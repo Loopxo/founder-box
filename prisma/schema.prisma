@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id               String     @id @default(cuid())
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  
+  // Basic Information
+  clientName       String
+  clientEmail      String
+  clientPhone      String
+  businessName     String
+  
+  // Business Details
+  industry         String
+  services         String[]
+  budget           String
+  timeline         String
+  currentWebsite   String?
+  
+  // Optional Fields
+  specialRequirements String?
+  competitors         String?
+  
+  // Relations
+  proposals        Proposal[]
+  
+  @@map("clients")
+}
+
+model Proposal {
+  id           String    @id @default(cuid())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  // Client Reference
+  clientId     String
+  client       Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  // Proposal Details
+  template     String
+  status       String    @default("draft")
+  pdfUrl       String?
+  fileName     String?
+  
+  // Analytics
+  viewCount    Int       @default(0)
+  lastViewed   DateTime?
+  downloaded   Boolean   @default(false)
+  downloadedAt DateTime?
+  
+  @@map("proposals")
+}
+
+model Template {
+  id               String @id @default(cuid())
+  name             String
+  industry         String @unique
+  
+  // Content
+  problemsContent  Json
+  solutionsContent Json
+  pricingStructure Json
+  caseStudyData    Json
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  
+  @@map("templates")
+}
