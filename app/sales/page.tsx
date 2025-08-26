@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import Navigation from '@/components/Navigation'
+import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -374,9 +374,8 @@ Looking forward to hearing from you!`
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <Navigation />
-      <div className="container mx-auto px-4 py-8">
+    <DashboardLayout>
+      <div className="container mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Advanced Sales Management Suite
@@ -1144,6 +1143,6 @@ Looking forward to hearing from you!`
           </TabsContent>
         </Tabs>
       </div>
-    </main>
+    </DashboardLayout>
   )
 }

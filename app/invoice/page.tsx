@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import Navigation from '@/components/Navigation'
+import DashboardLayout from '@/components/DashboardLayout'
 import { 
   Invoice, 
   InvoiceItem, 
@@ -1016,11 +1016,10 @@ ${invoice.notes || ''}
 
 export default function InvoiceGenerator() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <Navigation />
+    <DashboardLayout>
       <Suspense fallback={<div className="container mx-auto px-4 py-8">Loading...</div>}>
         <InvoiceContent />
       </Suspense>
-    </main>
+    </DashboardLayout>
   )
 }

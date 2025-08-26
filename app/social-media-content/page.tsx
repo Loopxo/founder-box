@@ -3,7 +3,7 @@
 
 import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Navigation from '@/components/Navigation';
+import DashboardLayout from '@/components/DashboardLayout';
 import { 
   platformStrategies,
   contentIdeas,
@@ -650,11 +650,10 @@ function SocialMediaContent() {
 
 export default function SocialMediaPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <Navigation />
+    <DashboardLayout>
       <Suspense fallback={<div className="container mx-auto px-4 py-8">Loading...</div>}>
         <SocialMediaContent />
       </Suspense>
-    </main>
+    </DashboardLayout>
   );
 }
