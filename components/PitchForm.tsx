@@ -5,11 +5,16 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
 import * as React from "react"
 import { ClientFormData, clientFormSchema, servicesByIndustry } from "@/lib/schemas"
+import { industryTemplates } from "@/lib/templates"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import * as Select from "@radix-ui/react-select"
 import * as Label from "@radix-ui/react-label"
 import { ChevronDown, Check } from "lucide-react"
+import ThemeSelector from "./ThemeSelector"
+import AgencyConfigForm from "./AgencyConfig"
+import PDFPreview from "./PDFPreview"
+import { defaultAgencyConfig, getTheme } from "@/lib/themes"
 
 interface PitchFormProps {
   onSubmit: (data: ClientFormData) => void
@@ -19,6 +24,9 @@ interface PitchFormProps {
 export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
   const [selectedIndustry, setSelectedIndustry] = useState<string>("")
   const [selectedServices, setSelectedServices] = useState<string[]>([])
+  const [selectedTheme, setSelectedTheme] = useState<string>("dark-luxe")
+  const [agencyConfig, setAgencyConfig] = useState(defaultAgencyConfig)
+  const [showPreview, setShowPreview] = useState(false)
 
   const {
     register,
@@ -37,11 +45,15 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
   React.useEffect(() => {
     if (onFormChange) {
       const subscription = watch((value) => {
-        onFormChange(value as Partial<ClientFormData>)
+        onFormChange({
+          ...value as Partial<ClientFormData>,
+          theme: selectedTheme,
+          agencyConfig: agencyConfig
+        })
       })
       return () => subscription.unsubscribe()
     }
-  }, [watch, onFormChange])
+  }, [watch, onFormChange, selectedTheme, agencyConfig])
 
   const handleIndustryChange = (industry: string) => {
     setSelectedIndustry(industry)
@@ -64,18 +76,24 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
   return (
     <div className="w-full">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+        <h2 className="text-2xl font-bold text-yellow-300 mb-2">
           Proposal Details
         </h2>
-        <p className="text-gray-600">Fill out the information below to generate your professional 8-section proposal</p>
+        <p className="text-gray-300">Fill out the information below to generate your professional 8-section proposal</p>
         
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit((data) => {
+        onSubmit({
+          ...data,
+          theme: selectedTheme,
+          agencyConfig: agencyConfig
+        })
+      })} className="space-y-6">
         {/* Basic Information */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label.Root className="text-sm font-medium text-gray-900">
+            <Label.Root className="text-sm font-medium text-gray-300">
               Client Name *
             </Label.Root>
             <Input
@@ -359,6 +377,22 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
           />
         </div>
 
+        {/* Theme Selection */}
+        <div className="border-t pt-6">
+          <ThemeSelector 
+            selectedTheme={selectedTheme}
+            onThemeChange={setSelectedTheme}
+          />
+        </div>
+
+        {/* Agency Configuration */}
+        <div className="border-t pt-6">
+          <AgencyConfigForm 
+            config={agencyConfig}
+            onConfigChange={setAgencyConfig}
+          />
+        </div>
+
         {/* Section Toggle */}
         {selectedIndustry && (
           <div className="border-t pt-6">
@@ -367,12 +401,12 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
             </Label.Root>
             <div className="grid grid-cols-2 gap-3">
               {[
-                { id: 'who-we-are', label: '1. Who We Are - LoopXO', enabled: true },
+                { id: 'who-we-are', label: `1. Who We Are - ${agencyConfig.name}`, enabled: true },
                 { id: 'industry-needs', label: `2. What ${selectedIndustry === 'doctors' ? 'Doctors' : selectedIndustry === 'realestate' ? 'Real Estate' : selectedIndustry.charAt(0).toUpperCase() + selectedIndustry.slice(1)}s Need Today`, enabled: true },
-                { id: 'solutions', label: '3. How LoopXO Solves These Problems', enabled: true },
+                { id: 'solutions', label: `3. How ${agencyConfig.name} Solves These Problems`, enabled: true },
                 { id: 'results', label: '4. Sample Client Results', enabled: true },
                 { id: 'pricing', label: '5. Investment Options', enabled: true },
-                { id: 'why-loopxo', label: '6. Why Choose LoopXO', enabled: true },
+                { id: 'why-loopxo', label: `6. Why Choose ${agencyConfig.name}`, enabled: true },
                 { id: 'next-steps', label: '7. Next Steps', enabled: true },
                 { id: 'endnotes', label: '8. Terms & Information', enabled: true }
               ].map((section) => (
@@ -398,14 +432,59 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
           </div>
         )}
 
-        <Button
-          type="submit"
-          className="w-full bg-gradient-to-r from-red-600 to-blue-800 hover:from-red-700 hover:to-blue-900 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? "Generating Proposal..." : "Generate Professional Proposal"}
-        </Button>
+        <div className="flex space-x-4">
+          <Button
+            type="button"
+            onClick={() => setShowPreview(true)}
+            className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
+          >
+            Preview Proposal
+          </Button>
+          <Button
+            type="submit"
+            className="flex-1 bg-gradient-to-r from-red-600 to-blue-800 hover:from-red-700 hover:to-blue-900 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Generating Proposal..." : "Generate PDF"}
+          </Button>
+        </div>
       </form>
+
+      {/* PDF Preview Modal */}
+      {showPreview && (
+        <PDFPreview
+          clientData={{
+            clientName: watch('clientName') || '',
+            businessName: watch('businessName') || '',
+            industry: watch('industry') || 'doctors',
+            services: watch('services') || [],
+            timeline: watch('timeline') || '2-4 weeks',
+            currentWebsite: watch('currentWebsite') || '',
+            specialRequirements: watch('specialRequirements') || '',
+            theme: selectedTheme,
+            agencyConfig: agencyConfig
+          }}
+          template={industryTemplates[watch('industry') || 'doctors']}
+          theme={getTheme(selectedTheme)}
+          agencyConfig={agencyConfig}
+          isOpen={showPreview}
+          onClose={() => setShowPreview(false)}
+          onGenerate={(customImages, customLogo, customTexts, imageHeights) => {
+            setShowPreview(false)
+            handleSubmit((data) => {
+              onSubmit({
+                ...data,
+                theme: selectedTheme,
+                agencyConfig: agencyConfig,
+                customImages: customImages || {},
+                customLogo: customLogo || '',
+                customTexts: customTexts || {},
+                imageHeights: imageHeights || {}
+              })
+            })()
+          }}
+        />
+      )}
     </div>
   )
 }

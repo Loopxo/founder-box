@@ -44,6 +44,20 @@ export const clientFormSchema = z.object({
   budget: z.enum(budgetRanges),
   timeline: z.enum(timelineOptions),
   
+  // Agency Configuration
+  agencyConfig: z.object({
+    name: z.string().default("LoopXO"),
+    logo: z.string().optional(),
+    email: z.string().email().default("hello@loopxo.com"),
+    phone: z.string().default("+91 98765 43210"),
+    address: z.string().default("Mumbai, Maharashtra, India"),
+    website: z.string().url().optional(),
+    tagline: z.string().default("A Digital Agency")
+  }).default({}),
+  
+  // Theme Selection
+  theme: z.string().default("dark-luxe"),
+  
   // Optional Fields
   specialRequirements: z.string().optional(),
   currentWebsite: z.string().url("Please enter a valid URL").optional().or(z.literal("")),
