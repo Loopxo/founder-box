@@ -1,6 +1,5 @@
 import puppeteer from 'puppeteer'
-import fs from 'fs'
-import path from 'path'
+
 import { ClientFormData } from './schemas'
 import { industryTemplates, IndustryTemplate } from './templates'
 import { Invoice, formatCurrency, invoiceThemes } from './invoice-data'
@@ -42,16 +41,7 @@ export interface InvoicePDFData {
   theme?: string
 }
 
-function getLogoBase64(): string {
-  try {
-    const logoPath = path.join(process.cwd(), 'public', 'logo.png')
-    const logoBuffer = fs.readFileSync(logoPath)
-    return logoBuffer.toString('base64')
-  } catch (error) {
-    console.warn('Could not load logo:', error)
-    return ''
-  }
-}
+
 
 export async function generateProposalPDF(
   clientData: ClientFormData,
@@ -67,12 +57,14 @@ export async function generateProposalPDF(
   }
 
   const theme = getTheme(clientData.theme || 'dark-luxe')
-  const agencyConfig = clientData.agencyConfig || {
-    name: 'LoopXO',
-    email: 'hello@loopxo.com',
-    phone: '+91 98765 43210',
-    address: 'Mumbai, Maharashtra, India',
-    tagline: 'A Digital Agency'
+  const agencyConfig = {
+    name: clientData.agencyConfig?.name || 'LoopXO',
+    email: clientData.agencyConfig?.email || 'hello@loopxo.com',
+    phone: clientData.agencyConfig?.phone || '+91 98765 43210',
+    address: clientData.agencyConfig?.address || 'Mumbai, Maharashtra, India',
+    tagline: clientData.agencyConfig?.tagline || 'A Digital Agency',
+    logo: clientData.agencyConfig?.logo,
+    website: clientData.agencyConfig?.website
   }
 
   const htmlContent = generateProposalHTML(clientData, template, theme, agencyConfig, customImages, customLogo, customTexts, imageHeights)
@@ -163,11 +155,11 @@ function generateProposalHTML(
     'next-steps': 80
   }
 
-  const getTextForSection = (textId: string) => {
+  const _getTextForSection = (textId: string) => {
     return customTexts?.[textId] || defaultTexts[textId as keyof typeof defaultTexts] || ''
   }
 
-  const getImageHeight = (sectionId: string) => {
+  const _getImageHeight = (sectionId: string) => {
     return imageHeights?.[sectionId] || defaultImageHeights[sectionId as keyof typeof defaultImageHeights] || 80
   }
 

@@ -1,19 +1,17 @@
 "use client"
 
 import { useState } from 'react'
-import { ClientFormData } from '@/lib/schemas'
-import { industryTemplates } from '@/lib/templates'
-import { getTheme, ThemeConfig, AgencyConfig } from '@/lib/themes'
-import { X, ChevronLeft, ChevronRight, Edit, Settings, Upload, Image as ImageIcon, Type } from 'lucide-react'
+import { ThemeConfig, AgencyConfig } from '@/lib/themes'
+import { X, ChevronLeft, ChevronRight, Settings, Image as ImageIcon, Type } from 'lucide-react'
 
 interface PDFPreviewProps {
-  clientData: any
-  template: any
+  clientData: Record<string, unknown>
+  template: Record<string, unknown>
   theme: ThemeConfig
   agencyConfig: AgencyConfig
   isOpen: boolean
   onClose: () => void
-  onGenerate: (customImages: any, customLogo: string, customTexts: any, imageHeights: any) => void
+  onGenerate: (customImages: Record<string, string>, customLogo: string, customTexts: Record<string, string>, imageHeights: Record<string, number>) => void
 }
 
 export default function PDFPreview({ 
@@ -27,7 +25,7 @@ export default function PDFPreview({
 }: PDFPreviewProps) {
   const [currentPage, setCurrentPage] = useState(1)
   const [customImages, setCustomImages] = useState<{[key: string]: string}>({})
-  const [customLogo, setCustomLogo] = useState('')
+  const [customLogo] = useState('')
   const [customTexts, setCustomTexts] = useState<{[key: string]: string}>({})
   const [imageHeights, setImageHeights] = useState<{[key: string]: number}>({})
   const [showImageEditor, setShowImageEditor] = useState<string | null>(null)
@@ -56,7 +54,7 @@ export default function PDFPreview({
       
       case 'industry-needs':
         if (template.problems && Array.isArray(template.problems)) {
-          return template.problems.map((problem: any) => 
+          return template.problems.map((problem: Record<string, string>) => 
             `${problem.title}: ${problem.description}`
           ).join('\n\n')
         }
@@ -64,22 +62,22 @@ export default function PDFPreview({
       
       case 'solutions':
         if (template.solutions && Array.isArray(template.solutions)) {
-          return template.solutions.map((solution: any) => 
-            `${solution.title}: ${solution.description}\nBenefits: ${solution.benefits?.join(', ')}`
+          return template.solutions.map((solution: Record<string, unknown>) => 
+            `${solution.title}: ${solution.description}\nBenefits: ${Array.isArray(solution.benefits) ? solution.benefits.join(', ') : ''}`
           ).join('\n\n')
         }
         return 'Our solutions...'
       
       case 'results':
         if (template.caseStudy) {
-          return `${template.caseStudy.title}\n${template.caseStudy.description}\nResults: ${template.caseStudy.results?.join(', ')}`
+          return `${(template.caseStudy as any).title}\n${(template.caseStudy as any).description}\nResults: ${Array.isArray((template.caseStudy as any).results) ? (template.caseStudy as any).results.join(', ') : ''}`
         }
         return 'Client results and case studies...'
       
       case 'pricing':
         if (template.pricing && Array.isArray(template.pricing)) {
-          return template.pricing.map((pkg: any) => 
-            `${pkg.name} - ${pkg.price}\nFeatures: ${pkg.features?.join(', ')}`
+          return template.pricing.map((pkg: Record<string, unknown>) => 
+            `${pkg.name} - ${pkg.price}\nFeatures: ${Array.isArray(pkg.features) ? pkg.features.join(', ') : ''}`
           ).join('\n\n')
         }
         return 'Pricing packages...'
@@ -184,21 +182,21 @@ export default function PDFPreview({
             </div>
           )}
           <h1 className="text-4xl font-bold mb-2">Professional Proposal</h1>
-          <p className="text-xl mb-8">For {clientData?.businessName || 'Your Business'}</p>
+          <p className="text-xl mb-8">For {(clientData as any)?.businessName || 'Your Business'}</p>
         </div>
         
         <div className="grid grid-cols-2 gap-8 text-left max-w-2xl mx-auto">
           <div>
             <h3 className="font-semibold mb-2">Client Information</h3>
-            <p>Business: {clientData?.businessName || 'N/A'}</p>
-            <p>Contact: {clientData?.clientName || 'N/A'}</p>
-            <p>Industry: {clientData?.industry || 'N/A'}</p>
+            <p>Business: {(clientData as any)?.businessName || 'N/A'}</p>
+            <p>Contact: {(clientData as any)?.clientName || 'N/A'}</p>
+            <p>Industry: {(clientData as any)?.industry || 'N/A'}</p>
           </div>
           <div>
             <h3 className="font-semibold mb-2">Project Details</h3>
-            <p>Budget: {clientData?.budget || 'N/A'}</p>
-            <p>Timeline: {clientData?.timeline || 'N/A'}</p>
-            <p>Services: {clientData?.services?.length || 0} selected</p>
+            <p>Budget: {(clientData as any)?.budget || 'N/A'}</p>
+            <p>Timeline: {(clientData as any)?.timeline || 'N/A'}</p>
+            <p>Services: {Array.isArray((clientData as any)?.services) ? (clientData as any).services.length : 0} selected</p>
           </div>
         </div>
       </div>
@@ -262,7 +260,7 @@ export default function PDFPreview({
 
   const renderIndustryNeeds = () => renderContentPage(
     'industry-needs',
-    `What ${clientData?.industry?.charAt(0)?.toUpperCase() + clientData?.industry?.slice(1) || 'Business'}s Need Today`,
+    `What ${(clientData as any)?.industry ? (clientData as any).industry.charAt(0).toUpperCase() + (clientData as any).industry.slice(1) : 'Business'}s Need Today`,
     getTextForSection('industry-needs')
   )
 

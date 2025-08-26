@@ -195,7 +195,7 @@ function InvoiceContent() {
         return prev
       })
     }
-  }, [invoice.items, invoice.taxes?.length, invoice.taxes?.map(t => `${t.name}-${t.rate}`).join(','), invoice.discount])
+  }, [invoice.items, invoice.taxes, invoice.discount])
 
   const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]

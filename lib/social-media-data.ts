@@ -557,7 +557,7 @@ export function generatePersonalizedStrategy(
   return strategies[key] || defaultStrategy;
 }
 
-function getPlatformsByAudienceAndField(audience: string, field: string): string[] {
+function getPlatformsByAudienceAndField(audience: string, _field: string): string[] {
   const platformMatrix: { [key: string]: string[] } = {
     "entrepreneurs": ["LinkedIn", "Twitter/X"],
     "professionals": ["LinkedIn", "Instagram"],
@@ -572,7 +572,7 @@ function getPlatformsByAudienceAndField(audience: string, field: string): string
   return platformMatrix[audience] || ["LinkedIn", "Twitter/X"];
 }
 
-function getContentStrategy(audience: string, time: string, field: string) {
+function getContentStrategy(audience: string, time: string, _field: string) {
   const timeBasedFrequency: { [key: string]: string } = {
     "minimal": "2-3 posts/week",
     "light": "4-5 posts/week", 
@@ -613,7 +613,7 @@ function getContentStrategy(audience: string, time: string, field: string) {
   };
 }
 
-function getQuickWins(audience: string, time: string, field: string): string[] {
+function getQuickWins(audience: string, time: string, _field: string): string[] {
   const quickWins: { [key: string]: string[] } = {
     "entrepreneurs": [
       "Share one startup lesson per week",
@@ -635,7 +635,7 @@ function getQuickWins(audience: string, time: string, field: string): string[] {
   return quickWins[audience] || quickWins["professionals"];
 }
 
-function getLongTermGoals(audience: string, field: string): string[] {
+function getLongTermGoals(audience: string, _field: string): string[] {
   const goals: { [key: string]: string[] } = {
     "entrepreneurs": [
       "Build network of 1000+ industry connections",

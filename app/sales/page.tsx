@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -13,32 +13,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { 
   BookOpen, 
   Target, 
-  Users, 
   Send, 
-  Handshake,
   CheckCircle2,
-  AlertCircle,
   Lightbulb,
   FileText,
   Calendar,
-  Phone,
   MessageSquare,
   TrendingUp,
-  DollarSign,
   Award,
   Zap,
-  Link,
-  Mail,
-  PhoneCall,
   Download,
   Copy,
   BarChart3,
-  Plus,
-  Edit,
-  Trash2,
-  Star,
-  Clock,
-  Filter
+  Plus
 } from 'lucide-react'
 
 import {
@@ -47,14 +34,64 @@ import {
   salesPlaybooks,
   leadStages,
   leadSources,
-  activityTypes,
   formatCurrency,
-  type Lead,
-  type SalesTemplate,
-  type SalesPlaybook
+  type Lead
 } from '@/lib/sales-data'
 
+interface GeneratedPlan {
+  createdAt?: string
+  plan?: {
+    executiveSummary?: string
+    prospecting?: {
+      title?: string
+      description?: string
+      steps?: string[]
+    }
+    messaging?: {
+      title?: string
+      description?: string
+      templates?: Array<{
+        type: string
+        subject?: string
+        body: string
+      }>
+    }
+    tools?: {
+      title?: string
+      description?: string
+      recommendations?: Array<{
+        name: string
+        cost: string
+        purpose: string
+      }>
+    }
+    timeline?: {
+      title?: string
+      weeks?: Array<{
+        week: string
+        focus: string
+        tasks?: string[]
+      }>
+    }
+    metrics?: {
+      title?: string
+      kpis?: Array<{
+        name: string
+        target: string
+      }>
+    }
+  }
+}
+
 export default function SelfServiceSDRGenerator() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SelfServiceSDRGeneratorContent />
+    </Suspense>
+  )
+}
+
+function SelfServiceSDRGeneratorContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   
@@ -68,15 +105,14 @@ export default function SelfServiceSDRGenerator() {
     salesChallenges: '',
     budget: ''
   })
-  const [generatedPlan, setGeneratedPlan] = useState<any>(null)
+  const [generatedPlan, setGeneratedPlan] = useState<GeneratedPlan | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const planRef = useRef<HTMLDivElement>(null)
   
   // New sales management state
-  const [leads, setLeads] = useState<Lead[]>(sampleLeads)
-  const [selectedTemplate, setSelectedTemplate] = useState<SalesTemplate | null>(null)
-  const [selectedPlaybook, setSelectedPlaybook] = useState<SalesPlaybook | null>(null)
+  const [leads] = useState<Lead[]>(sampleLeads)
+
 
   // URL state management
   useEffect(() => {
@@ -121,7 +157,7 @@ export default function SelfServiceSDRGenerator() {
     }, 1500)
   }
 
-  const generateCustomPlan = (info: any) => {
+  const generateCustomPlan = (info: Record<string, string>) => {
     // This would be replaced with actual AI/algorithmic plan generation
     return {
       executiveSummary: `This Self-Service SDR Plan is customized for ${info.companyName} in the ${info.industry} industry. The plan focuses on generating qualified leads for your ${info.productService} targeting ${info.targetCustomers}.`,
@@ -137,16 +173,16 @@ export default function SelfServiceSDRGenerator() {
       },
       messaging: {
         title: "Personalized Messaging Framework",
-        description: `Your messaging should focus on solving "${info.salesChallenges}" for your target customers. Since you're in the ${info.industry} space, emphasize ROI and measurable results.`,
+        description: `Your messaging should focus on solving "${info.salesChallenges}" for your target customers. Since you&apos;re in the ${info.industry} space, emphasize ROI and measurable results.`,
         templates: [
           {
             type: "Cold Email",
             subject: `Quick question about ${info.salesChallenges}`,
             body: `Hey [First Name],
 
-I noticed [Company Name] is in the ${info.industry} space. Quick question: Are you currently facing challenges with ${info.salesChallenges} that's impacting your bottom line?
+I noticed [Company Name] is in the ${info.industry} space. Quick question: Are you currently facing challenges with ${info.salesChallenges} that&apos;s impacting your bottom line?
 
-I've helped companies like yours increase efficiency by 30% using ${info.productService}.
+I&apos;ve helped companies like yours increase efficiency by 30% using ${info.productService}.
 
 Would you be open to a 15-minute conversation to see if we can do the same for you?
 
@@ -165,7 +201,7 @@ Looking forward to hearing from you!`
       },
       tools: {
         title: "Recommended Tool Stack",
-        description: `Based on your budget of ${info.budget}, here's an optimized tool stack that maximizes ROI:`,
+        description: `Based on your budget of ${info.budget}, here&apos;s an optimized tool stack that maximizes ROI:`,
         recommendations: [
           {
             name: "Google Workspace",
@@ -273,7 +309,7 @@ Looking forward to hearing from you!`
               <h2>${generatedPlan?.plan?.messaging?.title}</h2>
               <p>${generatedPlan?.plan?.messaging?.description}</p>
               
-              ${generatedPlan?.plan?.messaging?.templates?.map((template: any) => `
+              ${generatedPlan?.plan?.messaging?.templates?.map((template: Record<string, string>) => `
                 <div class="template">
                   <h3>${template.type}</h3>
                   ${template.subject ? `<p><strong>Subject:</strong> ${template.subject}</p>` : ''}
@@ -295,7 +331,7 @@ Looking forward to hearing from you!`
                   </tr>
                 </thead>
                 <tbody>
-                  ${generatedPlan?.plan?.tools?.recommendations?.map((tool: any) => `
+                  ${generatedPlan?.plan?.tools?.recommendations?.map((tool: Record<string, string>) => `
                     <tr>
                       <td>${tool.name}</td>
                       <td>${tool.cost}</td>
@@ -328,7 +364,7 @@ Looking forward to hearing from you!`
                   </tr>
                 </thead>
                 <tbody>
-                  ${generatedPlan?.plan?.metrics?.kpis?.map((kpi: any) => `
+                  ${generatedPlan?.plan?.metrics?.kpis?.map((kpi: Record<string, string>) => `
                     <tr>
                       <td>${kpi.name}</td>
                       <td>${kpi.target}</td>
@@ -544,7 +580,7 @@ Looking forward to hearing from you!`
                           {template.conversionRate && (
                             <Badge variant="secondary">{template.conversionRate} conversion</Badge>
                           )}
-                          <Button size="sm" onClick={() => setSelectedTemplate(template)}>
+                          <Button size="sm">
                             <Copy className="w-4 h-4 mr-2" />
                             Use Template
                           </Button>
@@ -700,7 +736,7 @@ Looking forward to hearing from you!`
                           <p className="text-gray-600">{playbook.description}</p>
                           <Badge variant="outline" className="mt-2">{playbook.targetPersona}</Badge>
                         </div>
-                        <Button onClick={() => setSelectedPlaybook(playbook)}>
+                        <Button>
                           View Full Playbook
                         </Button>
                       </div>
@@ -827,7 +863,7 @@ Looking forward to hearing from you!`
                   <div className="bg-blue-50 p-4 rounded-lg">
                     <h3 className="font-semibold text-blue-800 mb-2">How This Helps</h3>
                     <p className="text-sm text-blue-700">
-                      Based on your inputs, we'll generate a customized SDR plan that includes:
+                      Based on your inputs, we&apos;ll generate a customized SDR plan that includes:
                       prospecting strategies, messaging templates, tool recommendations, and a 30-day implementation timeline.
                     </p>
                   </div>
@@ -872,7 +908,7 @@ Looking forward to hearing from you!`
                       <Lightbulb className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
                       <h3 className="text-xl font-semibold mb-2">Ready to Generate Your Plan</h3>
                       <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-                        Based on your inputs, we'll create a comprehensive Self-Service SDR Plan customized for 
+                        Based on your inputs, we&apos;ll create a comprehensive Self-Service SDR Plan customized for 
                         {businessInfo.companyName} in the {businessInfo.industry} industry.
                       </p>
                       <div className="flex justify-center gap-4">
@@ -1013,7 +1049,7 @@ Looking forward to hearing from you!`
                       </p>
                       
                       <div className="space-y-6">
-                        {generatedPlan?.plan?.messaging?.templates?.map((template: any, index: number) => (
+                        {generatedPlan?.plan?.messaging?.templates?.map((template: Record<string, string>, index: number) => (
                           <div key={index} className="border rounded-lg p-4">
                             <h4 className="font-semibold mb-2">{template.type}</h4>
                             {template.subject && (
@@ -1045,7 +1081,7 @@ Looking forward to hearing from you!`
                       </p>
                       
                       <div className="grid md:grid-cols-2 gap-4">
-                        {generatedPlan?.plan?.tools?.recommendations?.map((tool: any, index: number) => (
+                        {generatedPlan?.plan?.tools?.recommendations?.map((tool: Record<string, string>, index: number) => (
                           <div key={index} className="border rounded-lg p-4">
                             <div className="flex justify-between items-start mb-2">
                               <h4 className="font-semibold">{tool.name}</h4>
@@ -1098,7 +1134,7 @@ Looking forward to hearing from you!`
                     </CardHeader>
                     <CardContent>
                       <div className="grid md:grid-cols-4 gap-4">
-                        {generatedPlan?.plan?.metrics?.kpis?.map((kpi: any, index: number) => (
+                        {generatedPlan?.plan?.metrics?.kpis?.map((kpi: Record<string, string>, index: number) => (
                           <div key={index} className="text-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg">
                             <div className="text-lg font-bold text-blue-600">{kpi.target}</div>
                             <div className="text-sm text-gray-600">{kpi.name}</div>

@@ -2,22 +2,17 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { 
-  Rocket, 
   Zap, 
   Shield, 
   Users, 
-  Star, 
-  CheckCircle, 
   ArrowRight, 
   Github,
-  Globe,
   FileText,
   MessageSquare,
   TrendingUp,
-  BarChart3,
   Instagram,
   Mail
 } from 'lucide-react'
@@ -115,7 +110,7 @@ export default function LandingPage() {
               Everything You Need to Succeed
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              From proposal generation to social media content, we've got you covered with 
+              From proposal generation to social media content, we&apos;ve got you covered with 
               professional templates and AI-powered tools.
             </p>
           </div>

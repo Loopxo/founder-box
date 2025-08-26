@@ -464,7 +464,7 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
             theme: selectedTheme,
             agencyConfig: agencyConfig
           }}
-          template={industryTemplates[watch('industry') || 'doctors']}
+          template={industryTemplates[watch('industry') || 'doctors'] as any}
           theme={getTheme(selectedTheme)}
           agencyConfig={agencyConfig}
           isOpen={showPreview}
@@ -475,11 +475,7 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
               onSubmit({
                 ...data,
                 theme: selectedTheme,
-                agencyConfig: agencyConfig,
-                customImages: customImages || {},
-                customLogo: customLogo || '',
-                customTexts: customTexts || {},
-                imageHeights: imageHeights || {}
+                agencyConfig: agencyConfig
               })
             })()
           }}

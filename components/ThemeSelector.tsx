@@ -1,6 +1,6 @@
 "use client"
 
-import { themes, ThemeConfig } from '@/lib/themes'
+import { themes } from '@/lib/themes'
 import { useState } from 'react'
 
 interface ThemeSelectorProps {
@@ -40,7 +40,7 @@ export default function ThemeSelector({ selectedTheme, onThemeChange }: ThemeSel
               <div 
                 className="w-full h-16 rounded-md mb-2"
                 style={{ 
-                  background: theme.colors.gradient || theme.colors.background,
+                  background: (theme.colors as any).gradient || theme.colors.background,
                   border: `2px solid ${theme.colors.border}`
                 }}
               >

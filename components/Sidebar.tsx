@@ -17,7 +17,6 @@ import {
   Settings,
   Menu,
   X,
-  User,
   ChevronDown,
   ChevronRight
 } from 'lucide-react'

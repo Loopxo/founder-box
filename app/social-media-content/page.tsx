@@ -30,7 +30,6 @@ import {
   Hash, 
   MessageSquare, 
   TrendingUp, 
-  Lightbulb, 
   Copy,
   Zap,
   Target,

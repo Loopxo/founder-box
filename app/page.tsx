@@ -3,8 +3,6 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabase'
 import LandingPage from '@/components/LandingPage'
 

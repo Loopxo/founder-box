@@ -17,7 +17,6 @@ import {
   employeeCounts,
   industries,
   type CompetitorInput,
-  type MarketPosition,
 } from '@/lib/competitive-analysis-data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -42,9 +41,7 @@ import {
   Plus,
   Target,
   Search,
-  TrendingUp,
-  Shield,
-  Zap
+  TrendingUp
 } from 'lucide-react';
 
 function CompetitiveAnalysisContent() {
@@ -177,7 +174,7 @@ function CompetitiveAnalysisContent() {
                 Add Your Competitors
               </CardTitle>
               <CardDescription>
-                Input your competitors' information to build a comprehensive analysis
+                Input your competitors&apos; information to build a comprehensive analysis
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -449,7 +446,7 @@ function CompetitiveAnalysisContent() {
                 Competitor Performance Snapshot
               </CardTitle>
               <CardDescription>
-                A high-level view of your main competitors' performance metrics.
+                A high-level view of your main competitors&apos; performance metrics.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">

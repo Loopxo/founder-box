@@ -224,7 +224,7 @@ function SEOContent() {
             <CardHeader>
               <CardTitle>SEO Optimization Checklist</CardTitle>
               <CardDescription>
-                Complete these tasks to improve your website's search engine performance
+                Complete these tasks to improve your website&apos;s search engine performance
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -316,7 +316,7 @@ function SEOContent() {
                   <ol className="list-decimal list-inside space-y-2 text-sm">
                     <li>Start with Google Keyword Planner (free with Google Ads account)</li>
                     <li>Use Google Autocomplete for long-tail suggestions</li>
-                    <li>Check "People also ask" and "Related searches" on Google</li>
+                    <li>Check &quot;People also ask&quot; and &quot;Related searches&quot; on Google</li>
                     <li>Analyze competitor websites with Ubersuggest (3 free searches/day)</li>
                     <li>Use Answer The Public for question-based keywords</li>
                     <li>Check Google Trends for seasonal patterns</li>
@@ -326,7 +326,7 @@ function SEOContent() {
                   <h3 className="font-semibold mb-3">Keyword Evaluation Criteria:</h3>
                   <ul className="list-disc list-inside space-y-2 text-sm">
                     <li><strong>Search Volume:</strong> 100+ monthly searches minimum</li>
-                    <li><strong>Competition:</strong> Look for "Low" to "Medium" difficulty</li>
+                    <li><strong>Competition:</strong> Look for &quot;Low&quot; to &quot;Medium&quot; difficulty</li>
                     <li><strong>Commercial Intent:</strong> Include buying keywords</li>
                     <li><strong>Relevance:</strong> Match your business offerings</li>
                     <li><strong>Local Potential:</strong> Add city/area for local business</li>
@@ -408,10 +408,10 @@ function SEOContent() {
               <div className="mt-6">
                 <h4 className="font-semibold mb-3">Long-tail Examples for Different Business Types:</h4>
                 <div className="space-y-2 text-sm">
-                  <div><strong>Local Service:</strong> "emergency plumber near me" vs "plumber"</div>
-                  <div><strong>E-commerce:</strong> "wireless bluetooth headphones under $100" vs "headphones"</div>
-                  <div><strong>B2B:</strong> "marketing automation software for small business" vs "marketing software"</div>
-                  <div><strong>Professional:</strong> "divorce lawyer in [city]" vs "lawyer"</div>
+                  <div><strong>Local Service:</strong> &quot;emergency plumber near me&quot; vs &quot;plumber&quot;</div>
+                  <div><strong>E-commerce:</strong> &quot;wireless bluetooth headphones under $100&quot; vs &quot;headphones&quot;</div>
+                  <div><strong>B2B:</strong> &quot;marketing automation software for small business&quot; vs &quot;marketing software&quot;</div>
+                  <div><strong>Professional:</strong> &quot;divorce lawyer in [city]&quot; vs &quot;lawyer&quot;</div>
                 </div>
               </div>
             </CardContent>
