@@ -59,7 +59,14 @@ export async function POST(request: NextRequest) {
     
     // Generate PDF
     console.log('Starting PDF generation...')
-    const pdfBuffer = await generateProposalPDF(validatedData)
+    const pdfBuffer = await generateProposalPDF(
+      validatedData, 
+      undefined, // default options
+      requestData.customImages, // custom images
+      requestData.customLogo, // custom logo
+      requestData.customTexts, // custom texts
+      requestData.imageHeights // image heights
+    )
     console.log('PDF generated, buffer length:', pdfBuffer.length)
     const fileName = generateFileName(validatedData)
     console.log('Generated file name:', fileName)
