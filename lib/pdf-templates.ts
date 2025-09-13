@@ -1362,32 +1362,25 @@ export async function generateContractPDF(
   let browser
   
   try {
-    console.log('Launching browser for contract PDF generation...')
     browser = await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     })
     
     const page = await browser.newPage()
-    console.log('Browser page created')
     
     const html = generateContractHTML(contractData)
-    console.log('Contract HTML generated, length:', html.length)
     
     await page.setContent(html, { waitUntil: 'networkidle0' })
-    console.log('HTML content set on page')
     
     const pdfBuffer = await page.pdf(options)
-    console.log('PDF buffer generated, size:', pdfBuffer.length)
     
     return Buffer.from(pdfBuffer)
   } catch (error) {
-    console.error('Error in generateContractPDF:', error)
     throw error
   } finally {
     if (browser) {
       await browser.close()
-      console.log('Browser closed')
     }
   }
 }

@@ -1,22 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateProposalPDF, generateFileName, generateContractPDF, generateInvoicePDF } from '@/lib/pdf-templates'
+import { pdfGenerationLimiter, getClientIP, createRateLimitResponse } from "@/lib/rate-limit"
 import { clientFormSchema } from '@/lib/schemas'
 // import { prisma } from '@/lib/prisma' // Temporarily disabled
 
 export async function POST(request: NextRequest) {
   try {
+    // Apply rate limiting
+    const clientIP = getClientIP(request)
+    const rateLimitResult = pdfGenerationLimiter.isAllowed(clientIP)
+    
+    if (!rateLimitResult.allowed) {
+      return createRateLimitResponse(
+        rateLimitResult.remaining,
+        rateLimitResult.resetTime,
+        "Too many PDF generation requests. Please wait before trying again."
+      )
+    }
     const requestData = await request.json()
-    console.log('Received request data:', requestData)
     
     // Check if this is an invoice generation request
     if (requestData.type === 'invoice' && requestData.invoice) {
-      console.log('Starting invoice PDF generation...')
       const pdfBuffer = await generateInvoicePDF({
         invoice: requestData.invoice,
         logo: requestData.invoice.logo,
         theme: requestData.invoice.theme
       })
-      console.log('Invoice PDF generated, buffer length:', pdfBuffer.length)
       const fileName = `invoice-${requestData.invoice.invoiceNumber || 'draft'}.pdf`
       
       return new NextResponse(pdfBuffer as unknown as BodyInit, {
@@ -31,13 +40,11 @@ export async function POST(request: NextRequest) {
     // Check if this is a contract generation request
     if (requestData.content && requestData.title) {
       // Contract generation
-      console.log('Starting contract PDF generation...')
       const pdfBuffer = await generateContractPDF({
         content: requestData.content,
         title: requestData.title,
         logo: requestData.logo
       })
-      console.log('Contract PDF generated, buffer length:', pdfBuffer.length)
       const fileName = `${requestData.title.replace(/\s+/g, '_')}.pdf`
       
       return new NextResponse(pdfBuffer as unknown as BodyInit, {
@@ -51,14 +58,11 @@ export async function POST(request: NextRequest) {
     
     // Proposal generation (existing functionality)
     const formData = requestData
-    console.log('Processing as proposal form data')
     
     // Validate the form data
     const validatedData = clientFormSchema.parse(formData)
-    console.log('Data validated successfully')
     
     // Generate PDF
-    console.log('Starting PDF generation...')
     const pdfBuffer = await generateProposalPDF(
       validatedData, 
       undefined, // default options
@@ -67,9 +71,7 @@ export async function POST(request: NextRequest) {
       requestData.customTexts, // custom texts
       requestData.imageHeights // image heights
     )
-    console.log('PDF generated, buffer length:', pdfBuffer.length)
     const fileName = generateFileName(validatedData)
-    console.log('Generated file name:', fileName)
     
     // TODO: Save client and proposal to database when database is set up
     // try {

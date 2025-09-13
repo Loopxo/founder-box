@@ -115,6 +115,7 @@ export const taxRates = {
 // Currency options
 export const currencies = [
   { code: 'USD', symbol: '$', name: 'US Dollar' },
+  { code: 'INR', symbol: '₹', name: 'Indian Rupees' },
   { code: 'EUR', symbol: '€', name: 'Euro' },
   { code: 'GBP', symbol: '£', name: 'British Pound' },
   { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar' },
@@ -215,18 +216,45 @@ export const generateInvoiceNumber = (prefix: string = 'INV'): string => {
   return `${prefix}-${year}${month}-${random}`;
 };
 
+/**
+ * Calculate the total amount for an invoice item
+ * Uses banker's rounding to avoid floating point precision issues
+ * @param quantity - Number of items/units
+ * @param rate - Price per unit
+ * @returns Total amount rounded to 2 decimal places
+ */
 export const calculateItemAmount = (quantity: number, rate: number): number => {
   return Math.round((quantity * rate) * 100) / 100;
 };
 
+/**
+ * Calculate subtotal from all invoice items
+ * Sums all item amounts and rounds to prevent floating point errors
+ * @param items - Array of invoice items with calculated amounts
+ * @returns Subtotal rounded to 2 decimal places
+ */
 export const calculateSubtotal = (items: InvoiceItem[]): number => {
   return Math.round(items.reduce((sum, item) => sum + item.amount, 0) * 100) / 100;
 };
 
+/**
+ * Calculate tax amount based on subtotal and tax rate
+ * @param subtotal - Pre-tax amount
+ * @param taxRate - Tax rate as percentage (e.g. 8.25 for 8.25%)
+ * @returns Tax amount rounded to 2 decimal places
+ */
 export const calculateTaxAmount = (subtotal: number, taxRate: number): number => {
   return Math.round((subtotal * (taxRate / 100)) * 100) / 100;
 };
 
+/**
+ * Calculate final total with taxes and discounts applied
+ * Handles both percentage and fixed amount discounts
+ * @param subtotal - Pre-tax amount
+ * @param totalTax - Total tax amount from all applicable taxes
+ * @param discount - Optional discount object with type and value
+ * @returns Object containing final total and calculated discount amount
+ */
 export const calculateTotal = (
   subtotal: number, 
   totalTax: number, 

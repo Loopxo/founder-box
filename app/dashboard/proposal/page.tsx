@@ -45,10 +45,8 @@ export default function ProposalPage() {
         window.URL.revokeObjectURL(url)
         document.body.removeChild(a)
       } else {
-        console.error('Failed to generate PDF')
       }
     } catch (error) {
-      console.error('Error generating PDF:', error)
     }
   }
 

@@ -394,7 +394,6 @@ Looking forward to hearing from you!`
       
       alert("Your SDR Plan has been downloaded as an HTML file! You can open it in any browser or convert it to PDF using your browser's print function.");
     } catch (error) {
-      console.error('Error downloading plan:', error);
       alert('Error downloading plan. Please try again.');
     } finally {
       setIsDownloading(false);

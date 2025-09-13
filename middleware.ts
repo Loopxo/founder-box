@@ -3,10 +3,6 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export async function middleware(req: NextRequest) {
-  // Skip middleware for demo mode - allow all access
-  if (process.env.NODE_ENV === 'development') {
-    return NextResponse.next()
-  }
 
   let response = NextResponse.next({
     request: {

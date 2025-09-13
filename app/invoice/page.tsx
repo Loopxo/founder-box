@@ -326,7 +326,6 @@ ${invoice.notes || ''}
         alert('Error generating PDF. Please try again.')
       }
     } catch (error) {
-      console.error('Error downloading PDF:', error)
       alert('Error generating PDF. Please try again.')
     }
   }
