@@ -75,8 +75,10 @@ export default function PDFPreview({
         return 'Client results and case studies...'
       
       case 'pricing':
-        if (template.pricing && Array.isArray(template.pricing)) {
-          return template.pricing.map((pkg: Record<string, unknown>) => 
+        // Use custom pricing if available, otherwise fall back to template pricing
+        const pricingData = (clientData as any)?.customPricing || template.pricing
+        if (pricingData && Array.isArray(pricingData)) {
+          return pricingData.map((pkg: Record<string, unknown>) =>
             `${pkg.name} - ${pkg.price}\nFeatures: ${Array.isArray(pkg.features) ? pkg.features.join(', ') : ''}`
           ).join('\n\n')
         }
@@ -96,27 +98,15 @@ export default function PDFPreview({
     }
   }
 
-  // Default texts for each section
-  const defaultTexts = {
-    'who-we-are': getTemplateText('who-we-are'),
-    'industry-needs': getTemplateText('industry-needs'),
-    'solutions': getTemplateText('solutions'),
-    'results': getTemplateText('results'),
-    'pricing': getTemplateText('pricing'),
-    'why-loopxo': getTemplateText('why-loopxo'),
-    'next-steps': getTemplateText('next-steps'),
-    'endnotes': getTemplateText('endnotes')
-  }
-
-  // Default image heights
+  // Default image heights (reduced by 20px for why-loopxo and next-steps)
   const defaultImageHeights = {
     'who-we-are': 300,
     'industry-needs': 250,
     'solutions': 280,
     'results': 320,
     'pricing': 200,
-    'why-loopxo': 300,
-    'next-steps': 250,
+    'why-loopxo': 280,  // Reduced from 300 to 280 (20px less)
+    'next-steps': 230,  // Reduced from 250 to 230 (20px less)
     'endnotes': 200
   }
 
@@ -125,7 +115,8 @@ export default function PDFPreview({
   }
 
   const getTextForSection = (section: string) => {
-    return customTexts[section] || defaultTexts[section as keyof typeof defaultTexts] || 'Content not available...'
+    // Always compute fresh to pick up customPricing changes
+    return customTexts[section] || getTemplateText(section) || 'Content not available...'
   }
 
   const getImageHeight = (section: string) => {
@@ -194,7 +185,6 @@ export default function PDFPreview({
           </div>
           <div>
             <h3 className="font-semibold mb-2">Project Details</h3>
-            <p>Budget: {(clientData as any)?.budget || 'N/A'}</p>
             <p>Timeline: {(clientData as any)?.timeline || 'N/A'}</p>
             <p>Services: {Array.isArray((clientData as any)?.services) ? (clientData as any).services.length : 0} selected</p>
           </div>

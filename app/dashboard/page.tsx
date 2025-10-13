@@ -1,9 +1,5 @@
 "use client"
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { 
@@ -12,64 +8,14 @@ import {
   Shield, 
   Mail, 
   TrendingUp, 
-  Instagram, 
+  Share2, 
   BarChart3,
   CheckCircle
 } from 'lucide-react'
 import Link from 'next/link'
 import DashboardLayout from '@/components/DashboardLayout'
-import type { User as SupabaseUser } from '@supabase/supabase-js'
 
 export default function DashboardPage() {
-  const [user, setUser] = useState<SupabaseUser | null>(null)
-  const [loading, setLoading] = useState(true)
-  const router = useRouter()
-
-  useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
-        // Demo mode - simulate user for testing
-        setUser({
-          id: 'demo-user',
-          email: 'demo@founderbox.com',
-          user_metadata: { name: 'Demo User' },
-          app_metadata: {},
-          aud: 'authenticated',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          role: 'authenticated'
-        } as SupabaseUser)
-        setLoading(false)
-        return
-      }
-      setUser(user)
-      setLoading(false)
-    }
-
-    getUser()
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session?.user) {
-        // Demo mode - don't redirect for testing
-        return
-      }
-      setUser(session.user)
-    })
-
-    return () => subscription.unsubscribe()
-  }, [router])
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    )
-  }
 
   const tools = [
     {
@@ -117,9 +63,9 @@ export default function DashboardPage() {
     {
       title: 'Social Media',
       description: 'Engaging social media content',
-      icon: Instagram,
+      icon: Share2,
       href: '/social-media-content',
-      color: 'from-yellow-500 to-orange-500'
+      color: 'from-blue-500 to-purple-500'
     },
     {
       title: 'Competitive Analysis',
@@ -136,66 +82,66 @@ export default function DashboardPage() {
       <div className="max-w-7xl mx-auto">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back, {user?.user_metadata?.name || 'Founder'}! 👋
+          <h1 className="text-3xl font-bold text-white mb-2">
+            Welcome, Founder! 👋
           </h1>
-          <p className="text-gray-600">
+          <p className="text-slate-300">
             Ready to accelerate your business? Choose a tool to get started.
           </p>
         </div>
 
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
+          <Card className="bg-slate-900/90 backdrop-blur-sm border-slate-700">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Tools Available</p>
-                  <p className="text-2xl font-bold text-gray-900">8</p>
+                  <p className="text-sm font-medium text-slate-400">Tools Available</p>
+                  <p className="text-2xl font-bold text-white">8</p>
                 </div>
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-r from-electric-blue to-electric-violet rounded-lg flex items-center justify-center shadow-lg shadow-electric-blue/30">
                   <FileText className="w-6 h-6 text-white" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-slate-900/90 backdrop-blur-sm border-slate-700">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Proposals Created</p>
-                  <p className="text-2xl font-bold text-gray-900">0</p>
+                  <p className="text-sm font-medium text-slate-400">Proposals Created</p>
+                  <p className="text-2xl font-bold text-white">0</p>
                 </div>
-                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-r from-electric-blue to-electric-violet rounded-lg flex items-center justify-center shadow-lg shadow-electric-blue/30">
                   <TrendingUp className="w-6 h-6 text-white" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-slate-900/90 backdrop-blur-sm border-slate-700">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Account Type</p>
-                  <p className="text-2xl font-bold text-gray-900">Free</p>
+                  <p className="text-sm font-medium text-slate-400">Account Type</p>
+                  <p className="text-2xl font-bold text-white">Free</p>
                 </div>
-                <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-r from-neon-orange to-electric-violet rounded-lg flex items-center justify-center shadow-lg shadow-neon-orange/30">
                   <Shield className="w-6 h-6 text-white" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-slate-900/90 backdrop-blur-sm border-slate-700">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Status</p>
-                  <Badge className="bg-green-100 text-green-800">Active</Badge>
+                  <p className="text-sm font-medium text-slate-400">Status</p>
+                  <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Active</Badge>
                 </div>
-                <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-green-500 rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center shadow-lg shadow-green-500/30">
                   <CheckCircle className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -205,17 +151,17 @@ export default function DashboardPage() {
 
         {/* Tools Grid */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Tools</h2>
+          <h2 className="text-2xl font-bold text-white mb-6">Your Tools</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {tools.map((tool, index) => (
               <Link key={index} href={tool.href}>
-                <Card className="hover:shadow-lg transition-shadow cursor-pointer border-0 shadow-md">
+                <Card className="hover:shadow-xl hover:shadow-electric-blue/20 transition-all cursor-pointer bg-slate-900/90 backdrop-blur-sm border-slate-700 hover:border-electric-blue/50">
                   <CardHeader className="pb-3">
-                    <div className={`w-12 h-12 bg-gradient-to-r ${tool.color} rounded-lg flex items-center justify-center mb-3`}>
+                    <div className={`w-12 h-12 bg-gradient-to-r ${tool.color} rounded-lg flex items-center justify-center mb-3 shadow-lg`}>
                       <tool.icon className="w-6 h-6 text-white" />
                     </div>
-                    <CardTitle className="text-lg">{tool.title}</CardTitle>
-                    <CardDescription className="text-sm">
+                    <CardTitle className="text-lg text-white">{tool.title}</CardTitle>
+                    <CardDescription className="text-sm text-slate-400">
                       {tool.description}
                     </CardDescription>
                   </CardHeader>
@@ -227,18 +173,18 @@ export default function DashboardPage() {
 
         {/* Quick Actions */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h2>
+          <h2 className="text-2xl font-bold text-white mb-6">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Link href="/dashboard/proposal">
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer border-0 shadow-md">
+              <Card className="hover:shadow-xl hover:shadow-electric-blue/20 transition-all cursor-pointer bg-slate-900/90 backdrop-blur-sm border-slate-700 hover:border-electric-blue/50">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                    <div className="w-12 h-12 bg-gradient-to-r from-electric-blue to-electric-violet rounded-lg flex items-center justify-center shadow-lg shadow-electric-blue/30">
                       <FileText className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">Create Proposal</h3>
-                      <p className="text-sm text-gray-600">Start a new client proposal</p>
+                      <h3 className="font-semibold text-white">Create Proposal</h3>
+                      <p className="text-sm text-slate-400">Start a new client proposal</p>
                     </div>
                   </div>
                 </CardContent>
@@ -246,15 +192,15 @@ export default function DashboardPage() {
             </Link>
 
             <Link href="/cold-emails">
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer border-0 shadow-md">
+              <Card className="hover:shadow-xl hover:shadow-green-500/20 transition-all cursor-pointer bg-slate-900/90 backdrop-blur-sm border-slate-700 hover:border-green-500/50">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-lg flex items-center justify-center">
+                    <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-lg flex items-center justify-center shadow-lg shadow-green-500/30">
                       <MessageSquare className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">Cold Emails</h3>
-                      <p className="text-sm text-gray-600">Generate outreach emails</p>
+                      <h3 className="font-semibold text-white">Cold Emails</h3>
+                      <p className="text-sm text-slate-400">Generate outreach emails</p>
                     </div>
                   </div>
                 </CardContent>
@@ -262,15 +208,15 @@ export default function DashboardPage() {
             </Link>
 
             <Link href="/contract">
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer border-0 shadow-md">
+              <Card className="hover:shadow-xl hover:shadow-purple-500/20 transition-all cursor-pointer bg-slate-900/90 backdrop-blur-sm border-slate-700 hover:border-purple-500/50">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                    <div className="w-12 h-12 bg-gradient-to-r from-neon-orange to-electric-violet rounded-lg flex items-center justify-center shadow-lg shadow-neon-orange/30">
                       <Shield className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">Contracts</h3>
-                      <p className="text-sm text-gray-600">Create legal agreements</p>
+                      <h3 className="font-semibold text-white">Contracts</h3>
+                      <p className="text-sm text-slate-400">Create legal agreements</p>
                     </div>
                   </div>
                 </CardContent>
@@ -280,14 +226,14 @@ export default function DashboardPage() {
         </div>
 
         {/* Footer */}
-        <div className="text-center py-8 border-t border-gray-200">
-          <p className="text-gray-600 text-sm">
+        <div className="text-center py-8 border-t border-slate-700">
+          <p className="text-slate-400 text-sm">
             Need help? Check out our{' '}
-            <a href="#" className="text-yellow-600 hover:text-yellow-700 font-medium">
+            <a href="https://github.com/Loopxo/founder-box" target="_blank" className="text-electric-blue hover:text-electric-blue/80 font-medium">
               documentation
             </a>{' '}
             or join our{' '}
-            <a href="#" className="text-yellow-600 hover:text-yellow-700 font-medium">
+            <a href="https://github.com/Loopxo/founder-box" target="_blank" className="text-electric-blue hover:text-electric-blue/80 font-medium">
               community
             </a>
             .

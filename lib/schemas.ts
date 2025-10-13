@@ -41,7 +41,6 @@ export const clientFormSchema = z.object({
   // Business Details
   industry: z.enum(industries),
   services: z.array(z.string()).min(1, "Please select at least one service"),
-  budget: z.enum(budgetRanges),
   timeline: z.enum(timelineOptions),
   
   // Agency Configuration
@@ -57,7 +56,15 @@ export const clientFormSchema = z.object({
   
   // Theme Selection
   theme: z.string().optional(),
-  
+
+  // Custom Pricing (optional - will use template defaults if not provided)
+  customPricing: z.array(z.object({
+    name: z.string(),
+    price: z.string(),
+    popular: z.boolean().optional(),
+    features: z.array(z.string())
+  })).optional(),
+
   // Optional Fields
   specialRequirements: z.string().optional(),
   currentWebsite: z.string().url("Please enter a valid URL").optional().or(z.literal("")),

@@ -51,6 +51,10 @@ export async function generateProposalPDF(
   customTexts?: Record<string, string>,
   imageHeights?: Record<string, number>
 ): Promise<Buffer> {
+  // Debug: Log custom pricing
+  console.log('PDF Generation - Custom Pricing:', clientData.customPricing)
+  console.log('PDF Generation - Has Custom Pricing:', !!clientData.customPricing)
+
   const template = industryTemplates[clientData.industry]
   if (!template) {
     throw new Error(`Template not found for industry: ${clientData.industry}`)
@@ -151,8 +155,8 @@ function generateProposalHTML(
     'solutions': 80,
     'results': 80,
     'pricing': 80,
-    'why-choose': 80,
-    'next-steps': 80
+    'why-choose': 60,  // Reduced from 80 to 60 (20px less)
+    'next-steps': 60   // Reduced from 80 to 60 (20px less)
   }
 
   const _getTextForSection = (textId: string) => {
@@ -756,6 +760,10 @@ function generateProposalHTML(
             position: relative;
             overflow: hidden;
         }
+
+        .pricing-hero-image {
+            margin-bottom: 1rem;  /* Increased from 0.6rem to 1rem (additional 5px margin) */
+        }
         
         .hero-image::before {
             content: '';
@@ -940,11 +948,11 @@ function generateProposalHTML(
             <p class="page-subtitle">Choose the perfect package for ${clientData.businessName}</p>
         </div>
         
-        ${getImageForSection('pricing') ? `<div class="hero-image" style="background-image: url('${getImageForSection('pricing')}');"></div>` : ''}
+        ${getImageForSection('pricing') ? `<div class="hero-image pricing-hero-image" style="background-image: url('${getImageForSection('pricing')}');"></div>` : ''}
         
         <div class="section">
             <div class="pricing-grid">
-                ${template.pricing.map(pkg => `
+                ${(clientData.customPricing || template.pricing).map(pkg => `
                     <div class="pricing-card ${pkg.popular ? 'popular' : ''}">
                         ${pkg.popular ? '<div class="popular-badge">Most Popular</div>' : ''}
                         <h3>${pkg.name}</h3>

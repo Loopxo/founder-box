@@ -412,10 +412,10 @@ Looking forward to hearing from you!`
     <DashboardLayout>
       <div className="container mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-white mb-4">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Advanced Sales Management Suite
           </h1>
-          <p className="text-xl text-slate-400 max-w-3xl mx-auto mb-6">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
             Complete sales toolkit: CRM, pipeline management, templates, analytics, and automated SDR plan generation.
           </p>
           <div className="flex flex-wrap justify-center gap-2">
@@ -479,25 +479,25 @@ Looking forward to hearing from you!`
                   <div className="grid md:grid-cols-4 gap-4 mb-6">
                     <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg">
                       <div className="text-2xl font-bold text-blue-600">{leads.length}</div>
-                      <div className="text-sm text-slate-400">Total Leads</div>
+                      <div className="text-sm text-gray-600">Total Leads</div>
                     </div>
                     <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg">
                       <div className="text-2xl font-bold text-green-600">
                         {leads.filter(l => ['demo', 'proposal', 'negotiation'].includes(l.stage)).length}
                       </div>
-                      <div className="text-sm text-slate-400">Active Deals</div>
+                      <div className="text-sm text-gray-600">Active Deals</div>
                     </div>
                     <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-violet-50 rounded-lg">
                       <div className="text-2xl font-bold text-purple-600">
                         {formatCurrency(leads.reduce((sum, l) => sum + (l.stage !== 'closed-lost' ? l.value * (l.probability / 100) : 0), 0))}
                       </div>
-                      <div className="text-sm text-slate-400">Pipeline Value</div>
+                      <div className="text-sm text-gray-600">Pipeline Value</div>
                     </div>
                     <div className="text-center p-4 bg-gradient-to-br from-orange-50 to-red-50 rounded-lg">
                       <div className="text-2xl font-bold text-orange-600">
                         {Math.round(leads.filter(l => l.stage === 'closed-won').length / Math.max(leads.length, 1) * 100)}%
                       </div>
-                      <div className="text-sm text-slate-400">Win Rate</div>
+                      <div className="text-sm text-gray-600">Win Rate</div>
                     </div>
                   </div>
                   
@@ -514,11 +514,11 @@ Looking forward to hearing from you!`
                       {leads.map((lead) => {
                         const stageConfig = leadStages.find(s => s.value === lead.stage);
                         return (
-                          <div key={lead.id} className="border rounded-lg p-4 hover:bg-slate-900">
+                          <div key={lead.id} className="border rounded-lg p-4 hover:bg-gray-50">
                             <div className="flex justify-between items-start mb-2">
                               <div>
                                 <h4 className="font-semibold">{lead.name}</h4>
-                                <p className="text-sm text-slate-400">{lead.company}</p>
+                                <p className="text-sm text-gray-600">{lead.company}</p>
                               </div>
                               <div className="text-right">
                                 <div className="text-lg font-bold">{formatCurrency(lead.value)}</div>
@@ -527,17 +527,17 @@ Looking forward to hearing from you!`
                             </div>
                             <div className="grid md:grid-cols-3 gap-4 text-sm">
                               <div>
-                                <span className="text-slate-400">Source:</span> {lead.source}
+                                <span className="text-gray-500">Source:</span> {lead.source}
                               </div>
                               <div>
-                                <span className="text-slate-400">Score:</span> {lead.score}/100
+                                <span className="text-gray-500">Score:</span> {lead.score}/100
                               </div>
                               <div>
-                                <span className="text-slate-400">Probability:</span> {lead.probability}%
+                                <span className="text-gray-500">Probability:</span> {lead.probability}%
                               </div>
                             </div>
                             <div className="mt-2">
-                              <span className="text-slate-400">Next Action:</span> {lead.nextAction}
+                              <span className="text-gray-500">Next Action:</span> {lead.nextAction}
                             </div>
                             <div className="flex flex-wrap gap-1 mt-2">
                               {lead.tags.map(tag => (
@@ -573,7 +573,7 @@ Looking forward to hearing from you!`
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <h3 className="font-semibold text-lg">{template.name}</h3>
-                          <p className="text-sm text-slate-400">{template.useCase}</p>
+                          <p className="text-sm text-gray-600">{template.useCase}</p>
                         </div>
                         <div className="flex items-center gap-2">
                           {template.conversionRate && (
@@ -593,7 +593,7 @@ Looking forward to hearing from you!`
                         </div>
                       )}
                       
-                      <div className="bg-slate-900 p-3 rounded-lg text-sm whitespace-pre-line mb-3">
+                      <div className="bg-gray-50 p-3 rounded-lg text-sm whitespace-pre-line mb-3">
                         {template.content}
                       </div>
                       
@@ -671,19 +671,19 @@ Looking forward to hearing from you!`
                     <h3 className="font-semibold">Key Metrics</h3>
                     <div className="space-y-3">
                       <div className="flex justify-between">
-                        <span className="text-sm text-slate-400">Avg Deal Size</span>
+                        <span className="text-sm text-gray-600">Avg Deal Size</span>
                         <span className="font-medium">{formatCurrency(leads.reduce((sum, l) => sum + l.value, 0) / leads.length)}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-sm text-slate-400">Avg Lead Score</span>
+                        <span className="text-sm text-gray-600">Avg Lead Score</span>
                         <span className="font-medium">{Math.round(leads.reduce((sum, l) => sum + l.score, 0) / leads.length)}/100</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-sm text-slate-400">High Value Deals</span>
+                        <span className="text-sm text-gray-600">High Value Deals</span>
                         <span className="font-medium">{leads.filter(l => l.value > 50000).length}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-sm text-slate-400">Hot Leads (Score &gt;80)</span>
+                        <span className="text-sm text-gray-600">Hot Leads (Score &gt;80)</span>
                         <span className="font-medium">{leads.filter(l => l.score > 80).length}</span>
                       </div>
                     </div>
@@ -732,7 +732,7 @@ Looking forward to hearing from you!`
                       <div className="flex justify-between items-start mb-4">
                         <div>
                           <h3 className="text-xl font-semibold">{playbook.name}</h3>
-                          <p className="text-slate-400">{playbook.description}</p>
+                          <p className="text-gray-600">{playbook.description}</p>
                           <Badge variant="outline" className="mt-2">{playbook.targetPersona}</Badge>
                         </div>
                         <Button>
@@ -751,8 +751,8 @@ Looking forward to hearing from you!`
                                 <h4 className="font-medium">{stage.name}</h4>
                                 <Badge variant="secondary">{stage.avgDuration}</Badge>
                               </div>
-                              <p className="text-sm text-slate-400 mb-2">{stage.description}</p>
-                              <div className="text-xs text-slate-400">
+                              <p className="text-sm text-gray-600 mb-2">{stage.description}</p>
+                              <div className="text-xs text-gray-500">
                                 {stage.activities.length} activities • {stage.successCriteria.length} success criteria
                               </div>
                             </div>
@@ -898,7 +898,7 @@ Looking forward to hearing from you!`
                     <>
                       <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
                       <h3 className="text-xl font-semibold mb-2">Generating Your Custom Plan</h3>
-                      <p className="text-slate-400">
+                      <p className="text-gray-600">
                         Analyzing your business information and creating a tailored SDR strategy...
                       </p>
                     </>
@@ -906,7 +906,7 @@ Looking forward to hearing from you!`
                     <>
                       <Lightbulb className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
                       <h3 className="text-xl font-semibold mb-2">Ready to Generate Your Plan</h3>
-                      <p className="text-slate-400 mb-6 max-w-2xl mx-auto">
+                      <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
                         Based on your inputs, we&apos;ll create a comprehensive Self-Service SDR Plan customized for 
                         {businessInfo.companyName} in the {businessInfo.industry} industry.
                       </p>
@@ -940,7 +940,7 @@ Looking forward to hearing from you!`
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-gray-600">
                       Customized approach to find your ideal customers in the {businessInfo.industry} space.
                     </p>
                   </CardContent>
@@ -953,7 +953,7 @@ Looking forward to hearing from you!`
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-gray-600">
                       Personalized outreach messages that resonate with your target audience.
                     </p>
                   </CardContent>
@@ -966,7 +966,7 @@ Looking forward to hearing from you!`
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-gray-600">
                       Step-by-step timeline to execute your SDR strategy effectively.
                     </p>
                   </CardContent>
@@ -1003,7 +1003,7 @@ Looking forward to hearing from you!`
                   {/* Executive Summary */}
                   <div>
                     <h2 className="text-2xl font-bold mb-4 text-blue-800">Executive Summary</h2>
-                    <p className="text-slate-300 bg-blue-50 p-4 rounded-lg">
+                    <p className="text-gray-700 bg-blue-50 p-4 rounded-lg">
                       {generatedPlan?.plan?.executiveSummary}
                     </p>
                   </div>
@@ -1017,7 +1017,7 @@ Looking forward to hearing from you!`
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-slate-300 mb-4">
+                      <p className="text-gray-700 mb-4">
                         {generatedPlan?.plan?.prospecting?.description}
                       </p>
                       <div className="space-y-3">
@@ -1043,7 +1043,7 @@ Looking forward to hearing from you!`
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-slate-300 mb-4">
+                      <p className="text-gray-700 mb-4">
                         {generatedPlan?.plan?.messaging?.description}
                       </p>
                       
@@ -1054,10 +1054,10 @@ Looking forward to hearing from you!`
                             {template.subject && (
                               <div className="mb-2">
                                 <span className="font-medium">Subject: </span>
-                                <span className="text-slate-300">{template.subject}</span>
+                                <span className="text-gray-700">{template.subject}</span>
                               </div>
                             )}
-                            <div className="bg-slate-900 p-3 rounded text-sm whitespace-pre-line">
+                            <div className="bg-gray-50 p-3 rounded text-sm whitespace-pre-line">
                               {template.body}
                             </div>
                           </div>
@@ -1075,7 +1075,7 @@ Looking forward to hearing from you!`
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-slate-300 mb-4">
+                      <p className="text-gray-700 mb-4">
                         {generatedPlan?.plan?.tools?.description}
                       </p>
                       
@@ -1086,7 +1086,7 @@ Looking forward to hearing from you!`
                               <h4 className="font-semibold">{tool.name}</h4>
                               <Badge variant="secondary">{tool.cost}</Badge>
                             </div>
-                            <p className="text-sm text-slate-400">{tool.purpose}</p>
+                            <p className="text-sm text-gray-600">{tool.purpose}</p>
                           </div>
                         ))}
                       </div>
@@ -1136,7 +1136,7 @@ Looking forward to hearing from you!`
                         {generatedPlan?.plan?.metrics?.kpis?.map((kpi: Record<string, string>, index: number) => (
                           <div key={index} className="text-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg">
                             <div className="text-lg font-bold text-blue-600">{kpi.target}</div>
-                            <div className="text-sm text-slate-400">{kpi.name}</div>
+                            <div className="text-sm text-gray-600">{kpi.name}</div>
                           </div>
                         ))}
                       </div>
@@ -1157,16 +1157,16 @@ Looking forward to hearing from you!`
                         Follow the 30-day timeline to implement your strategy and start generating qualified leads.
                       </p>
                       <div className="flex flex-wrap gap-2">
-                        <Badge variant="secondary" className="bg-slate-800 text-blue-600">
+                        <Badge variant="secondary" className="bg-white text-blue-600">
                           Start Week 1
                         </Badge>
-                        <Badge variant="secondary" className="bg-slate-800 text-blue-600">
+                        <Badge variant="secondary" className="bg-white text-blue-600">
                           Set up tools
                         </Badge>
-                        <Badge variant="secondary" className="bg-slate-800 text-blue-600">
+                        <Badge variant="secondary" className="bg-white text-blue-600">
                           Build prospect list
                         </Badge>
-                        <Badge variant="secondary" className="bg-slate-800 text-blue-600">
+                        <Badge variant="secondary" className="bg-white text-blue-600">
                           Launch outreach
                         </Badge>
                       </div>

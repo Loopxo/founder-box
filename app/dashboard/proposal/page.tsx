@@ -1,30 +1,18 @@
 "use client"
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { useState } from 'react'
 import PitchForm from '@/components/PitchForm'
 import DashboardLayout from '@/components/DashboardLayout'
+import { ToastProvider, useToast } from '@/components/ui/toast'
 import type { ClientFormData } from '@/lib/schemas'
 
-export default function ProposalPage() {
-  const [loading, setLoading] = useState(true)
-  const router = useRouter()
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        // Demo mode - allow access for testing
-        setLoading(false)
-        return
-      }
-      setLoading(false)
-    }
-    checkAuth()
-  }, [router])
+function ProposalPageContent() {
+  const { addToast } = useToast()
+  const [isGenerating, setIsGenerating] = useState(false)
 
   const handleSubmit = async (data: ClientFormData) => {
+    setIsGenerating(true)
+
     try {
       const response = await fetch('/api/generate-pdf', {
         method: 'POST',
@@ -39,39 +27,55 @@ export default function ProposalPage() {
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.href = url
-        a.download = `${data.agencyConfig?.name || 'Proposal'}_${data.businessName}_${new Date().toISOString().split('T')[0]}.pdf`
+        const fileName = `${data.agencyConfig?.name || data.businessName || 'Proposal'}_${data.businessName}_${new Date().toISOString().split('T')[0]}.pdf`
+        a.download = fileName
         document.body.appendChild(a)
         a.click()
         window.URL.revokeObjectURL(url)
         document.body.removeChild(a)
+
+        addToast({
+          type: 'success',
+          title: 'Proposal Generated Successfully!',
+          message: `Your proposal "${fileName}" has been downloaded.`,
+          duration: 5000,
+        })
       } else {
+        const errorData = await response.json().catch(() => null)
+        throw new Error(errorData?.message || 'Failed to generate PDF')
       }
     } catch (error) {
+      console.error('PDF generation error:', error)
+      addToast({
+        type: 'error',
+        title: 'Failed to Generate Proposal',
+        message: error instanceof Error ? error.message : 'An unexpected error occurred. Please try again.',
+        duration: 7000,
+      })
+    } finally {
+      setIsGenerating(false)
     }
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    )
   }
 
   return (
     <DashboardLayout>
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Proposal Generator</h1>
-          <p className="text-gray-600">
+          <h1 className="text-3xl font-bold text-white mb-2">Proposal Launcher</h1>
+          <p className="text-slate-300">
             Create stunning, professional proposals with customizable themes and branding
           </p>
         </div>
-        <PitchForm onSubmit={handleSubmit} />
+        <PitchForm onSubmit={handleSubmit} isGenerating={isGenerating} />
       </div>
     </DashboardLayout>
+  )
+}
+
+export default function ProposalPage() {
+  return (
+    <ToastProvider>
+      <ProposalPageContent />
+    </ToastProvider>
   )
 }

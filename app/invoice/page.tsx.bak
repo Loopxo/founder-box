@@ -335,10 +335,10 @@ ${invoice.notes || ''}
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-white mb-4">
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">
           Professional Invoice Generator
         </h1>
-        <p className="text-xl text-slate-400 max-w-3xl mx-auto mb-6">
+        <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
           Create professional invoices with automated tax calculations, payment terms, 
           and secure branding for your business.
         </p>
@@ -645,7 +645,7 @@ ${invoice.notes || ''}
                           <Input
                             value={formatCurrency(item.amount, invoice.currency || 'USD')}
                             readOnly
-                            className="bg-slate-900"
+                            className="bg-gray-50"
                           />
                         </div>
                         <div className="col-span-1">
@@ -678,16 +678,16 @@ ${invoice.notes || ''}
                 <CardContent>
                   {!companyLogo ? (
                     <div 
-                      className="border-2 border-dashed border-slate-600 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400"
+                      className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400"
                       onClick={() => fileInputRef.current?.click()}
                     >
                       <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                      <p className="text-sm text-slate-400">Click to upload logo</p>
-                      <p className="text-xs text-slate-400">PNG, JPG up to 2MB</p>
+                      <p className="text-sm text-gray-600">Click to upload logo</p>
+                      <p className="text-xs text-gray-500">PNG, JPG up to 2MB</p>
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      <div className="border rounded-lg p-4 bg-slate-900">
+                      <div className="border rounded-lg p-4 bg-gray-50">
                         <img 
                           src={companyLogo} 
                           alt="Company Logo" 
@@ -768,7 +768,7 @@ ${invoice.notes || ''}
                               ))}
                             </SelectContent>
                           </Select>
-                          <div className="text-sm text-slate-400">
+                          <div className="text-sm text-gray-600">
                             Amount: {formatCurrency(tax.amount, invoice.currency || 'USD')}
                           </div>
                         </div>
@@ -829,7 +829,7 @@ ${invoice.notes || ''}
                     <div 
                       key={theme.id}
                       className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                        selectedTheme === theme.id ? 'border-blue-500 bg-blue-50' : 'hover:bg-slate-900'
+                        selectedTheme === theme.id ? 'border-blue-500 bg-blue-50' : 'hover:bg-gray-50'
                       }`}
                       onClick={() => handleThemeChange(theme.id)}
                     >
@@ -840,7 +840,7 @@ ${invoice.notes || ''}
                         />
                         <div>
                           <div className="font-medium">{theme.name}</div>
-                          <div className="text-sm text-slate-400">{theme.description}</div>
+                          <div className="text-sm text-gray-600">{theme.description}</div>
                         </div>
                       </div>
                     </div>
@@ -874,7 +874,7 @@ ${invoice.notes || ''}
             </CardHeader>
             <CardContent>
               <div 
-                className="bg-slate-800 border rounded-lg p-8 min-h-[800px] font-mono text-sm overflow-auto"
+                className="bg-white border rounded-lg p-8 min-h-[800px] font-mono text-sm overflow-auto"
                 style={{ 
                   color: selectedThemeData?.primaryColor,
                   fontFamily: 'system-ui, -apple-system, sans-serif'

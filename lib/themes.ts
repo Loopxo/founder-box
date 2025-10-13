@@ -160,7 +160,7 @@ export const defaultAgencyConfig: AgencyConfig = {
   name: 'LoopXO',
   email: 'hello@loopxo.com',
   phone: '+91 98765 43210',
-  address: 'Mumbai, Maharashtra, India',
+  address: '6th Floor, Autumn Grove, Lokhandwala, Kandivali, Mumbai, Maharashtra, India',
   website: 'https://loopxo.com',
   tagline: 'A Digital Agency'
 }

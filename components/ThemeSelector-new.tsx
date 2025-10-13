@@ -2,6 +2,7 @@
 
 import { themes } from '@/lib/themes'
 import { useState } from 'react'
+import { Eye, Check } from 'lucide-react'
 
 interface ThemeSelectorProps {
   selectedTheme: string
@@ -14,14 +15,14 @@ export default function ThemeSelector({ selectedTheme, onThemeChange }: ThemeSel
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-white mb-2">
+        <h3 className="text-lg font-semibold text-slate-900 mb-2">
           Choose PDF Theme
-        </label>
-        <p className="text-sm text-slate-400 mb-4">
+        </h3>
+        <p className="text-sm text-slate-600 mb-4">
           Select a theme that matches your brand and target audience
         </p>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {themes.map((theme) => (
           <div
@@ -29,59 +30,69 @@ export default function ThemeSelector({ selectedTheme, onThemeChange }: ThemeSel
             className={`
               relative p-4 rounded-lg border-2 cursor-pointer transition-all duration-200
               ${selectedTheme === theme.id
-                ? 'border-electric-blue bg-electric-blue/10 shadow-lg shadow-electric-blue/20'
-                : 'border-slate-600 bg-slate-800/50 hover:border-slate-500'
+                ? 'border-[#00D4FF] bg-[#00D4FF]/5 shadow-lg shadow-[#00D4FF]/20'
+                : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-md'
               }
             `}
             onClick={() => onThemeChange(theme.id)}
+            role="button"
+            tabIndex={0}
+            aria-label={`Select ${theme.name} theme`}
+            aria-pressed={selectedTheme === theme.id}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                onThemeChange(theme.id)
+              }
+            }}
           >
             {/* Theme Preview */}
             <div className="mb-3">
-              <div 
-                className="w-full h-16 rounded-md mb-2"
-                style={{ 
+              <div
+                className="w-full h-16 rounded-md mb-2 border"
+                style={{
                   background: (theme.colors as any).gradient || theme.colors.background,
-                  border: `2px solid ${theme.colors.border}`
+                  borderColor: theme.colors.border
                 }}
               >
                 <div className="flex items-center justify-center h-full">
-                  <div 
-                    className="w-8 h-8 rounded-full mr-2"
+                  <div
+                    className="w-8 h-8 rounded-full mr-2 border-2 border-white/30"
                     style={{ backgroundColor: theme.colors.primary }}
                   />
-                  <div 
+                  <div
                     className="w-12 h-2 rounded"
                     style={{ backgroundColor: theme.colors.secondary }}
                   />
                 </div>
               </div>
             </div>
-            
+
             {/* Theme Info */}
             <div>
-              <h3 className="font-semibold text-white mb-1">{theme.name}</h3>
-              <p className="text-xs text-gray-400 mb-2">{theme.description}</p>
-              
+              <h4 className="font-semibold text-slate-900 mb-1">{theme.name}</h4>
+              <p className="text-xs text-slate-600 mb-2">{theme.description}</p>
+
               {/* Color Palette */}
-              <div className="flex space-x-1">
-                <div 
-                  className="w-4 h-4 rounded-full border border-gray-600"
+              <div className="flex space-x-1" role="img" aria-label="Theme color palette">
+                <div
+                  className="w-4 h-4 rounded-full border border-slate-300"
                   style={{ backgroundColor: theme.colors.primary }}
-                  title="Primary"
+                  title="Primary color"
                 />
-                <div 
-                  className="w-4 h-4 rounded-full border border-gray-600"
+                <div
+                  className="w-4 h-4 rounded-full border border-slate-300"
                   style={{ backgroundColor: theme.colors.secondary }}
-                  title="Secondary"
+                  title="Secondary color"
                 />
-                <div 
-                  className="w-4 h-4 rounded-full border border-gray-600"
+                <div
+                  className="w-4 h-4 rounded-full border border-slate-300"
                   style={{ backgroundColor: theme.colors.accent }}
-                  title="Accent"
+                  title="Accent color"
                 />
               </div>
             </div>
-            
+
             {/* Preview Button */}
             <button
               type="button"
@@ -89,75 +100,75 @@ export default function ThemeSelector({ selectedTheme, onThemeChange }: ThemeSel
                 e.stopPropagation()
                 setPreviewTheme(theme.id)
               }}
-              className="absolute top-2 right-2 w-6 h-6 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-colors"
+              className="absolute top-2 right-2 w-7 h-7 bg-slate-100 hover:bg-slate-200 rounded-full flex items-center justify-center transition-colors border border-slate-300"
               title="Preview theme"
+              aria-label={`Preview ${theme.name} theme`}
             >
-              <svg className="w-3 h-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
+              <Eye className="w-3.5 h-3.5 text-slate-600" />
             </button>
 
             {/* Selection Indicator */}
             {selectedTheme === theme.id && (
               <div className="absolute top-2 left-2">
-                <div className="w-5 h-5 bg-electric-blue rounded-full flex items-center justify-center shadow-lg shadow-electric-blue/50">
-                  <svg className="w-3 h-3 text-slate-900" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
+                <div className="w-6 h-6 bg-[#00D4FF] rounded-full flex items-center justify-center shadow-lg">
+                  <Check className="w-4 h-4 text-white" />
                 </div>
               </div>
             )}
           </div>
         ))}
       </div>
-      
+
       {/* Theme Preview Modal */}
       {previewTheme && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setPreviewTheme(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="theme-preview-title"
         >
-          <div 
-            className="bg-gray-900 border border-yellow-500/30 rounded-lg p-6 max-w-md w-full mx-4"
+          <div
+            className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="text-center">
+            <div>
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold text-electric-blue">
+                <h3 id="theme-preview-title" className="text-lg font-semibold text-slate-900">
                   {themes.find(t => t.id === previewTheme)?.name}
                 </h3>
                 <button
                   onClick={() => setPreviewTheme(null)}
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-slate-400 hover:text-slate-600 transition-colors"
+                  aria-label="Close preview"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
-              
-              <p className="text-gray-300 mb-4 text-sm">
+
+              <p className="text-slate-600 mb-4 text-sm">
                 {themes.find(t => t.id === previewTheme)?.description}
               </p>
-              
+
               {/* Sample Preview */}
-              <div 
+              <div
                 className="w-full h-32 rounded-lg mb-4 p-4 border"
-                style={{ 
+                style={{
                   background: themes.find(t => t.id === previewTheme)?.colors.background,
                   color: themes.find(t => t.id === previewTheme)?.colors.text,
                   borderColor: themes.find(t => t.id === previewTheme)?.colors.border
                 }}
               >
                 <div className="text-center">
-                  <h4 
+                  <h4
                     className="text-lg font-bold mb-2"
                     style={{ color: themes.find(t => t.id === previewTheme)?.colors.primary }}
                   >
                     Sample Heading
                   </h4>
-                  <p 
+                  <p
                     className="text-sm"
                     style={{ color: themes.find(t => t.id === previewTheme)?.colors.textSecondary }}
                   >
@@ -165,20 +176,20 @@ export default function ThemeSelector({ selectedTheme, onThemeChange }: ThemeSel
                   </p>
                 </div>
               </div>
-              
-              <div className="flex space-x-2">
+
+              <div className="flex gap-3">
                 <button
                   onClick={() => {
                     onThemeChange(previewTheme)
                     setPreviewTheme(null)
                   }}
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-electric-blue to-electric-violet text-white rounded shadow-lg shadow-electric-blue/30 hover:from-electric-blue/80 hover:to-electric-violet/80 transition-all"
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-[#00D4FF] to-[#8B5CF6] text-white rounded-lg hover:from-[#00D4FF]/90 hover:to-[#8B5CF6]/90 font-semibold transition-all duration-200"
                 >
                   Use This Theme
                 </button>
                 <button
                   onClick={() => setPreviewTheme(null)}
-                  className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition-colors"
+                  className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 font-semibold transition-colors"
                 >
                   Cancel
                 </button>

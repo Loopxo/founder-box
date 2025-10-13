@@ -91,7 +91,7 @@ function CompetitiveAnalysisContent() {
       case 'Medium': return 'text-yellow-600 bg-yellow-100';
       case 'High': return 'text-orange-600 bg-orange-100';
       case 'Critical': return 'text-red-600 bg-red-100';
-      default: return 'text-slate-400 bg-slate-800';
+      default: return 'text-gray-600 bg-gray-100';
     }
   };
 
@@ -100,26 +100,26 @@ function CompetitiveAnalysisContent() {
       case 'Easy': return 'text-green-600 bg-green-100';
       case 'Medium': return 'text-yellow-600 bg-yellow-100';
       case 'Hard': return 'text-red-600 bg-red-100';
-      default: return 'text-slate-400 bg-slate-800';
+      default: return 'text-gray-600 bg-gray-100';
     }
   };
 
   const getImpactColor = (impact: string) => {
     switch (impact) {
-      case 'Low': return 'text-slate-400 bg-slate-800';
+      case 'Low': return 'text-gray-600 bg-gray-100';
       case 'Medium': return 'text-blue-600 bg-blue-100';
       case 'High': return 'text-purple-600 bg-purple-100';
-      default: return 'text-slate-400 bg-slate-800';
+      default: return 'text-gray-600 bg-gray-100';
     }
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-white mb-4">
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">
           Advanced Competitive Intelligence
         </h1>
-        <p className="text-xl text-slate-400 max-w-3xl mx-auto mb-6">
+        <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
           Systematic competitor analysis with actionable insights, market positioning, and strategic recommendations.
         </p>
         <div className="flex flex-wrap justify-center gap-2">
@@ -281,10 +281,10 @@ function CompetitiveAnalysisContent() {
                         </a>
                       </div>
                       <div className="grid md:grid-cols-4 gap-2 text-sm">
-                        <div><span className="text-slate-400">Industry:</span> {industries.find(i => i.value === competitor.industry)?.label}</div>
-                        <div><span className="text-slate-400">Stage:</span> {fundingStages.find(s => s.value === competitor.fundingStage)?.label}</div>
-                        <div><span className="text-slate-400">Size:</span> {employeeCounts.find(c => c.value === competitor.employeeCount)?.label}</div>
-                        <div><span className="text-slate-400">Model:</span> {businessModels.find(m => m.value === competitor.businessModel)?.label}</div>
+                        <div><span className="text-gray-500">Industry:</span> {industries.find(i => i.value === competitor.industry)?.label}</div>
+                        <div><span className="text-gray-500">Stage:</span> {fundingStages.find(s => s.value === competitor.fundingStage)?.label}</div>
+                        <div><span className="text-gray-500">Size:</span> {employeeCounts.find(c => c.value === competitor.employeeCount)?.label}</div>
+                        <div><span className="text-gray-500">Model:</span> {businessModels.find(m => m.value === competitor.businessModel)?.label}</div>
                       </div>
                     </div>
                   ))}
@@ -318,24 +318,24 @@ function CompetitiveAnalysisContent() {
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
                         <div className="mb-2">
-                          <span className="text-sm text-slate-400">Market Share:</span>
+                          <span className="text-sm text-gray-500">Market Share:</span>
                           <div className="flex items-center gap-2 mt-1">
                             <Progress value={position.marketShare} className="h-2" />
                             <span className="text-sm font-medium">{position.marketShare}%</span>
                           </div>
                         </div>
                         <div className="mb-2">
-                          <span className="text-sm text-slate-400">Pricing Tier:</span>
+                          <span className="text-sm text-gray-500">Pricing Tier:</span>
                           <Badge variant="outline" className="ml-2">{position.pricingTier}</Badge>
                         </div>
                       </div>
                       <div>
                         <div className="mb-2">
-                          <span className="text-sm text-slate-400">Target Segment:</span>
+                          <span className="text-sm text-gray-500">Target Segment:</span>
                           <p className="text-sm">{position.targetSegment}</p>
                         </div>
                         <div>
-                          <span className="text-sm text-slate-400">Competitive Advantage:</span>
+                          <span className="text-sm text-gray-500">Competitive Advantage:</span>
                           <p className="text-sm">{position.competitiveAdvantage}</p>
                         </div>
                       </div>
@@ -365,14 +365,14 @@ function CompetitiveAnalysisContent() {
                     <AccordionTrigger className="text-lg font-semibold">{category.category}</AccordionTrigger>
                     <AccordionContent className="space-y-4">
                       {category.tools.map((tool, j) => (
-                        <div key={j} className="border rounded-lg p-4 bg-slate-900">
+                        <div key={j} className="border rounded-lg p-4 bg-gray-50">
                           <div className="flex justify-between items-start mb-2">
                             <h4 className="font-semibold">{tool.name}</h4>
                             <Badge variant={tool.freeVersion ? "secondary" : "destructive"}>
                               {tool.freeVersion ? "Free Available" : "Paid Only"}
                             </Badge>
                           </div>
-                          <p className="text-sm text-slate-400 mb-3">{tool.description}</p>
+                          <p className="text-sm text-gray-600 mb-3">{tool.description}</p>
                           <div>
                             <h5 className="text-sm font-medium mb-2">Key Data Points:</h5>
                             <div className="flex flex-wrap gap-2">
@@ -416,10 +416,10 @@ function CompetitiveAnalysisContent() {
                       </Badge>
                     </div>
                   </div>
-                  <p className="text-slate-300 mb-4">{strategy.description}</p>
+                  <p className="text-gray-700 mb-4">{strategy.description}</p>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <h5 className="font-medium text-sm text-slate-400 mb-2">Implementation Steps:</h5>
+                      <h5 className="font-medium text-sm text-gray-600 mb-2">Implementation Steps:</h5>
                       <ol className="list-decimal list-inside space-y-1 text-sm">
                         {strategy.implementation.map((step, j) => (
                           <li key={j}>{step}</li>
@@ -427,7 +427,7 @@ function CompetitiveAnalysisContent() {
                       </ol>
                     </div>
                     <div>
-                      <h5 className="font-medium text-sm text-slate-400 mb-2">Timeline:</h5>
+                      <h5 className="font-medium text-sm text-gray-600 mb-2">Timeline:</h5>
                       <p className="text-sm mb-3">{strategy.timeframe}</p>
                       <Badge variant="outline">{strategy.difficulty} to implement</Badge>
                     </div>
@@ -454,7 +454,7 @@ function CompetitiveAnalysisContent() {
                 <div key={competitor.id} className="border rounded-lg p-4">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xl font-semibold text-blue-600">{competitor.name}</h3>
-                    <a href={`https://${competitor.website}`} target="_blank" rel="noopener noreferrer" className="text-sm text-slate-400 hover:text-blue-600">
+                    <a href={`https://${competitor.website}`} target="_blank" rel="noopener noreferrer" className="text-sm text-gray-500 hover:text-blue-600">
                       {competitor.website}
                     </a>
                   </div>
@@ -462,17 +462,17 @@ function CompetitiveAnalysisContent() {
                     <div>
                       <Label>SEO Score</Label>
                       <Progress value={competitor.seoScore} className="h-3 mt-1" />
-                      <span className="text-xs text-slate-400">{competitor.seoScore}/100</span>
+                      <span className="text-xs text-gray-500">{competitor.seoScore}/100</span>
                     </div>
                     <div>
                       <Label>Content Score</Label>
                       <Progress value={competitor.contentScore} className="h-3 mt-1" />
-                      <span className="text-xs text-slate-400">{competitor.contentScore}/100</span>
+                      <span className="text-xs text-gray-500">{competitor.contentScore}/100</span>
                     </div>
                     <div>
                       <Label>Social Media Score</Label>
                       <Progress value={competitor.socialScore} className="h-3 mt-1" />
-                      <span className="text-xs text-slate-400">{competitor.socialScore}/100</span>
+                      <span className="text-xs text-gray-500">{competitor.socialScore}/100</span>
                     </div>
                   </div>
                   <div className="grid md:grid-cols-2 gap-6 mt-4">
@@ -509,7 +509,7 @@ function CompetitiveAnalysisContent() {
             <CardContent>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left">
-                  <thead className="bg-slate-900">
+                  <thead className="bg-gray-50">
                     <tr>
                       <th className="p-3 font-medium">Feature</th>
                       <th className="p-3 font-medium text-center">Your Business</th>
@@ -594,7 +594,7 @@ function CompetitiveAnalysisContent() {
                 {analysisQuestions.map((item, i) => (
                   <AccordionItem key={i} value={`item-${i}`}>
                     <AccordionTrigger>{item.question}</AccordionTrigger>
-                    <AccordionContent className="text-sm text-slate-400">
+                    <AccordionContent className="text-sm text-gray-600">
                       {item.description}
                     </AccordionContent>
                   </AccordionItem>

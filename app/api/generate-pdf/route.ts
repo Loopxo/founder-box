@@ -1,22 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateProposalPDF, generateFileName, generateContractPDF, generateInvoicePDF } from '@/lib/pdf-templates'
-import { pdfGenerationLimiter, getClientIP, createRateLimitResponse } from "@/lib/rate-limit"
 import { clientFormSchema } from '@/lib/schemas'
 // import { prisma } from '@/lib/prisma' // Temporarily disabled
 
 export async function POST(request: NextRequest) {
   try {
-    // Apply rate limiting
-    const clientIP = getClientIP(request)
-    const rateLimitResult = pdfGenerationLimiter.isAllowed(clientIP)
-    
-    if (!rateLimitResult.allowed) {
-      return createRateLimitResponse(
-        rateLimitResult.remaining,
-        rateLimitResult.resetTime,
-        "Too many PDF generation requests. Please wait before trying again."
-      )
-    }
     const requestData = await request.json()
     
     // Check if this is an invoice generation request

@@ -14,7 +14,9 @@ import { ChevronDown, Check } from "lucide-react"
 import ThemeSelector from "./ThemeSelector"
 import AgencyConfigForm from "./AgencyConfig"
 import PDFPreview from "./PDFPreview"
+import PricingEditor, { PricingPackage } from "./PricingEditor"
 import { defaultAgencyConfig, getTheme } from "@/lib/themes"
+import { DEFAULT_CURRENCY, CurrencyCode } from "@/lib/design-system"
 
 interface PitchFormProps {
   onSubmit: (data: ClientFormData) => void
@@ -27,6 +29,8 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
   const [selectedTheme, setSelectedTheme] = useState<string>("dark-luxe")
   const [agencyConfig, setAgencyConfig] = useState(defaultAgencyConfig)
   const [showPreview, setShowPreview] = useState(false)
+  const [customPricing, setCustomPricing] = useState<PricingPackage[] | null>(null)
+  const [currency, setCurrency] = useState<CurrencyCode>(DEFAULT_CURRENCY)
 
   const {
     register,
@@ -41,6 +45,16 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
     }
   })
 
+  // Initialize pricing from template when industry changes
+  React.useEffect(() => {
+    if (selectedIndustry) {
+      const template = industryTemplates[selectedIndustry as keyof typeof industryTemplates]
+      if (template && template.pricing && !customPricing) {
+        setCustomPricing(template.pricing as PricingPackage[])
+      }
+    }
+  }, [selectedIndustry, customPricing])
+
   // Update parent component with form changes
   React.useEffect(() => {
     if (onFormChange) {
@@ -48,18 +62,20 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
         onFormChange({
           ...value as Partial<ClientFormData>,
           theme: selectedTheme,
-          agencyConfig: agencyConfig
+          agencyConfig: agencyConfig,
+          customPricing: customPricing || undefined
         })
       })
       return () => subscription.unsubscribe()
     }
-  }, [watch, onFormChange, selectedTheme, agencyConfig])
+  }, [watch, onFormChange, selectedTheme, agencyConfig, customPricing])
 
   const handleIndustryChange = (industry: string) => {
     setSelectedIndustry(industry)
     setValue("industry", industry as keyof typeof servicesByIndustry)
     setSelectedServices([])
     setValue("services", [])
+    setCustomPricing(null) // Reset pricing when industry changes
   }
 
   const handleServiceToggle = (service: string) => {
@@ -76,96 +92,100 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
   return (
     <div className="w-full">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-yellow-300 mb-2">
+        <h2 className="text-2xl font-bold bg-gradient-to-r from-electric-blue via-neon-orange to-electric-violet bg-clip-text text-transparent mb-2">
           Proposal Details
         </h2>
-        <p className="text-gray-300">Fill out the information below to generate your professional 8-section proposal</p>
-        
+        <p className="text-slate-300">Fill out the information below to generate your professional 8-section proposal</p>
+
       </div>
 
       <form onSubmit={handleSubmit((data) => {
-        onSubmit({
+        console.log('Form Submit - Custom Pricing:', customPricing)
+        const submissionData = {
           ...data,
           theme: selectedTheme,
-          agencyConfig: agencyConfig
-        })
-      })} className="space-y-6">
+          agencyConfig: agencyConfig,
+          customPricing: customPricing || undefined
+        }
+        console.log('Form Submit - Full Data:', submissionData)
+        onSubmit(submissionData)
+      })} className="space-y-6 bg-slate-900/90 backdrop-blur-sm border border-slate-700 rounded-xl p-8 shadow-2xl">
         {/* Basic Information */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label.Root className="text-sm font-medium text-gray-300">
+            <Label.Root className="text-sm font-medium text-white">
               Client Name *
             </Label.Root>
             <Input
               {...register("clientName")}
               placeholder="Vijeet Shah"
-              className="mt-1 border-gray-300 focus:border-red-500 focus:ring-red-500"
+              className="mt-1 bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 focus:border-electric-blue focus:ring-electric-blue"
             />
             {errors.clientName && (
-              <p className="text-red-500 text-sm mt-1">{errors.clientName.message}</p>
+              <p className="text-red-400 text-sm mt-1">{errors.clientName.message}</p>
             )}
           </div>
 
           <div>
-            <Label.Root className="text-sm font-medium text-gray-700">
+            <Label.Root className="text-sm font-medium text-white">
               Business Name *
             </Label.Root>
             <Input
               {...register("businessName")}
               placeholder="Loopxo"
-              className="mt-1"
+              className="mt-1 bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 focus:border-electric-blue focus:ring-electric-blue"
             />
             {errors.businessName && (
-              <p className="text-red-500 text-sm mt-1">{errors.businessName.message}</p>
+              <p className="text-red-400 text-sm mt-1">{errors.businessName.message}</p>
             )}
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label.Root className="text-sm font-medium text-gray-700">
+            <Label.Root className="text-sm font-medium text-white">
               Email Address *
             </Label.Root>
             <Input
               {...register("clientEmail")}
               type="email"
               placeholder="vijeet@vijeetshah.com"
-              className="mt-1"
+              className="mt-1 bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 focus:border-electric-blue focus:ring-electric-blue"
             />
             {errors.clientEmail && (
-              <p className="text-red-500 text-sm mt-1">{errors.clientEmail.message}</p>
+              <p className="text-red-400 text-sm mt-1">{errors.clientEmail.message}</p>
             )}
           </div>
 
           <div>
-            <Label.Root className="text-sm font-medium text-gray-700">
+            <Label.Root className="text-sm font-medium text-white">
               Phone Number *
             </Label.Root>
             <Input
               {...register("clientPhone")}
               placeholder="+91 9892912999"
-              className="mt-1"
+              className="mt-1 bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 focus:border-electric-blue focus:ring-electric-blue"
             />
             {errors.clientPhone && (
-              <p className="text-red-500 text-sm mt-1">{errors.clientPhone.message}</p>
+              <p className="text-red-400 text-sm mt-1">{errors.clientPhone.message}</p>
             )}
           </div>
         </div>
 
         {/* Industry Selection */}
         <div>
-          <Label.Root className="text-sm font-medium text-gray-700">
+          <Label.Root className="text-sm font-medium text-white">
             Industry *
           </Label.Root>
           <Select.Root onValueChange={handleIndustryChange}>
-            <Select.Trigger className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1">
+            <Select.Trigger className="flex h-10 w-full items-center justify-between rounded-md border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-electric-blue disabled:cursor-not-allowed disabled:opacity-50 mt-1">
               <Select.Value placeholder="Select your industry" />
               <Select.Icon asChild>
                 <ChevronDown className="h-4 w-4 opacity-50" />
               </Select.Icon>
             </Select.Trigger>
             <Select.Portal>
-              <Select.Content className="relative z-50 max-h-96 min-w-[12rem] overflow-hidden rounded-md border bg-white text-gray-900 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
+              <Select.Content className="relative z-50 max-h-96 min-w-[12rem] overflow-hidden rounded-md border border-slate-600 bg-slate-900 text-white shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
                 <Select.Viewport className="p-2 h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]">
                   {Object.keys(servicesByIndustry).map((industry) => {
                     const industryLabels = {
@@ -189,11 +209,11 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
                     <Select.Item
                       key={industry}
                       value={industry}
-                      className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-blue-50 focus:bg-blue-50 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                      className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-slate-700 focus:bg-slate-700 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
                     >
                       <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
                         <Select.ItemIndicator>
-                          <Check className="h-4 w-4 text-blue-600" />
+                          <Check className="h-4 w-4 text-electric-blue" />
                         </Select.ItemIndicator>
                       </span>
                       <Select.ItemText className="font-medium">
@@ -206,137 +226,81 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
             </Select.Portal>
           </Select.Root>
           {errors.industry && (
-            <p className="text-red-500 text-sm mt-1">{errors.industry.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.industry.message}</p>
           )}
         </div>
 
         {/* Services Selection */}
         {selectedIndustry && (
           <div>
-            <Label.Root className="text-sm font-medium text-gray-700">
+            <Label.Root className="text-sm font-medium text-white">
               Services Needed *
             </Label.Root>
             <div className="grid grid-cols-2 gap-2 mt-2">
               {availableServices.map((service) => (
                 <label
                   key={service}
-                  className="flex items-center space-x-2 p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
+                  className="flex items-center space-x-2 p-3 border border-slate-600 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700 transition-colors"
                 >
                   <input
                     type="checkbox"
                     checked={selectedServices.includes(service)}
                     onChange={() => handleServiceToggle(service)}
-                    className="rounded border-gray-300 text-loopxo-red focus:ring-loopxo-red"
+                    className="rounded border-slate-600 bg-slate-700 text-electric-blue focus:ring-electric-blue"
                   />
-                  <span className="text-sm">{service}</span>
+                  <span className="text-sm text-white">{service}</span>
                 </label>
               ))}
             </div>
             {errors.services && (
-              <p className="text-red-500 text-sm mt-1">{errors.services.message}</p>
+              <p className="text-red-400 text-sm mt-1">{errors.services.message}</p>
             )}
           </div>
         )}
 
-        {/* Budget and Timeline */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label.Root className="text-sm font-medium text-gray-700">
-              Budget Range *
-            </Label.Root>
-            <Select.Root onValueChange={(value) => setValue("budget", value as "15k-25k" | "25k-40k" | "40k-60k" | "60k+")}>
-              <Select.Trigger className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1">
-                <Select.Value placeholder="Select budget" />
-                <Select.Icon asChild>
-                  <ChevronDown className="h-4 w-4 opacity-50" />
-                </Select.Icon>
-              </Select.Trigger>
-              <Select.Portal>
-                <Select.Content className="relative z-50 max-h-96 min-w-[10rem] overflow-hidden rounded-md border bg-white text-gray-900 shadow-lg">
-                  <Select.Viewport className="p-2">
-                    <Select.Item value="15k-25k" className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-blue-50 focus:bg-blue-50 transition-colors">
-                      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-                        <Select.ItemIndicator>
-                          <Check className="h-4 w-4 text-blue-600" />
-                        </Select.ItemIndicator>
-                      </span>
-                      <Select.ItemText className="font-medium">₹15k - ₹25k</Select.ItemText>
-                    </Select.Item>
-                    <Select.Item value="25k-40k" className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-blue-50 focus:bg-blue-50 transition-colors">
-                      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-                        <Select.ItemIndicator>
-                          <Check className="h-4 w-4 text-blue-600" />
-                        </Select.ItemIndicator>
-                      </span>
-                      <Select.ItemText className="font-medium">₹25k - ₹40k</Select.ItemText>
-                    </Select.Item>
-                    <Select.Item value="40k-60k" className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-blue-50 focus:bg-blue-50 transition-colors">
-                      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-                        <Select.ItemIndicator>
-                          <Check className="h-4 w-4 text-blue-600" />
-                        </Select.ItemIndicator>
-                      </span>
-                      <Select.ItemText className="font-medium">₹40k - ₹60k</Select.ItemText>
-                    </Select.Item>
-                    <Select.Item value="60k+" className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-blue-50 focus:bg-blue-50 transition-colors">
-                      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-                        <Select.ItemIndicator>
-                          <Check className="h-4 w-4 text-blue-600" />
-                        </Select.ItemIndicator>
-                      </span>
-                      <Select.ItemText className="font-medium">₹60k+</Select.ItemText>
-                    </Select.Item>
-                  </Select.Viewport>
-                </Select.Content>
-              </Select.Portal>
-            </Select.Root>
-            {errors.budget && (
-              <p className="text-red-500 text-sm mt-1">{errors.budget.message}</p>
-            )}
-          </div>
-
-          <div>
-            <Label.Root className="text-sm font-medium text-gray-700">
+        {/* Timeline */}
+        <div>
+            <Label.Root className="text-sm font-medium text-white">
               Timeline *
             </Label.Root>
             <Select.Root onValueChange={(value) => setValue("timeline", value as "1-2weeks" | "3-4weeks" | "1-2months" | "3months+")}>
-              <Select.Trigger className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1">
+              <Select.Trigger className="flex h-10 w-full items-center justify-between rounded-md border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-electric-blue disabled:cursor-not-allowed disabled:opacity-50 mt-1">
                 <Select.Value placeholder="Select timeline" />
                 <Select.Icon asChild>
                   <ChevronDown className="h-4 w-4 opacity-50" />
                 </Select.Icon>
               </Select.Trigger>
               <Select.Portal>
-                <Select.Content className="relative z-50 max-h-96 min-w-[10rem] overflow-hidden rounded-md border bg-white text-gray-900 shadow-lg">
+                <Select.Content className="relative z-50 max-h-96 min-w-[10rem] overflow-hidden rounded-md border border-slate-600 bg-slate-900 text-white shadow-lg">
                   <Select.Viewport className="p-2">
-                    <Select.Item value="1-2weeks" className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-blue-50 focus:bg-blue-50 transition-colors">
+                    <Select.Item value="1-2weeks" className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-slate-700 focus:bg-slate-700 transition-colors">
                       <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
                         <Select.ItemIndicator>
-                          <Check className="h-4 w-4 text-blue-600" />
+                          <Check className="h-4 w-4 text-electric-blue" />
                         </Select.ItemIndicator>
                       </span>
                       <Select.ItemText className="font-medium">1-2 weeks</Select.ItemText>
                     </Select.Item>
-                    <Select.Item value="3-4weeks" className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-blue-50 focus:bg-blue-50 transition-colors">
+                    <Select.Item value="3-4weeks" className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-slate-700 focus:bg-slate-700 transition-colors">
                       <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
                         <Select.ItemIndicator>
-                          <Check className="h-4 w-4 text-blue-600" />
+                          <Check className="h-4 w-4 text-electric-blue" />
                         </Select.ItemIndicator>
                       </span>
                       <Select.ItemText className="font-medium">3-4 weeks</Select.ItemText>
                     </Select.Item>
-                    <Select.Item value="1-2months" className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-blue-50 focus:bg-blue-50 transition-colors">
+                    <Select.Item value="1-2months" className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-slate-700 focus:bg-slate-700 transition-colors">
                       <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
                         <Select.ItemIndicator>
-                          <Check className="h-4 w-4 text-blue-600" />
+                          <Check className="h-4 w-4 text-electric-blue" />
                         </Select.ItemIndicator>
                       </span>
                       <Select.ItemText className="font-medium">1-2 months</Select.ItemText>
                     </Select.Item>
-                    <Select.Item value="3months+" className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-blue-50 focus:bg-blue-50 transition-colors">
+                    <Select.Item value="3months+" className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-slate-700 focus:bg-slate-700 transition-colors">
                       <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
                         <Select.ItemIndicator>
-                          <Check className="h-4 w-4 text-blue-600" />
+                          <Check className="h-4 w-4 text-electric-blue" />
                         </Select.ItemIndicator>
                       </span>
                       <Select.ItemText className="font-medium">3+ months</Select.ItemText>
@@ -346,14 +310,13 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
               </Select.Portal>
             </Select.Root>
             {errors.timeline && (
-              <p className="text-red-500 text-sm mt-1">{errors.timeline.message}</p>
+              <p className="text-red-400 text-sm mt-1">{errors.timeline.message}</p>
             )}
-          </div>
         </div>
 
         {/* Optional Fields */}
         <div>
-          <Label.Root className="text-sm font-medium text-gray-700">
+          <Label.Root className="text-sm font-medium text-white">
             Current Website (Optional)
           </Label.Root>
           <Input
@@ -362,23 +325,23 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
             className="mt-1"
           />
           {errors.currentWebsite && (
-            <p className="text-red-500 text-sm mt-1">{errors.currentWebsite.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.currentWebsite.message}</p>
           )}
         </div>
 
         <div>
-          <Label.Root className="text-sm font-medium text-gray-700">
+          <Label.Root className="text-sm font-medium text-white">
             Special Requirements (Optional)
           </Label.Root>
           <textarea
             {...register("specialRequirements")}
             placeholder="Any specific requirements or preferences..."
-            className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1"
+            className="flex min-h-[80px] w-full rounded-md border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:border-electric-blue disabled:cursor-not-allowed disabled:opacity-50 mt-1"
           />
         </div>
 
         {/* Theme Selection */}
-        <div className="border-t pt-6">
+        <div className="border-t border-slate-700 pt-6">
           <ThemeSelector 
             selectedTheme={selectedTheme}
             onThemeChange={setSelectedTheme}
@@ -386,17 +349,28 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
         </div>
 
         {/* Agency Configuration */}
-        <div className="border-t pt-6">
-          <AgencyConfigForm 
+        <div className="border-t border-slate-700 pt-6">
+          <AgencyConfigForm
             config={agencyConfig}
             onConfigChange={setAgencyConfig}
           />
         </div>
 
+        {/* Pricing Packages Editor */}
+        {selectedIndustry && customPricing && (
+          <div className="border-t border-slate-700 pt-6">
+            <PricingEditor
+              packages={customPricing}
+              onPackagesChange={setCustomPricing}
+              currency={currency}
+            />
+          </div>
+        )}
+
         {/* Section Toggle */}
         {selectedIndustry && (
-          <div className="border-t pt-6">
-            <Label.Root className="text-sm font-medium text-gray-700 mb-4 block">
+          <div className="border-t border-slate-700 pt-6">
+            <Label.Root className="text-sm font-medium text-white mb-4 block">
               Proposal Sections (All sections are included by default)
             </Label.Root>
             <div className="grid grid-cols-2 gap-3">
@@ -412,40 +386,33 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
               ].map((section) => (
                 <label
                   key={section.id}
-                  className="flex items-center space-x-3 p-3 border rounded-lg bg-green-50 border-green-200 cursor-not-allowed"
+                  className="flex items-center space-x-3 p-3 border rounded-lg bg-slate-800 border-slate-600 cursor-not-allowed"
                 >
                   <input
                     type="checkbox"
                     checked={section.enabled}
                     disabled
-                    className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                    className="rounded border-slate-600 bg-slate-700 text-electric-blue focus:ring-electric-blue"
                   />
-                  <span className="text-sm font-medium text-green-800">{section.label}</span>
-                  <span className="text-xs text-green-600 ml-auto">✓ Included</span>
+                  <span className="text-sm font-medium text-white">{section.label}</span>
+                  <span className="text-xs text-green-400 ml-auto">✓ Included</span>
                 </label>
               ))}
             </div>
-            <p className="text-sm text-gray-500 mt-3">
-              ℹ️ All 8 sections are included in every proposal to ensure comprehensive coverage. 
+            <p className="text-sm text-slate-400 mt-3">
+              ℹ️ All 8 sections are included in every proposal to ensure comprehensive coverage.
               Custom section selection will be available in future updates.
             </p>
           </div>
         )}
 
-        <div className="flex space-x-4">
+        <div className="flex justify-center">
           <Button
             type="button"
             onClick={() => setShowPreview(true)}
-            className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
+            className="w-full max-w-md bg-gradient-to-r from-electric-blue to-electric-violet hover:from-electric-blue/80 hover:to-electric-violet/80 text-white font-bold py-3 px-6 rounded-lg shadow-lg shadow-electric-blue/25 hover:shadow-electric-blue/40 transition-all duration-300 transform hover:scale-[1.02]"
           >
-            Preview Proposal
-          </Button>
-          <Button
-            type="submit"
-            className="flex-1 bg-gradient-to-r from-red-600 to-blue-800 hover:from-red-700 hover:to-blue-900 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Generating Proposal..." : "Generate PDF"}
+            Preview & Generate Proposal
           </Button>
         </div>
       </form>
@@ -462,7 +429,8 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
             currentWebsite: watch('currentWebsite') || '',
             specialRequirements: watch('specialRequirements') || '',
             theme: selectedTheme,
-            agencyConfig: agencyConfig
+            agencyConfig: agencyConfig,
+            customPricing: customPricing || undefined
           }}
           template={industryTemplates[watch('industry') || 'doctors'] as any}
           theme={getTheme(selectedTheme)}
@@ -475,7 +443,8 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
               onSubmit({
                 ...data,
                 theme: selectedTheme,
-                agencyConfig: agencyConfig
+                agencyConfig: agencyConfig,
+                customPricing: customPricing || undefined
               })
             })()
           }}

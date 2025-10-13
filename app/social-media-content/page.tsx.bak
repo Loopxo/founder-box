@@ -79,10 +79,10 @@ function SocialMediaContent() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-white mb-4">
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">
           Advanced Social Media Growth System
         </h1>
-        <p className="text-xl text-slate-400 max-w-3xl mx-auto mb-6">
+        <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
           Psychology-based growth strategies, viral mechanics, and proven frameworks that go beyond basic social media advice.
         </p>
         <div className="flex flex-wrap justify-center gap-2">
@@ -236,7 +236,7 @@ function SocialMediaContent() {
                   <h4 className="font-semibold mb-3 flex items-center gap-2">
                     🎨 Content Strategy
                   </h4>
-                  <div className="bg-slate-900 rounded-lg p-4 mb-3">
+                  <div className="bg-gray-50 rounded-lg p-4 mb-3">
                     <p className="font-medium text-sm mb-2">Primary Focus:</p>
                     <p className="text-sm">{personalizedStrategy.content_strategy.primary_focus}</p>
                   </div>
@@ -346,7 +346,7 @@ function SocialMediaContent() {
                       {category.ideas.map((idea, j) => (
                         <div key={j} className="border rounded-lg p-4">
                           <h4 className="font-medium">{idea.title}</h4>
-                          <p className="text-sm text-slate-400 mt-1 mb-2">{idea.description}</p>
+                          <p className="text-sm text-gray-600 mt-1 mb-2">{idea.description}</p>
                           <div className="flex gap-2">
                             {idea.formats.map(format => <Badge key={format} variant="secondary">{format}</Badge>)}
                           </div>
@@ -389,7 +389,7 @@ function SocialMediaContent() {
                     <h4 className="font-semibold mb-2">{category.name}</h4>
                     <div className="flex flex-wrap gap-2">
                       {category.hashtags.map(tag => (
-                        <div key={tag} className="flex items-center gap-1 bg-slate-800 rounded-full px-2 py-1">
+                        <div key={tag} className="flex items-center gap-1 bg-gray-100 rounded-full px-2 py-1">
                             <span className="text-sm">{tag}</span>
                             <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => copyToClipboard(tag)}>
                                 <Copy className="h-3 w-3" />
@@ -427,14 +427,14 @@ function SocialMediaContent() {
                               {tactic.difficultyLevel}
                             </Badge>
                           </div>
-                          <p className="text-slate-300 mb-3">{tactic.description}</p>
+                          <p className="text-gray-700 mb-3">{tactic.description}</p>
                           <div className="grid md:grid-cols-2 gap-4">
                             <div>
-                              <h5 className="font-medium text-sm text-slate-400 mb-1">Implementation:</h5>
+                              <h5 className="font-medium text-sm text-gray-600 mb-1">Implementation:</h5>
                               <p className="text-sm">{tactic.implementation}</p>
                             </div>
                             <div>
-                              <h5 className="font-medium text-sm text-slate-400 mb-1">Expected Results:</h5>
+                              <h5 className="font-medium text-sm text-gray-600 mb-1">Expected Results:</h5>
                               <p className="text-sm font-medium text-green-700">{tactic.expectedResults}</p>
                             </div>
                           </div>
@@ -463,16 +463,16 @@ function SocialMediaContent() {
                   <h3 className="font-semibold text-lg mb-4 text-blue-700">{platform.platform} Conversion Strategies</h3>
                   <div className="grid gap-4">
                     {platform.strategies.map((strategy, j) => (
-                      <div key={j} className="bg-slate-900 rounded-lg p-4">
+                      <div key={j} className="bg-gray-50 rounded-lg p-4">
                         <h4 className="font-medium mb-2">{strategy.name}</h4>
-                        <p className="text-sm text-slate-400 mb-2">{strategy.description}</p>
+                        <p className="text-sm text-gray-600 mb-2">{strategy.description}</p>
                         <div className="grid md:grid-cols-2 gap-4">
                           <div>
-                            <h5 className="font-medium text-sm text-slate-400 mb-1">How to implement:</h5>
+                            <h5 className="font-medium text-sm text-gray-600 mb-1">How to implement:</h5>
                             <p className="text-sm">{strategy.implementation}</p>
                           </div>
                           <div>
-                            <h5 className="font-medium text-sm text-slate-400 mb-1">Performance boost:</h5>
+                            <h5 className="font-medium text-sm text-gray-600 mb-1">Performance boost:</h5>
                             <p className="text-sm font-medium text-green-700">{strategy.conversionRate}</p>
                           </div>
                         </div>
@@ -498,23 +498,23 @@ function SocialMediaContent() {
               {advancedAnalytics.map((metric, i) => (
                 <div key={i} className="border rounded-lg p-4 bg-gradient-to-r from-blue-50 to-indigo-50">
                   <h3 className="font-semibold text-lg mb-2">{metric.metric}</h3>
-                  <p className="text-slate-300 mb-3">{metric.description}</p>
+                  <p className="text-gray-700 mb-3">{metric.description}</p>
                   <div className="grid md:grid-cols-3 gap-4 mb-4">
                     <div>
-                      <h5 className="font-medium text-sm text-slate-400 mb-1">Calculation:</h5>
-                      <code className="text-sm bg-slate-800 px-2 py-1 rounded">{metric.calculation}</code>
+                      <h5 className="font-medium text-sm text-gray-600 mb-1">Calculation:</h5>
+                      <code className="text-sm bg-gray-100 px-2 py-1 rounded">{metric.calculation}</code>
                     </div>
                     <div>
-                      <h5 className="font-medium text-sm text-slate-400 mb-1">Benchmarks:</h5>
+                      <h5 className="font-medium text-sm text-gray-600 mb-1">Benchmarks:</h5>
                       <p className="text-sm font-medium">{metric.benchmarks}</p>
                     </div>
                     <div>
-                      <h5 className="font-medium text-sm text-slate-400 mb-1">Platform Relevance:</h5>
+                      <h5 className="font-medium text-sm text-gray-600 mb-1">Platform Relevance:</h5>
                       <Badge variant="secondary">All Platforms</Badge>
                     </div>
                   </div>
                   <div>
-                    <h5 className="font-medium text-sm text-slate-400 mb-2">Actionable Insights:</h5>
+                    <h5 className="font-medium text-sm text-gray-600 mb-2">Actionable Insights:</h5>
                     <ul className="list-disc list-inside space-y-1 text-sm">
                       {metric.actionable_insights.map((insight, j) => <li key={j}>{insight}</li>)}
                     </ul>
@@ -541,10 +541,10 @@ function SocialMediaContent() {
                     <h3 className="font-semibold text-lg">{strategy.analysis_type}</h3>
                     <Badge variant="outline">{strategy.frequency}</Badge>
                   </div>
-                  <p className="text-slate-300 mb-4">{strategy.description}</p>
+                  <p className="text-gray-700 mb-4">{strategy.description}</p>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <h5 className="font-medium text-sm text-slate-400 mb-2">Tools Needed:</h5>
+                      <h5 className="font-medium text-sm text-gray-600 mb-2">Tools Needed:</h5>
                       <div className="flex flex-wrap gap-2">
                         {strategy.tools_needed.map(tool => (
                           <Badge key={tool} variant="secondary">{tool}</Badge>
@@ -552,7 +552,7 @@ function SocialMediaContent() {
                       </div>
                     </div>
                     <div>
-                      <h5 className="font-medium text-sm text-slate-400 mb-2">Implementation Steps:</h5>
+                      <h5 className="font-medium text-sm text-gray-600 mb-2">Implementation Steps:</h5>
                       <ol className="list-decimal list-inside space-y-1 text-sm">
                         {strategy.implementation_steps.map((step, j) => <li key={j}>{step}</li>)}
                       </ol>
@@ -578,18 +578,18 @@ function SocialMediaContent() {
                 <div key={i} className="border rounded-lg p-4 bg-gradient-to-r from-orange-50 to-red-50">
                   <h3 className="font-semibold text-lg mb-2">{crisis.scenario}</h3>
                   <div className="mb-4">
-                    <h5 className="font-medium text-sm text-slate-400 mb-1">Framework:</h5>
-                    <p className="text-sm font-mono bg-slate-800 px-2 py-1 rounded">{crisis.response_framework}</p>
+                    <h5 className="font-medium text-sm text-gray-600 mb-1">Framework:</h5>
+                    <p className="text-sm font-mono bg-gray-100 px-2 py-1 rounded">{crisis.response_framework}</p>
                   </div>
                   <div className="grid md:grid-cols-2 gap-4 mb-4">
                     <div>
-                      <h5 className="font-medium text-sm text-slate-400 mb-2">Immediate Actions (First 24 hours):</h5>
+                      <h5 className="font-medium text-sm text-gray-600 mb-2">Immediate Actions (First 24 hours):</h5>
                       <ul className="list-disc list-inside space-y-1 text-sm">
                         {crisis.immediate_actions.map((action, j) => <li key={j}>{action}</li>)}
                       </ul>
                     </div>
                     <div>
-                      <h5 className="font-medium text-sm text-slate-400 mb-2">Long-term Strategy:</h5>
+                      <h5 className="font-medium text-sm text-gray-600 mb-2">Long-term Strategy:</h5>
                       <ul className="list-disc list-inside space-y-1 text-sm">
                         {crisis.long_term_strategy.map((strategy, j) => <li key={j}>{strategy}</li>)}
                       </ul>
@@ -597,12 +597,12 @@ function SocialMediaContent() {
                   </div>
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <h5 className="font-medium text-sm text-slate-400">Example Response Template:</h5>
+                      <h5 className="font-medium text-sm text-gray-600">Example Response Template:</h5>
                       <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => copyToClipboard(crisis.example_response)}>
                         <Copy className="h-4 w-4" />
                       </Button>
                     </div>
-                    <p className="text-sm bg-slate-800 border rounded p-3 italic">{crisis.example_response}</p>
+                    <p className="text-sm bg-white border rounded p-3 italic">{crisis.example_response}</p>
                   </div>
                 </div>
               ))}
@@ -628,7 +628,7 @@ function SocialMediaContent() {
                                         <Copy className="h-4 w-4" />
                                     </Button>
                                 </div>
-                                <p className="text-sm text-slate-400 mt-1">{template.template}</p>
+                                <p className="text-sm text-gray-600 mt-1">{template.template}</p>
                             </div>
                         ))}
                     </div>
