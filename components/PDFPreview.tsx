@@ -439,8 +439,8 @@ export default function PDFPreview({
               />
               <div className="flex space-x-4 mt-4">
                 <button
-                  onClick={() => handleTextChange(showTextEditor, defaultTexts[showTextEditor as keyof typeof defaultTexts] || '')}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+                  onClick={() => handleTextChange(showTextEditor, getTemplateText(showTextEditor))}
+                  className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-600 transition-colors"
                 >
                   Use Default Text
                 </button>

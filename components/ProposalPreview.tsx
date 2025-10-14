@@ -15,7 +15,6 @@ export default function ProposalPreview({ formData }: ProposalPreviewProps) {
     clientPhone = "Phone Number",
     industry = "Industry",
     services = [],
-    budget = "Budget Range",
     timeline = "Timeline",
     currentWebsite,
     specialRequirements
@@ -93,13 +92,6 @@ export default function ProposalPreview({ formData }: ProposalPreviewProps) {
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
-            <DollarSign className="h-4 w-4 text-gray-400" />
-            <div>
-              <label className="text-sm font-medium text-gray-600">Budget Range</label>
-              <p className="text-gray-900">{budget}</p>
-            </div>
-          </div>
         </div>
       </div>
 

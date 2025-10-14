@@ -21,6 +21,7 @@ import { DEFAULT_CURRENCY, CurrencyCode } from "@/lib/design-system"
 interface PitchFormProps {
   onSubmit: (data: ClientFormData) => void
   onFormChange?: (data: Partial<ClientFormData>) => void
+  isGenerating?: boolean
 }
 
 export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
