@@ -1,6 +1,31 @@
-import puppeteer from 'puppeteer'
+import puppeteer from 'puppeteer-core'
+import chromium from '@sparticuz/chromium'
 
 import { ClientFormData } from './schemas'
+
+// Helper function to get browser launch config based on environment
+async function getBrowserConfig() {
+  const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1'
+
+  if (isProduction) {
+    // Use @sparticuz/chromium for Vercel
+    return {
+      args: chromium.args,
+      executablePath: await chromium.executablePath(),
+      headless: true,
+    }
+  } else {
+    // Use local Chrome/Chromium for development
+    // Use local Chrome for development (macOS path as default)
+    const executablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+
+    return {
+      executablePath,
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    }
+  }
+}
 import { industryTemplates, IndustryTemplate } from './templates'
 import { Invoice, formatCurrency, invoiceThemes } from './invoice-data'
 import { getTheme, ThemeConfig, AgencyConfig } from './themes'
@@ -72,11 +97,9 @@ export async function generateProposalPDF(
   }
 
   const htmlContent = generateProposalHTML(clientData, template, theme, agencyConfig, customImages, customLogo, customTexts, imageHeights)
-  
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  })
+
+  const browserConfig = await getBrowserConfig()
+  const browser = await puppeteer.launch(browserConfig)
 
   try {
     const page = await browser.newPage()
@@ -1370,10 +1393,8 @@ export async function generateContractPDF(
   let browser
   
   try {
-    browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-    })
+    const browserConfig = await getBrowserConfig()
+    browser = await puppeteer.launch(browserConfig)
     
     const page = await browser.newPage()
     
@@ -1575,11 +1596,9 @@ export async function generateInvoicePDF(
   invoiceData: InvoicePDFData,
   options: PDFGenerationOptions = defaultPDFOptions
 ): Promise<Buffer> {
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  })
-  
+  const browserConfig = await getBrowserConfig()
+  const browser = await puppeteer.launch(browserConfig)
+
   try {
     const page = await browser.newPage()
     const html = generateInvoiceHTML(invoiceData)

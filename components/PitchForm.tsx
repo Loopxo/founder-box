@@ -145,7 +145,7 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label.Root className="text-sm font-medium text-white">
-              Email Address *
+              Email Address <span className="text-slate-400 text-xs">(Optional)</span>
             </Label.Root>
             <Input
               {...register("clientEmail")}

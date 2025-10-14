@@ -172,12 +172,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Inspired by the challenges of growing a business
 - Powered by the open-source community
 
-## 📞 Support
-
-- **Documentation**: [docs.founderbox.com](https://docs.founderbox.com)
-- **Issues**: [GitHub Issues](https://github.com/your-username/founder-box/issues)
-- **Discord**: [Join our community](https://discord.gg/founderbox)
-- **Email**: support@founderbox.com
 
 ## 🗺️ Roadmap
 

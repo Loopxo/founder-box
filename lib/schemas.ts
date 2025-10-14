@@ -34,7 +34,7 @@ export const timelineOptions = [
 export const clientFormSchema = z.object({
   // Basic Information
   clientName: z.string().min(2, "Client name must be at least 2 characters"),
-  clientEmail: z.string().email("Please enter a valid email address"),
+  clientEmail: z.string().email("Please enter a valid email address").optional().or(z.literal("")),
   clientPhone: z.string().min(10, "Phone number must be at least 10 digits"),
   businessName: z.string().min(2, "Business name must be at least 2 characters"),
   

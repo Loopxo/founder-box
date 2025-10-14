@@ -106,11 +106,11 @@ export default function PricingEditor({ packages, onPackagesChange, currency }: 
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-slate-900 mb-2">
+          <h3 className="text-lg font-semibold text-white mb-2">
             <DollarSign className="w-5 h-5 inline mr-2 mb-1" />
             Pricing Packages
           </h3>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-slate-300">
             Customize your pricing packages. Click edit to modify, or add new packages.
           </p>
         </div>
@@ -140,8 +140,8 @@ export default function PricingEditor({ packages, onPackagesChange, currency }: 
             key={index}
             className={`relative border-2 rounded-lg p-4 transition-all ${
               pkg.popular
-                ? 'border-[#00D4FF] bg-[#00D4FF]/5 shadow-lg'
-                : 'border-slate-200 bg-white'
+                ? 'border-[#00D4FF] bg-[#00D4FF]/10 shadow-lg'
+                : 'border-slate-600 bg-slate-800'
             } ${editingIndex === index ? 'ring-2 ring-[#8B5CF6]' : ''}`}
           >
             {/* Popular Badge */}
@@ -175,7 +175,7 @@ export default function PricingEditor({ packages, onPackagesChange, currency }: 
                     className={inputClasses.default}
                     placeholder={`e.g., ${currencySymbol}50,000`}
                   />
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="text-xs text-slate-400 mt-1">
                     Include currency symbol: {currencySymbol}
                   </p>
                 </div>
@@ -230,7 +230,7 @@ export default function PricingEditor({ packages, onPackagesChange, currency }: 
                     onChange={(e) => setEditingPackage({ ...editingPackage, popular: e.target.checked })}
                     className="w-4 h-4 rounded border-slate-300 text-[#00D4FF] focus:ring-[#00D4FF]"
                   />
-                  <label htmlFor={`popular-${index}`} className="text-sm font-medium text-slate-700">
+                  <label htmlFor={`popular-${index}`} className="text-sm font-medium text-white">
                     Mark as Most Popular
                   </label>
                 </div>
@@ -257,14 +257,14 @@ export default function PricingEditor({ packages, onPackagesChange, currency }: 
               // View Mode
               <div className="space-y-3 pt-2">
                 <div className="text-center">
-                  <h4 className="text-lg font-bold text-slate-900">{pkg.name}</h4>
+                  <h4 className="text-lg font-bold text-white">{pkg.name}</h4>
                   <p className="text-2xl font-black text-[#00D4FF] mt-2">{pkg.price}</p>
                 </div>
 
-                <div className="border-t border-slate-200 pt-3">
+                <div className="border-t border-slate-600 pt-3">
                   <ul className="space-y-2">
                     {pkg.features.map((feature, fIndex) => (
-                      <li key={fIndex} className="flex items-start text-sm text-slate-700">
+                      <li key={fIndex} className="flex items-start text-sm text-slate-200">
                         <span className="text-[#00D4FF] mr-2 font-bold">•</span>
                         <span>{feature}</span>
                       </li>
@@ -312,14 +312,14 @@ export default function PricingEditor({ packages, onPackagesChange, currency }: 
       </div>
 
       {/* Info Box */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <div className="bg-slate-800 border border-slate-600 rounded-lg p-4">
         <div className="flex items-start gap-3">
           <div className="w-5 h-5 bg-[#00D4FF] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
             <span className="text-white text-xs font-bold">i</span>
           </div>
-          <div className="text-sm text-slate-700">
+          <div className="text-sm text-slate-200">
             <p className="font-semibold mb-1">Tips for pricing packages:</p>
-            <ul className="list-disc list-inside space-y-1 text-slate-600">
+            <ul className="list-disc list-inside space-y-1 text-slate-300">
               <li>Keep package names clear and descriptive</li>
               <li>Mark your recommended package as "Most Popular"</li>
               <li>Include currency symbol in prices: {currencySymbol}</li>

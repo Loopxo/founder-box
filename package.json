@@ -27,11 +27,14 @@
     "next": "15.4.6",
     "next-themes": "^0.4.6",
     "prisma": "^6.14.0",
-    "puppeteer": "^24.16.2",
+    "puppeteer-core": "^23.11.1",
+    "@sparticuz/chromium": "^141.0.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.62.0",
     "tailwind-merge": "^3.3.1",
+    "xlsx": "^0.18.5",
+    "jszip": "^3.10.1",
     "zod": "^4.0.17"
   },
   "devDependencies": {
