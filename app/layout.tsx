@@ -51,10 +51,10 @@ export const metadata: Metadata = {
       "Stop juggling 10 different tools. FounderBox gives you proposals, contracts, invoices, cold emails, and more — free forever. An open source project by Loopxo.",
     images: [
       {
-        url: "/logo.png",
-        width: 512,
-        height: 512,
-        alt: "FounderBox Logo — The complete founder toolkit",
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "FounderBox — Free Open Source Toolkit for Founders | Proposals, Invoices & Contracts",
       },
     ],
   },
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     title: "FounderBox — Free Open Source Toolkit for Founders",
     description:
       "Proposals, contracts, invoices, cold emails, and more — free forever. Built by Loopxo.",
-    images: ["/logo.png"],
+    images: ["/og-image.png"],
     creator: "@loopxo",
   },
   robots: {
