@@ -2,267 +2,163 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { 
-  LayoutDashboard, 
-  FileText, 
-  MessageSquare, 
-  Shield, 
-  Mail, 
-  TrendingUp, 
-  Instagram, 
-  BarChart3,
-  LogOut,
-  Settings,
-  Menu,
-  X,
-  ChevronDown,
-  ChevronRight
-} from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
-interface SidebarItem {
+interface NavItem {
   name: string
   href: string
-  icon: React.ComponentType<{ className?: string }>
+  abbr: string       // 2-char abbr shown when collapsed
   badge?: string
-  children?: SidebarItem[]
 }
 
+const NAV_ITEMS: NavItem[] = [
+  { name: 'Dashboard', href: '/dashboard', abbr: 'DB' },
+  { name: 'Proposal Generator', href: '/dashboard/proposal', abbr: 'PG' },
+  { name: 'Cold Emails', href: '/cold-emails', abbr: 'CE' },
+  { name: 'Competitive Analysis', href: '/competitive-analysis', abbr: 'CA' },
+  { name: 'Contracts', href: '/contract', abbr: 'CN' },
+  { name: 'Invoices', href: '/invoice', abbr: 'IN' },
+  { name: 'SEO Content', href: '/seo', abbr: 'SE' },
+  { name: 'Sales Copy', href: '/sales', abbr: 'SC' },
+  { name: 'Social Media', href: '/social-media-content', abbr: 'SM' },
+  { name: 'Resume Forge', href: '/resume', abbr: 'RF', badge: 'NEW' },
+]
+
 export default function Sidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false)
-  const [isMobileOpen, setIsMobileOpen] = useState(false)
-  const [expandedItems, setExpandedItems] = useState<string[]>([])
+  const [collapsed, setCollapsed] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
 
-  const navigationItems: SidebarItem[] = [
-    {
-      name: 'Dashboard',
-      href: '/dashboard',
-      icon: LayoutDashboard
-    },
-    {
-      name: 'Proposal Generator',
-      href: '/dashboard/proposal',
-      icon: FileText
-    },
-    {
-      name: 'Cold Emails',
-      href: '/cold-emails',
-      icon: MessageSquare
-    },
-    {
-      name: 'Competitive Analysis',
-      href: '/competitive-analysis',
-      icon: BarChart3
-    },
-    {
-      name: 'Contracts',
-      href: '/contract',
-      icon: Shield
-    },
-    {
-      name: 'Invoices',
-      href: '/invoice',
-      icon: Mail
-    },
-    {
-      name: 'SEO Content',
-      href: '/seo',
-      icon: TrendingUp
-    },
-    {
-      name: 'Sales Copy',
-      href: '/sales',
-      icon: BarChart3
-    },
-    {
-      name: 'Social Media',
-      href: '/social-media-content',
-      icon: Instagram
-    }
-  ]
+  const isActive = (href: string) =>
+    href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(href)
 
-  const handleLogout = async () => {
-    router.push('/')
-  }
-
-  const toggleExpanded = (itemName: string) => {
-    setExpandedItems(prev => 
-      prev.includes(itemName) 
-        ? prev.filter(name => name !== itemName)
-        : [...prev, itemName]
-    )
-  }
-
-  const isActive = (href: string) => {
-    if (href === '/dashboard') {
-      return pathname === '/dashboard'
-    }
-    return pathname.startsWith(href)
-  }
-
-  const SidebarItem = ({ item }: { item: SidebarItem }) => {
-    const active = isActive(item.href)
-    const hasChildren = item.children && item.children.length > 0
-    const isExpanded = expandedItems.includes(item.name)
-
-    return (
-      <div>
-        <Link href={hasChildren ? '#' : item.href}>
-          <div
-            className={`
-              flex items-center justify-between px-3 py-2 rounded-lg transition-colors cursor-pointer
-              ${active
-                ? 'bg-gradient-to-r from-electric-blue to-electric-violet text-white shadow-lg shadow-electric-blue/30'
-                : 'text-slate-300 hover:bg-slate-800 hover:text-white'
-              }
-              ${isCollapsed ? 'justify-center' : 'justify-between'}
-            `}
-            onClick={hasChildren ? () => toggleExpanded(item.name) : undefined}
-          >
-            <div className="flex items-center space-x-3">
-              <item.icon className={`w-5 h-5 ${active ? 'text-white' : 'text-slate-400'}`} />
-              {!isCollapsed && (
-                <span className="font-medium">{item.name}</span>
-              )}
-            </div>
-            {!isCollapsed && hasChildren && (
-              <div className="flex items-center space-x-2">
-                {item.badge && (
-                  <span className="px-2 py-1 text-xs bg-electric-blue/20 text-electric-blue border border-electric-blue/30 rounded-full">
-                    {item.badge}
-                  </span>
-                )}
-                {isExpanded ? (
-                  <ChevronDown className="w-4 h-4" />
-                ) : (
-                  <ChevronRight className="w-4 h-4" />
-                )}
-              </div>
-            )}
-          </div>
-        </Link>
-        
-        {hasChildren && isExpanded && !isCollapsed && (
-          <div className="ml-6 mt-2 space-y-1">
-            {item.children!.map((child) => (
-              <Link key={child.href} href={child.href}>
-                <div
-                  className={`
-                    flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors cursor-pointer
-                    ${isActive(child.href)
-                      ? 'bg-slate-800 text-electric-blue border-l-2 border-electric-blue'
-                      : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
-                    }
-                  `}
-                >
-                  <child.icon className="w-4 h-4" />
-                  <span className="text-sm">{child.name}</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-    )
-  }
+  const sidebarWidth = collapsed ? 'w-[60px]' : 'w-[220px]'
 
   return (
     <>
       {/* Mobile overlay */}
-      {isMobileOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-          onClick={() => setIsMobileOpen(false)}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+          onClick={() => setMobileOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
-      <div className={`
-        fixed top-0 left-0 h-full bg-slate-900/95 backdrop-blur-sm border-r border-slate-700 z-50 transition-all duration-300
-        ${isCollapsed ? 'w-16' : 'w-64'}
-        ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-      `}>
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-slate-700">
-          {!isCollapsed && (
-            <div className="flex items-center space-x-3">
-              <Image
-                src="/logo.png"
-                alt="FounderBox Logo"
-                width={32}
-                height={32}
-                className="rounded-lg"
-              />
-              <span className="text-xl font-bold bg-gradient-to-r from-electric-blue via-neon-orange to-electric-violet bg-clip-text text-transparent">FounderBox</span>
-            </div>
+      {/* Sidebar panel */}
+      <aside
+        style={{ backgroundColor: '#18181F', borderColor: '#2A2A38' }}
+        className={`
+          fixed top-0 left-0 h-full border-r z-50 flex flex-col transition-all duration-200
+          ${sidebarWidth}
+          ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        `}
+      >
+        {/* Brand */}
+        <div
+          style={{ borderColor: '#2A2A38' }}
+          className="flex items-center justify-between px-4 py-5 border-b flex-shrink-0"
+        >
+          {!collapsed ? (
+            <span
+              style={{ color: '#D4A853', letterSpacing: '0.08em' }}
+              className="text-sm font-800 font-extrabold tracking-widest uppercase"
+            >
+              FounderBox
+            </span>
+          ) : (
+            <span
+              style={{ color: '#D4A853' }}
+              className="text-sm font-extrabold tracking-widest w-full text-center"
+            >
+              FB
+            </span>
           )}
-
-          {isCollapsed && (
-            <div className="flex justify-center w-full">
-              <Image
-                src="/logo.png"
-                alt="FounderBox Logo"
-                width={32}
-                height={32}
-                className="rounded-lg"
-              />
-            </div>
-          )}
-
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsMobileOpen(false)}
-            className="lg:hidden text-slate-400 hover:text-white"
-          >
-            <X className="w-4 h-4" />
-          </Button>
-        </div>
-
-        {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-          {navigationItems.map((item) => (
-            <SidebarItem key={item.href} item={item} />
-          ))}
-        </nav>
-
-        {/* Collapse Toggle Button - Desktop Only */}
-        <div className="hidden lg:block p-4 border-t border-slate-700">
+          {/* Mobile close */}
           <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="w-full flex items-center justify-center px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
-            title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            onClick={() => setMobileOpen(false)}
+            style={{ color: '#9E9880' }}
+            className="lg:hidden text-sm hover:text-white transition-colors ml-2"
           >
-            {isCollapsed ? (
-              <ChevronRight className="w-5 h-5" />
-            ) : (
-              <>
-                <ChevronDown className="w-5 h-5 rotate-[-90deg]" />
-                <span className="ml-2 text-sm">Collapse</span>
-              </>
-            )}
+            ✕
           </button>
         </div>
 
-      </div>
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto py-4">
+          {NAV_ITEMS.map((item) => {
+            const active = isActive(item.href)
+            return (
+              <Link key={item.href} href={item.href}>
+                <div
+                  style={{
+                    borderLeft: active ? '2px solid #D4A853' : '2px solid transparent',
+                    color: active ? '#D4A853' : '#9E9880',
+                    backgroundColor: active ? 'rgba(212,168,83,0.06)' : 'transparent',
+                  }}
+                  className="flex items-center gap-3 px-4 py-2.5 transition-colors duration-150 cursor-pointer hover:bg-white/[0.03]"
+                  onMouseEnter={(e) => {
+                    if (!active) (e.currentTarget as HTMLElement).style.color = '#EDE9DC'
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!active) (e.currentTarget as HTMLElement).style.color = '#9E9880'
+                  }}
+                >
+                  {collapsed ? (
+                    <span
+                      style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.04em', minWidth: '28px', textAlign: 'center' }}
+                    >
+                      {item.abbr}
+                    </span>
+                  ) : (
+                    <>
+                      <span className="text-sm font-medium flex-1 truncate">{item.name}</span>
+                      {item.badge && (
+                        <span
+                          style={{
+                            fontSize: '9px',
+                            letterSpacing: '0.08em',
+                            padding: '1px 6px',
+                            borderRadius: '3px',
+                            background: 'rgba(212,168,83,0.15)',
+                            color: '#D4A853',
+                            border: '1px solid rgba(212,168,83,0.3)',
+                            fontWeight: 700,
+                          }}
+                        >
+                          {item.badge}
+                        </span>
+                      )}
+                    </>
+                  )}
+                </div>
+              </Link>
+            )
+          })}
+        </nav>
 
-      {/* Mobile menu button - Only show when sidebar is closed */}
-      {!isMobileOpen && (
-        <div className="lg:hidden fixed top-4 right-4 z-50">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setIsMobileOpen(true)}
-            className="bg-slate-900 border-slate-700 text-white hover:bg-slate-800 shadow-lg"
+        {/* Collapse toggle — desktop */}
+        <div style={{ borderColor: '#2A2A38' }} className="hidden lg:block border-t flex-shrink-0">
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            style={{ color: '#9E9880' }}
+            className="w-full py-4 text-xs font-semibold tracking-widest uppercase hover:text-white transition-colors"
           >
-            <Menu className="w-4 h-4" />
-          </Button>
+            {collapsed ? '→' : '← Collapse'}
+          </button>
         </div>
+      </aside>
+
+      {/* Mobile hamburger */}
+      {!mobileOpen && (
+        <button
+          onClick={() => setMobileOpen(true)}
+          style={{ background: '#18181F', border: '1px solid #2A2A38', color: '#EDE9DC' }}
+          className="lg:hidden fixed top-4 right-4 z-50 px-3 py-2 rounded text-sm font-semibold"
+        >
+          Menu
+        </button>
       )}
     </>
   )

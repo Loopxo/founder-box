@@ -1,25 +1,19 @@
 "use client"
 
-import Image from 'next/image'
 import Sidebar from './Sidebar'
 
 interface DashboardLayoutProps {
   children: React.ReactNode
-  showHeader?: boolean
 }
 
-export default function DashboardLayout({ children, showHeader = true }: DashboardLayoutProps) {
-
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-black">
+    <div style={{ backgroundColor: '#111118', minHeight: '100vh' }}>
       <Sidebar />
 
-      {/* Main content area */}
-      <div className="lg:ml-64 transition-all duration-300">
-
-
-        {/* Page content */}
-        <main className="p-6">
+      {/* Main content — offset by sidebar width */}
+      <div className="lg:ml-[220px] transition-all duration-200">
+        <main className="p-8 max-w-7xl">
           {children}
         </main>
       </div>
