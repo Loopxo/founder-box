@@ -1,6 +1,9 @@
+import LandingPage from '@/components/LandingPage';
 
-import LandingPage from '@/components/LandingPage'
-
-export default function HomePage() {
-  return <LandingPage />
+export default function Home() {
+  return (
+    <main className="w-full bg-[#111118]">
+      <LandingPage />
+    </main>
+  );
 }
