@@ -49,7 +49,7 @@ export default function AboutSection() {
                         </motion.div>
 
                         {/* Image Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                        <div className="hidden sm:grid grid-cols-1 sm:grid-cols-2 gap-8">
                             <motion.div
                                 className="relative aspect-[3/4] bg-[#18181F] rounded-lg overflow-hidden border border-[#2A2A38]"
                                 initial={{ opacity: 0, y: 40 }}
