@@ -159,7 +159,8 @@ export default function PDFPreview({
       <div className="text-center">
         <div className="mb-8">
           {customLogo || agencyConfig.logo ? (
-            <img 
+            /* eslint-disable-next-line @next/next/no-img-element */
+<img 
               src={customLogo || agencyConfig.logo} 
               alt={agencyConfig.name}
               className="h-16 mx-auto mb-4"
@@ -228,7 +229,8 @@ export default function PDFPreview({
       </div>
       
       <div className="mb-6">
-        <img 
+        /* eslint-disable-next-line @next/next/no-img-element */
+<img 
           src={getImageForSection(section)}
           alt={title}
           className="w-full rounded-lg"

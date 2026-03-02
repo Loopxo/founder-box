@@ -24,7 +24,8 @@ export default function Navigation() {
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <img src="/logo.png" alt="FounderBox" className="h-8 w-auto" />
+              /* eslint-disable-next-line @next/next/no-img-element */
+<img src="/logo.png" alt="FounderBox" className="h-8 w-auto" />
               <span className="ml-3 text-xl font-bold bg-gradient-to-r from-yellow-400 to-cyan-400 bg-clip-text text-transparent">
                 FounderBox
               </span>

@@ -723,7 +723,7 @@ export const calculateCampaignMetrics = (
   // Calculate backwards from target meetings
   const meetingBookingRate = 0.4; // 40% of positive replies book meetings
   const positiveReplyRate = 0.3; // 30% of replies are positive
-  
+
   const requiredPositiveReplies = targetMeetings / meetingBookingRate;
   const requiredTotalReplies = requiredPositiveReplies / positiveReplyRate;
   const requiredEmails = Math.ceil(requiredTotalReplies / actualRate);
@@ -733,9 +733,9 @@ export const calculateCampaignMetrics = (
     expectedReplies: Math.round(requiredEmails * actualRate),
     meetingsLikely: Math.round(requiredEmails * actualRate * positiveReplyRate * meetingBookingRate),
     dailyEmails: Math.ceil(requiredEmails / 30), // Monthly target
-    timeline: experienceLevel === "beginner" ? "2-3 months to optimize" : 
-              experienceLevel === "intermediate" ? "1-2 months to optimize" : 
-              "2-4 weeks to optimize"
+    timeline: experienceLevel === "beginner" ? "2-3 months to optimize" :
+      experienceLevel === "intermediate" ? "1-2 months to optimize" :
+        "2-4 weeks to optimize"
   };
 };
 
@@ -743,27 +743,27 @@ export const calculateCampaignMetrics = (
 export const analyzeSubjectLine = (subject: string) => {
   const length = subject.length;
   const words = subject.toLowerCase().split(' ');
-  
+
   // Urgency words (can be spammy if overused)
   const urgencyWords = ['urgent', 'immediate', 'asap', 'quick', 'fast', 'now', 'today'];
   const urgencyCount = words.filter(word => urgencyWords.includes(word)).length;
-  
+
   // Personalization check
   const hasPersonalization = subject.includes('[') || subject.includes('{');
-  
+
   // Emotion words
   const positiveWords = ['help', 'improve', 'better', 'grow', 'increase', 'boost'];
   const negativeWords = ['problem', 'issue', 'trouble', 'losing', 'missing'];
-  const emotionScore = 
+  const emotionScore =
     words.filter(word => positiveWords.includes(word)).length * 2 +
     words.filter(word => negativeWords.includes(word)).length * 1;
-  
+
   // Question check
   const isQuestion = subject.includes('?');
-  
+
   let score = 0;
   const feedback: string[] = [];
-  
+
   // Length scoring
   if (length >= 30 && length <= 50) {
     score += 25;
@@ -775,7 +775,7 @@ export const analyzeSubjectLine = (subject: string) => {
     score += 10;
     feedback.push("⚠️ Might be too long - risk of truncation");
   }
-  
+
   // Urgency scoring
   if (urgencyCount === 0) {
     score += 25;
@@ -787,7 +787,7 @@ export const analyzeSubjectLine = (subject: string) => {
     score += 5;
     feedback.push("❌ Multiple urgency words - high spam risk");
   }
-  
+
   // Personalization scoring
   if (hasPersonalization) {
     score += 25;
@@ -796,7 +796,7 @@ export const analyzeSubjectLine = (subject: string) => {
     score += 10;
     feedback.push("⚠️ Consider adding personalization");
   }
-  
+
   // Emotion scoring
   if (emotionScore > 0) {
     score += 25;
@@ -805,7 +805,7 @@ export const analyzeSubjectLine = (subject: string) => {
     score += 15;
     feedback.push("⚠️ Consider adding emotional appeal");
   }
-  
+
   return {
     score: Math.min(100, score),
     length,
@@ -816,3 +816,149 @@ export const analyzeSubjectLine = (subject: string) => {
     emotionScore
   };
 };
+export const blueprintSteps = [
+  {
+    part: "PART 1",
+    title: "The Math Behind Scalable Outreach",
+    content: `Before we get tactical, you need to understand the numbers.
+
+**The Cold Email Equation:**
+• Per 1,000 emails sent: → 15-25 replies (1.5-2.5% reply rate)
+• 8-12 positive/interested replies → 3-5 calls booked
+• Per 10,000 emails/month: → 30-50 calls booked → 8-12 new clients
+
+**The Cost to Run This:**
+• 66 domains: ~$16/month
+• 200 inboxes: ~$400/month
+• Instantly & Verification: ~$147/month
+• **Total:** ~$563/month to run this at scale.`
+  },
+  {
+    part: "PART 2",
+    title: "Infrastructure Setup",
+    content: `Sending 500 emails from a single inbox doesn't work anymore. You need a decentralized setup.
+
+**The Domain Strategy:**
+• Buy domains variations like getfrost.co, tryfrost.co (e.g., from Porkbun)
+• Rule: 3 inboxes per domain, sending max 25 emails per inbox per day.
+• For 5,000 emails/day, you need 66 domains = 198 inboxes.
+
+**The Warming Protocol (DO NOT SKIP):**
+• Connect all inboxes to Instantly.
+• Enable warmup on every inbox for a minimum of 14-21 days.
+• Only launch campaigns when warmup scores are 90%+.
+• Keep warmup running forever.`
+  },
+  {
+    part: "PART 3",
+    title: "Lead Sources",
+    content: `Your leads determine everything. Same script + bad leads = no replies. Stop using just Apollo.
+
+**The Secret Weapon (Tweet Scraper):**
+• Scrape followers of specific Twitter accounts in your ICP.
+• E.g., target agency owners by scraping @alexhormozi followers.
+• Filter bios for keywords like "founder", "CEO".
+
+**Other Untapped Sources:**
+• Instagram followers using Social Scraper.
+• Paid communities (Skool, Circle, Slack).
+• Podcast guests and Event attendees.
+• **CRITICAL:** Always verify your emails using tools like Omni Verifier before sending.`
+  },
+  {
+    part: "PART 4",
+    title: "The Scripts That Book Calls",
+    content: `After 1,000,000+ emails, this is the only structure that works:
+
+1. **Relevancy:** Prove you're not a bot ("Saw you followed [account]").
+2. **Irresistible Offer:** Specific outcome + timeframe ("If we could book you 30-45 meetings").
+3. **Soft CTA:** Frictionless call to action ("Reply yes and I'll send more details").
+4. **Signature:** Simple.
+5. **PS (Social Proof):** "PS - we just got [company] 23 leads, they closed 5 deals".
+
+Use specific numbers. Short, simple, and easy to respond with a 'yes'.`
+  },
+  {
+    part: "PART 5",
+    title: "Clay Personalization",
+    content: `Clay is what separates mass spam from a hyper-personalized outreach.
+
+**The Client Name Method (1%+ Reply Rates):**
+• Upload your lead list to Clay.
+• Have Clay scrape their website to find one of THEIR clients or case studies.
+• Frame the email around it: "Subject: {{clientName}} - your client? Just saw the results you got for {{clientName}}..."
+
+Other Clay enrichments: pull competitor names, product names from TikTok Shop, or reference their recent content.`
+  },
+  {
+    part: "PART 6",
+    title: "Booking The Calls",
+    content: `Getting replies is step 1. Booking them into your calendar is step 2.
+
+**Speed is Everything:**
+• Respond within 5 minutes = 35%+ booking rate.
+• Respond next day = 5% booking rate.
+
+**The Response Sequence:**
+1. Call them immediately: "Hey, this is James - you just replied to my email..."
+2. No answer? Send a Calendly link immediately.
+3. Follow up the exact same day if they haven't booked.
+Consider hiring a performance-based appointment setter once replies scale.`
+  },
+  {
+    part: "PART 7",
+    title: "Deliverability in 2026",
+    content: `The rules changed. Google and Microsoft are strictly filtering bulk senders.
+
+**The Authentication Checklist (Mandatory):**
+• SPF, DKIM, DMARC correctly configured.
+• Custom tracking domains setup (do not use Instantly's default).
+• Spam complaint rate must stay < 0.3%.
+
+**Monitoring Health:**
+• Check Mail-Tester.com (aim for 10/10).
+• Check Google Postmaster Tools.
+• Volume limits: Safe is 15-20 emails per inbox/day (45-60 per domain/day).`
+  },
+  {
+    part: "PART 8",
+    title: "Case Studies / Proof",
+    content: `This system generates massive pipeline across multiple industries:
+
+• **Accounting Firm:** 91 calls booked in 62 days. $255K pipeline generated.
+• **Ecom Agency:** 900% increase in booked calls by switching off generic Apollo leads.
+• **AI Agency:** 3 clients closed in 30 days ($36K MRR) with a 9.9% reply rate.
+• **Local Landscaping:** 23 calls booked in 30 days ($128K pipeline).
+
+High-ticket offers + cold email at scale = serious money.`
+  },
+  {
+    part: "PART 9",
+    title: "The Complete Checklist",
+    content: `**Infrastructure:**
+[ ] Domains (Porkbun), Inboxes (Frost Mailer), DNS (SPF/DKIM/DMARC) matched.
+[ ] Instantly warmup running 21+ days.
+
+**Lead Gen:**
+[ ] Untapped sources found (Twitter/IG Scraper, Communities).
+[ ] All leads verified before uploading.
+
+**Campaign:**
+[ ] Script follows framework (Relevancy + Offer + CTA + PS).
+[ ] Follow-up sequence ready (2-3 emails max).
+
+**Booking:**
+[ ] Setter hired or Calendly ready. Fast response protocols in place.`
+  },
+  {
+    part: "PART 10",
+    title: "Need 1-on-1 Help?",
+    content: `Setting up an infrastructure of 200 inboxes, writing converting copy, and managing the lead flow can be overwhelming.
+
+If you want me to review your setup, help you write your scripts, or just want to bounce ideas off someone who has done this before, I'm here to help.
+
+**Reach Out Directly:**
+• Email me at: **vijeet@vijeetshah.com**
+• Let me know where you're stuck, and we'll figure it out together.`
+  }
+];

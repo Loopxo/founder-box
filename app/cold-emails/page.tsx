@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/DashboardLayout'
-import { industries, templates, calculateCampaignMetrics } from '@/lib/cold-email-data'
+import { industries, templates, calculateCampaignMetrics, blueprintSteps } from '@/lib/cold-email-data'
 
 // Studio palette
 const S = {
@@ -33,7 +33,8 @@ function ColdEmailContent() {
   const [selectedIndustry, setSelectedIndustry] = useState<string | null>(null)
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [activeTab, setActiveTab] = useState<'templates' | 'calculator'>('templates')
+  const [activeTab, setActiveTab] = useState<'templates' | 'calculator' | 'blueprint'>('templates')
+  const [activeBlueprintStep, setActiveBlueprintStep] = useState<number>(0)
   const [campaignData, setCampaignData] = useState({
     targetMeetings: 50,
     industry: 'saas',
@@ -165,7 +166,7 @@ function ColdEmailContent() {
 
       {/* Tab bar */}
       <div style={{ display: 'flex', gap: '1px', background: S.border, borderRadius: '8px', padding: '1px', marginBottom: '28px', width: 'fit-content' }}>
-        {(['templates', 'calculator'] as const).map(tab => (
+        {(['templates', 'calculator', 'blueprint'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -177,7 +178,7 @@ function ColdEmailContent() {
               letterSpacing: '0.02em',
             }}
           >
-            {tab === 'templates' ? 'Templates' : 'Campaign Calculator'}
+            {tab === 'templates' ? 'Templates' : tab === 'calculator' ? 'Campaign Calculator' : 'The Blueprint'}
           </button>
         ))}
       </div>
@@ -515,6 +516,72 @@ function ColdEmailContent() {
                   </span>
                 </div>
               </div>
+            </div>
+          </SCard>
+        </div>
+      )}
+
+      {/* ── BLUEPRINT TAB ── */}
+      {activeTab === 'blueprint' && (
+        <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '24px', alignItems: 'flex-start' }}>
+          {/* Left Menu / Stepper */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', position: 'sticky', top: '24px' }}>
+            {blueprintSteps.map((step: any, idx: number) => (
+              <button
+                key={idx}
+                onClick={() => setActiveBlueprintStep(idx)}
+                style={{
+                  display: 'flex', flexDirection: 'column', alignItems: 'flex-start',
+                  padding: '16px', borderRadius: '8px', border: `1px solid ${activeBlueprintStep === idx ? S.gold : S.border}`,
+                  background: activeBlueprintStep === idx ? S.surface2 : S.surface,
+                  cursor: 'pointer', transition: 'all 0.2s ease',
+                  textAlign: 'left'
+                }}
+              >
+                <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.06em', color: activeBlueprintStep === idx ? S.gold : S.muted, marginBottom: '4px' }}>
+                  STEP {idx + 1}
+                </span>
+                <span style={{ fontSize: '14px', fontWeight: 600, color: activeBlueprintStep === idx ? S.text : S.muted }}>
+                  {step.title}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          {/* Right Content */}
+          <SCard style={{ padding: '32px' }}>
+            <div style={{ marginBottom: '24px', paddingBottom: '24px', borderBottom: `1px solid ${S.border}` }}>
+              <span style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '0.1em', color: S.gold, textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>
+                {blueprintSteps[activeBlueprintStep].part}
+              </span>
+              <h2 style={{ fontSize: '24px', fontWeight: 700, color: S.text }}>
+                {blueprintSteps[activeBlueprintStep].title}
+              </h2>
+            </div>
+
+            <div
+              style={{ fontSize: '14px', lineHeight: '1.7', color: S.text, whiteSpace: 'pre-wrap' }}
+              dangerouslySetInnerHTML={{
+                __html: blueprintSteps[activeBlueprintStep].content
+                  // Simple markdown parsing for the content
+                  .replace(/\*\*(.*?)\*\*/g, '<strong style="color: #D4A853; font-weight: 700">$1</strong>')
+                  .replace(/•/g, '<span style="color: #D4A853; margin-right: 8px">•</span>')
+              }}
+            />
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '48px', paddingTop: '24px', borderTop: `1px solid ${S.border}` }}>
+              <button
+                onClick={() => setActiveBlueprintStep(Math.max(0, activeBlueprintStep - 1))}
+                style={{ ...ghostBtn, opacity: activeBlueprintStep === 0 ? 0.3 : 1, pointerEvents: activeBlueprintStep === 0 ? 'none' : 'auto' }}
+              >
+                ← Previous Step
+              </button>
+              <button
+                onClick={() => setActiveBlueprintStep(Math.min(blueprintSteps.length - 1, activeBlueprintStep + 1))}
+                style={{ ...ghostBtn, borderColor: S.gold, color: S.gold, opacity: activeBlueprintStep === blueprintSteps.length - 1 ? 0.3 : 1, pointerEvents: activeBlueprintStep === blueprintSteps.length - 1 ? 'none' : 'auto' }}
+              >
+                Next Step →
+              </button>
             </div>
           </SCard>
         </div>

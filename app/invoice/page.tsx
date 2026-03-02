@@ -413,7 +413,8 @@ ${invoice.notes || ''}
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <div style={{ background: S.bg, padding: '16px', borderRadius: '6px', textAlign: 'center', border: `1px solid ${S.border}` }}>
-                    <img src={companyLogo} alt="Logo" style={{ maxHeight: '64px', margin: '0 auto' }} />
+                    /* eslint-disable-next-line @next/next/no-img-element */
+<img src={companyLogo} alt="Logo" style={{ maxHeight: '64px', margin: '0 auto' }} />
                   </div>
                   <button style={ghostBtn} onClick={removeLogo}>Remove Logo</button>
                 </div>
@@ -510,7 +511,8 @@ ${invoice.notes || ''}
               {/* Fake PDF document inner wrapper to show real print colors against white bg, since this previews the PDF */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px' }}>
                 <div>
-                  {companyLogo && <img src={companyLogo} alt="Logo" style={{ maxHeight: '64px', marginBottom: '16px' }} />}
+                  {companyLogo && /* eslint-disable-next-line @next/next/no-img-element */
+<img src={companyLogo} alt="Logo" style={{ maxHeight: '64px', marginBottom: '16px' }} />}
                   <h1 style={{ fontSize: '32px', fontWeight: 800, color: selectedThemeData?.accentColor, marginBottom: '8px' }}>INVOICE</h1>
                   <p style={{ fontSize: '18px', fontWeight: 600, color: '#111' }}>#{invoice.invoiceNumber}</p>
                 </div>

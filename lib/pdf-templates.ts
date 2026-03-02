@@ -182,11 +182,13 @@ function generateProposalHTML(
     'next-steps': 60   // Reduced from 80 to 60 (20px less)
   }
 
-  const _getTextForSection = (textId: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _getTextForSection = (textId: string) => {
     return customTexts?.[textId] || defaultTexts[textId as keyof typeof defaultTexts] || ''
   }
 
-  const _getImageHeight = (sectionId: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _getImageHeight = (sectionId: string) => {
     return imageHeights?.[sectionId] || defaultImageHeights[sectionId as keyof typeof defaultImageHeights] || 80
   }
 

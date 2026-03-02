@@ -522,7 +522,7 @@ Looking forward to hearing from you!`
                               </div>
                               <div className="text-right">
                                 <div className="text-lg font-bold">{formatCurrency(lead.value)}</div>
-                                <Badge className="bg-[#111118] border border-[#2A2A38] text-[#EDE9DC] font-mono rounded-sm hover:bg-[#111118]" className={stageConfig?.color}>{stageConfig?.label}</Badge>
+                                <Badge className={`bg-[#111118] border border-[#2A2A38] text-[#EDE9DC] font-mono rounded-sm hover:bg-[#111118] ${stageConfig?.color || ''}`}>{stageConfig?.label}</Badge>
                               </div>
                             </div>
                             <div className="grid md:grid-cols-3 gap-4 text-sm">
@@ -783,79 +783,79 @@ Looking forward to hearing from you!`
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <Label className="font-mono text-xs text-[#D4A853] uppercase tracking-widest mb-2 block" htmlFor="companyName">Company Name *</Label>
-                      <Input className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm"
+                      <Input className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm mt-1"
                         id="companyName"
                         value={businessInfo.companyName}
                         onChange={(e) => handleInputChange('companyName', e.target.value)}
                         placeholder="e.g., TechFlow Solutions"
-                        className="mt-1"
+                        
                       />
                     </div>
                     <div>
                       <Label className="font-mono text-xs text-[#D4A853] uppercase tracking-widest mb-2 block" htmlFor="industry">Industry *</Label>
-                      <Input className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm"
+                      <Input className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm mt-1"
                         id="industry"
                         value={businessInfo.industry}
                         onChange={(e) => handleInputChange('industry', e.target.value)}
                         placeholder="e.g., SaaS, E-commerce, Professional Services"
-                        className="mt-1"
+                        
                       />
                     </div>
                   </div>
 
                   <div>
                     <Label className="font-mono text-xs text-[#D4A853] uppercase tracking-widest mb-2 block" htmlFor="productService">Product or Service *</Label>
-                    <Textarea className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm min-h-[100px]"
+                    <Textarea className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm min-h-[100px] mt-1"
                       id="productService"
                       value={businessInfo.productService}
                       onChange={(e) => handleInputChange('productService', e.target.value)}
                       placeholder="Describe what you sell or the service you provide"
-                      className="mt-1"
+                      
                     />
                   </div>
 
                   <div>
                     <Label className="font-mono text-xs text-[#D4A853] uppercase tracking-widest mb-2 block" htmlFor="targetCustomers">Target Customers *</Label>
-                    <Textarea className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm min-h-[100px]"
+                    <Textarea className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm min-h-[100px] mt-1"
                       id="targetCustomers"
                       value={businessInfo.targetCustomers}
                       onChange={(e) => handleInputChange('targetCustomers', e.target.value)}
                       placeholder="Describe your ideal customers (company size, roles, challenges, etc.)"
-                      className="mt-1"
+                      
                     />
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <Label className="font-mono text-xs text-[#D4A853] uppercase tracking-widest mb-2 block" htmlFor="currentSales">Current Monthly Sales ($) *</Label>
-                      <Input className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm"
+                      <Input className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm mt-1"
                         id="currentSales"
                         value={businessInfo.currentSales}
                         onChange={(e) => handleInputChange('currentSales', e.target.value)}
                         placeholder="e.g., $10,000"
-                        className="mt-1"
+                        
                       />
                     </div>
                     <div>
                       <Label className="font-mono text-xs text-[#D4A853] uppercase tracking-widest mb-2 block" htmlFor="budget">Monthly SDR Budget ($) *</Label>
-                      <Input className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm"
+                      <Input className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm mt-1"
                         id="budget"
                         value={businessInfo.budget}
                         onChange={(e) => handleInputChange('budget', e.target.value)}
                         placeholder="e.g., $200"
-                        className="mt-1"
+                        
                       />
                     </div>
                   </div>
 
                   <div>
                     <Label className="font-mono text-xs text-[#D4A853] uppercase tracking-widest mb-2 block" htmlFor="salesChallenges">Top Sales Challenge *</Label>
-                    <Textarea className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm min-h-[100px]"
+                    <Textarea className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm min-h-[100px] mt-1"
                       id="salesChallenges"
                       value={businessInfo.salesChallenges}
                       onChange={(e) => handleInputChange('salesChallenges', e.target.value)}
                       placeholder="What's your biggest obstacle in acquiring new customers?"
-                      className="mt-1"
+                      
                     />
                   </div>
 

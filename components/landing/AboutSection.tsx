@@ -41,7 +41,7 @@ export default function AboutSection() {
                             viewport={{ once: true }}
                         >
                             <p className="font-sans text-xl sm:text-2xl text-[#EDE9DC] font-light leading-relaxed mb-8">
-                                Business isn't just about building great products; it's about defining the system that scales them. Since day one, founders waste countless hours on administrative friction instead of pure execution.
+                                Business isn&apos;t just about building great products; it&apos;s about defining the system that scales them. Since day one, founders waste countless hours on administrative friction instead of pure execution.
                             </p>
                             <p className="font-mono text-sm text-[#9E9880] leading-relaxed max-w-2xl">
                                 Our methodology is subtractive. We remove the unnecessary context switching tools to reveal the essential workflow. Every contract, proposal, and invoice is calculated to create a sense of permanence in a fast-paced ecosystem.

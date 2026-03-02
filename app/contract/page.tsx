@@ -178,7 +178,7 @@ function ContractContent() {
   const toggleSection = (section: string) => {
     setOpenSections(prev => {
       const next = new Set(prev)
-      next.has(section) ? next.delete(section) : next.add(section)
+      if (next.has(section)) { next.delete(section); } else { next.add(section); }
       return next
     })
   }
@@ -355,7 +355,8 @@ function ContractContent() {
                 ) : (
                   <div>
                     <div style={{ background: S.bg, border: `1px solid ${S.border}`, borderRadius: '6px', padding: '16px', textAlign: 'center', marginBottom: '10px' }}>
-                      <img src={companyLogo} alt="Company Logo" style={{ maxHeight: '64px', margin: '0 auto' }} />
+                      /* eslint-disable-next-line @next/next/no-img-element */
+<img src={companyLogo} alt="Company Logo" style={{ maxHeight: '64px', margin: '0 auto' }} />
                     </div>
                     <button
                       onClick={removeLogo}
@@ -471,7 +472,8 @@ function ContractContent() {
               <div style={{ padding: '24px', minHeight: '600px', fontFamily: 'monospace', fontSize: '13px', color: S.text }}>
                 {companyLogo && (
                   <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-                    <img src={companyLogo} alt="Company Logo" style={{ maxHeight: '64px', margin: '0 auto' }} />
+                    /* eslint-disable-next-line @next/next/no-img-element */
+<img src={companyLogo} alt="Company Logo" style={{ maxHeight: '64px', margin: '0 auto' }} />
                   </div>
                 )}
                 <pre style={{ whiteSpace: 'pre-wrap', margin: 0, color: S.text }}>
