@@ -95,12 +95,12 @@ function ToolkitCard({ item, index }: { item: typeof toolkitItems[0]; index: num
 
                     {/* Bottom: Title & Details */}
                     <div>
-                        <h3 className="font-sans text-2xl text-[#EDE9DC] font-bold mb-2 group-hover:text-[#D4A853] transition-colors duration-300">
+                        <h3 className="font-sans text-2xl text-[#EDE9DC] font-bold group-hover:text-[#D4A853] transition-colors duration-300">
                             {item.title}
                         </h3>
-                        <div className="h-0 overflow-hidden group-hover:h-auto transition-all duration-300">
-                            <div className="pt-4 border-t border-[#2A2A38] flex justify-between items-center bg-[#111118]/80 -mx-6 px-6 pb-2 backdrop-blur-sm">
-                                <span className="font-mono text-xs text-[#9E9880] uppercase">{item.description}</span>
+                        <div className="h-0 opacity-0 overflow-hidden group-hover:h-12 group-hover:opacity-100 transition-all duration-300 ease-in-out">
+                            <div className="pt-4 mt-4 border-t border-[#2A2A38] flex justify-between items-center">
+                                <span className="font-mono text-xs text-[#9E9880] uppercase tracking-wider">{item.description}</span>
                                 <span className="font-mono text-xs text-[#D4A853] flex items-center gap-2">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#4D9E6A]"></span>
                                     {item.status}
