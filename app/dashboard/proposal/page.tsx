@@ -6,7 +6,7 @@ import DashboardLayout from '@/components/DashboardLayout'
 import { ToastProvider, useToast } from '@/components/ui/toast'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Package, Upload, FileSpreadsheet, X, Download, Loader2, CheckCircle, XCircle } from 'lucide-react'
+
 import * as XLSX from 'xlsx'
 import PricingEditor, { PricingPackage } from '@/components/PricingEditor'
 import { industryTemplates } from '@/lib/templates'
@@ -217,37 +217,28 @@ function ProposalPageContent() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-8 flex justify-between items-start">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Proposal Launcher</h1>
-            <p className="text-slate-300">
-              Create stunning, professional proposals with customizable themes and branding
-            </p>
+            <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#EDE9DC', marginBottom: '4px' }}>Proposal Generator</h1>
+            <p style={{ color: '#9E9880', fontSize: '14px' }}>Create professional, client-ready proposals with custom themes and branding.</p>
           </div>
-          <Button
+          <button
             onClick={() => setShowBulkModal(true)}
-            className="bg-gradient-to-r from-neon-orange to-electric-violet hover:from-neon-orange/80 hover:to-electric-violet/80 text-white font-bold shadow-lg"
+            style={{ background: '#D4A853', color: '#111118', fontWeight: 700, fontSize: '13px', letterSpacing: '0.04em', padding: '9px 18px', borderRadius: '6px', border: 'none', cursor: 'pointer', flexShrink: 0 }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = '#C49843')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = '#D4A853')}
           >
-            <Package className="w-4 h-4 mr-2" />
             Bulk Generator
-          </Button>
+          </button>
         </div>
         <PitchForm onSubmit={handleSubmit} isGenerating={isGenerating} />
 
         {/* PDF Generation Loading Modal */}
         {isGenerating && (
           <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-slate-900 border-2 border-electric-blue rounded-lg p-8 max-w-md w-full mx-4">
-              <div className="text-center">
-                <Loader2 className="w-16 h-16 text-electric-blue animate-spin mx-auto mb-4" />
-                <h3 className="text-2xl font-bold text-white mb-2">Generating Your Proposal</h3>
-                <p className="text-slate-400 mb-4">
-                  Please wait while we create your professional proposal...
-                </p>
-                <div className="flex items-center justify-center gap-2 text-slate-500 text-sm">
-                  <div className="w-2 h-2 bg-electric-blue rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                  <div className="w-2 h-2 bg-electric-blue rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                  <div className="w-2 h-2 bg-electric-blue rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                </div>
-              </div>
+            <div style={{ background: '#18181F', border: '1px solid #D4A853', borderRadius: '8px', padding: '40px', maxWidth: '420px', textAlign: 'center' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', border: '3px solid #D4A853', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite', margin: '0 auto 20px' }} />
+              <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
+              <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#EDE9DC', marginBottom: '8px' }}>Generating Your Proposal</h3>
+              <p style={{ color: '#9E9880', fontSize: '14px' }}>Please wait while we create your professional proposal...</p>
             </div>
           </div>
         )}
@@ -255,203 +246,122 @@ function ProposalPageContent() {
         {/* Bulk Generator Modal */}
         {showBulkModal && (
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-slate-900 border border-slate-700 rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto">
-              {/* Header */}
-              <div className="sticky top-0 bg-slate-900 border-b border-slate-700 p-6 flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-white">Bulk Proposal Generator</h2>
-                <button
-                  onClick={closeBulkModal}
-                  className="text-slate-400 hover:text-white transition-colors"
-                >
-                  <X className="w-6 h-6" />
-                </button>
+            <div style={{ background: '#18181F', border: '1px solid #2A2A38', borderRadius: '8px', maxWidth: '900px', width: '100%', maxHeight: '90vh', overflowY: 'auto' }}>
+              <div style={{ position: 'sticky', top: 0, background: '#18181F', borderBottom: '1px solid #2A2A38', padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#EDE9DC' }}>Bulk Proposal Generator</h2>
+                <button onClick={closeBulkModal} style={{ color: '#9E9880', background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', lineHeight: 1 }} onMouseEnter={(e) => (e.currentTarget.style.color = '#EDE9DC')} onMouseLeave={(e) => (e.currentTarget.style.color = '#9E9880')}>✕</button>
               </div>
 
               {/* Step 1: Upload */}
               {bulkStep === 'upload' && (
-                <div className="p-6">
-                  <Card className="bg-slate-800 border-slate-700">
-                    <CardHeader>
-                      <CardTitle className="text-white">Upload Client Data</CardTitle>
-                      <CardDescription className="text-slate-400">
-                        Upload an Excel file (.xlsx) with up to 10 clients
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="border-2 border-dashed border-slate-600 rounded-lg p-8 text-center hover:border-electric-blue transition-colors">
-                        <Upload className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-                        <label className="cursor-pointer">
-                          <span className="text-white font-medium">Click to upload</span>
-                          <span className="text-slate-400"> or drag and drop</span>
-                          <input
-                            type="file"
-                            accept=".xlsx,.xls,.csv"
-                            onChange={handleBulkFileUpload}
-                            className="hidden"
-                          />
-                        </label>
-                        <p className="text-sm text-slate-500 mt-2">Excel file (max 10 clients)</p>
-                      </div>
-
-                      <Button
-                        onClick={downloadTemplate}
-                        variant="outline"
-                        className="w-full bg-slate-700 border-slate-600 text-white hover:bg-slate-600"
-                      >
-                        <FileSpreadsheet className="w-4 h-4 mr-2" />
-                        Download Template
-                      </Button>
-                    </CardContent>
-                  </Card>
+                <div style={{ padding: '24px' }}>
+                  <div style={{ background: '#111118', border: '2px dashed #2A2A38', borderRadius: '6px', padding: '40px 24px', textAlign: 'center' }}>
+                    <label style={{ cursor: 'pointer' }}>
+                      <p style={{ color: '#EDE9DC', fontWeight: 600, marginBottom: '4px' }}>Click to upload</p>
+                      <p style={{ color: '#9E9880', fontSize: '13px' }}>or drag and drop — Excel file, max 10 clients</p>
+                      <input type="file" accept=".xlsx,.xls,.csv" onChange={handleBulkFileUpload} style={{ display: 'none' }} />
+                    </label>
+                  </div>
+                  <button
+                    onClick={downloadTemplate}
+                    style={{ width: '100%', marginTop: '12px', padding: '10px', background: '#1E1E28', border: '1px solid #2A2A38', borderRadius: '6px', color: '#9E9880', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = '#EDE9DC')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#9E9880')}
+                  >
+                    Download Template
+                  </button>
                 </div>
               )}
 
               {/* Step 2: Configure Pricing */}
               {bulkStep === 'configure' && (
-                <div className="p-6 space-y-6">
-                  <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
-                    <h3 className="text-white font-semibold mb-2">
-                      {bulkClients.length} Clients Uploaded
-                    </h3>
-                    <p className="text-slate-400 text-sm">
-                      Configure the pricing packages below. These settings will apply to all clients.
-                    </p>
+                <div style={{ padding: '24px' }} className="space-y-6">
+                  <div style={{ background: '#111118', border: '1px solid #2A2A38', borderRadius: '6px', padding: '16px' }}>
+                    <h3 style={{ color: '#EDE9DC', fontWeight: 600, fontSize: '15px', marginBottom: '4px' }}>{bulkClients.length} Clients Uploaded</h3>
+                    <p style={{ color: '#9E9880', fontSize: '13px' }}>Configure pricing below — these settings apply to all clients.</p>
                   </div>
 
                   <div>
-                    <h3 className="text-white text-lg font-bold mb-4">Global Pricing Configuration</h3>
-                    <p className="text-slate-400 text-sm mb-6">
-                      Set the pricing packages that will be used for all {bulkClients.length} proposals
-                    </p>
-                    <PricingEditor
-                      packages={globalPricing}
-                      onPackagesChange={setGlobalPricing}
-                      currency="USD"
-                    />
+                    <h3 style={{ color: '#EDE9DC', fontWeight: 700, fontSize: '16px', marginBottom: '4px' }}>Global Pricing</h3>
+                    <p style={{ color: '#9E9880', fontSize: '13px', marginBottom: '20px' }}>Set pricing packages for all {bulkClients.length} proposals.</p>
+                    <PricingEditor packages={globalPricing} onPackagesChange={setGlobalPricing} currency="USD" />
                   </div>
 
-                  {/* Client Preview */}
                   <div>
-                    <h3 className="text-white text-lg font-bold mb-4">Client List Preview</h3>
-                    <div className="space-y-2 max-h-60 overflow-y-auto">
+                    <h3 style={{ color: '#EDE9DC', fontWeight: 700, fontSize: '16px', marginBottom: '12px' }}>Client List</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '240px', overflowY: 'auto' }}>
                       {bulkClients.map((client, index) => (
-                        <div
-                          key={client.id}
-                          className="flex items-center justify-between p-3 bg-slate-800 rounded-lg border border-slate-700"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-electric-blue/20 flex items-center justify-center text-electric-blue font-bold text-sm">
-                              {index + 1}
-                            </div>
+                        <div key={client.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: '#111118', border: '1px solid #2A2A38', borderRadius: '6px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(212,168,83,0.12)', color: '#D4A853', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 700 }}>{index + 1}</span>
                             <div>
-                              <p className="text-white font-medium text-sm">{client.data.businessName || 'N/A'}</p>
-                              <p className="text-slate-400 text-xs">{client.data.clientName || 'N/A'}</p>
+                              <p style={{ color: '#EDE9DC', fontWeight: 500, fontSize: '14px' }}>{client.data.businessName || 'N/A'}</p>
+                              <p style={{ color: '#9E9880', fontSize: '12px' }}>{client.data.clientName || 'N/A'}</p>
                             </div>
                           </div>
-                          <div className="text-slate-400 text-xs">
-                            {client.data.industry || 'N/A'}
-                          </div>
+                          <span style={{ color: '#9E9880', fontSize: '12px' }}>{client.data.industry || 'N/A'}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="flex gap-4">
-                    <Button
-                      onClick={() => {
-                        setBulkClients([])
-                        setBulkStep('upload')
-                      }}
-                      variant="outline"
-                      className="flex-1 bg-slate-800 border-slate-600 text-white hover:bg-slate-700"
-                    >
-                      Back to Upload
-                    </Button>
-                    <Button
-                      onClick={generateAllBulk}
-                      className="flex-1 bg-gradient-to-r from-electric-blue to-electric-violet hover:from-electric-blue/80 hover:to-electric-violet/80 text-white font-bold"
-                    >
-                      Generate All Proposals
-                    </Button>
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                    <button onClick={() => { setBulkClients([]); setBulkStep('upload') }} style={{ flex: 1, padding: '10px', background: '#1E1E28', border: '1px solid #2A2A38', borderRadius: '6px', color: '#9E9880', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}>Back</button>
+                    <button onClick={generateAllBulk} style={{ flex: 1, padding: '10px', background: '#D4A853', color: '#111118', fontWeight: 700, fontSize: '14px', borderRadius: '6px', border: 'none', cursor: 'pointer' }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = '#C49843')}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = '#D4A853')}
+                    >Generate All Proposals</button>
                   </div>
                 </div>
               )}
 
               {/* Step 3: Generate & Download */}
               {bulkStep === 'generate' && (
-                <div className="p-6 space-y-6">
-                  {/* Progress */}
+                <div style={{ padding: '24px' }} className="space-y-6">
                   {isGeneratingBulk && (
-                    <div className="bg-slate-800 border border-slate-700 rounded-lg p-6 text-center">
-                      <Loader2 className="w-12 h-12 text-electric-blue animate-spin mx-auto mb-4" />
-                      <h3 className="text-white font-bold text-lg mb-2">
-                        Generating Proposals...
-                      </h3>
-                      <p className="text-slate-400">
-                        {bulkProgress.current} of {bulkProgress.total} complete
-                      </p>
+                    <div style={{ background: '#111118', border: '1px solid #2A2A38', borderRadius: '6px', padding: '32px', textAlign: 'center' }}>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '3px solid #D4A853', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite', margin: '0 auto 16px' }} />
+                      <h3 style={{ color: '#EDE9DC', fontWeight: 700, fontSize: '16px', marginBottom: '4px' }}>Generating Proposals...</h3>
+                      <p style={{ color: '#9E9880', fontSize: '14px' }}>{bulkProgress.current} of {bulkProgress.total} complete</p>
                     </div>
                   )}
 
-                  {/* Results */}
                   <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-white text-lg font-bold">Results</h3>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                      <h3 style={{ color: '#EDE9DC', fontWeight: 700, fontSize: '16px' }}>Results</h3>
                       {bulkClients.some(c => c.status === 'success') && (
-                        <Button
-                          onClick={downloadAllBulk}
-                          className="bg-gradient-to-r from-electric-blue to-electric-violet hover:from-electric-blue/80 hover:to-electric-violet/80 text-white font-bold"
-                        >
-                          <Package className="w-4 h-4 mr-2" />
-                          Download All as ZIP
-                        </Button>
+                        <button onClick={downloadAllBulk}
+                          style={{ padding: '8px 16px', background: '#D4A853', color: '#111118', fontWeight: 700, fontSize: '13px', borderRadius: '6px', border: 'none', cursor: 'pointer' }}
+                          onMouseEnter={(e) => (e.currentTarget.style.background = '#C49843')}
+                          onMouseLeave={(e) => (e.currentTarget.style.background = '#D4A853')}
+                        >Download All (ZIP)</button>
                       )}
                     </div>
 
-                    <div className="space-y-2 max-h-96 overflow-y-auto">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '384px', overflowY: 'auto' }}>
                       {bulkClients.map((client, index) => (
-                        <div
-                          key={client.id}
-                          className="flex items-center justify-between p-4 bg-slate-800 rounded-lg border border-slate-700"
-                        >
-                          <div className="flex items-center gap-4 flex-1">
-                            <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-white font-bold">
-                              {index + 1}
-                            </div>
+                        <div key={client.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px', background: '#111118', border: '1px solid #2A2A38', borderRadius: '6px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
+                            <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#1E1E28', color: '#EDE9DC', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 700, flexShrink: 0 }}>{index + 1}</span>
                             <div>
-                              <p className="text-white font-medium">{client.data.businessName || 'N/A'}</p>
-                              <p className="text-sm text-slate-400">{client.data.clientName || 'N/A'}</p>
+                              <p style={{ color: '#EDE9DC', fontWeight: 500, fontSize: '14px' }}>{client.data.businessName || 'N/A'}</p>
+                              <p style={{ color: '#9E9880', fontSize: '12px' }}>{client.data.clientName || 'N/A'}</p>
                             </div>
                           </div>
-
-                          <div className="flex items-center gap-4">
-                            {client.status === 'pending' && (
-                              <span className="text-slate-400 text-sm">Waiting...</span>
-                            )}
-                            {client.status === 'processing' && (
-                              <Loader2 className="w-5 h-5 text-electric-blue animate-spin" />
-                            )}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            {client.status === 'pending' && <span style={{ color: '#9E9880', fontSize: '12px' }}>Waiting</span>}
+                            {client.status === 'processing' && <span style={{ color: '#D4A853', fontSize: '12px', fontWeight: 600 }}>Generating...</span>}
                             {client.status === 'success' && (
                               <>
-                                <CheckCircle className="w-5 h-5 text-green-400" />
+                                <span style={{ color: '#4D9E6A', fontSize: '12px', fontWeight: 600 }}>Done</span>
                                 {client.pdfUrl && (
-                                  <a
-                                    href={client.pdfUrl}
-                                    download={`${client.data.businessName}_Proposal.pdf`}
-                                    className="text-electric-blue hover:underline text-sm flex items-center gap-1"
-                                  >
-                                    <Download className="w-4 h-4" />
-                                    Download
-                                  </a>
+                                  <a href={client.pdfUrl} download={`${client.data.businessName}_Proposal.pdf`}
+                                    style={{ color: '#D4A853', fontSize: '12px', fontWeight: 600, textDecoration: 'none' }}
+                                  >Download</a>
                                 )}
                               </>
                             )}
-                            {client.status === 'error' && (
-                              <div className="flex items-center gap-2">
-                                <XCircle className="w-5 h-5 text-red-400" />
-                                <span className="text-red-400 text-sm">{client.error}</span>
-                              </div>
-                            )}
+                            {client.status === 'error' && <span style={{ color: '#C0514A', fontSize: '12px' }}>{client.error}</span>}
                           </div>
                         </div>
                       ))}
@@ -459,13 +369,9 @@ function ProposalPageContent() {
                   </div>
 
                   {!isGeneratingBulk && (
-                    <Button
-                      onClick={closeBulkModal}
-                      variant="outline"
-                      className="w-full bg-slate-800 border-slate-600 text-white hover:bg-slate-700"
-                    >
-                      Close
-                    </Button>
+                    <button onClick={closeBulkModal}
+                      style={{ width: '100%', padding: '10px', background: '#1E1E28', border: '1px solid #2A2A38', borderRadius: '6px', color: '#9E9880', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}
+                    >Close</button>
                   )}
                 </div>
               )}

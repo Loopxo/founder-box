@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import * as Select from "@radix-ui/react-select"
 import * as Label from "@radix-ui/react-label"
-import { ChevronDown, Check } from "lucide-react"
+// no icon imports — Studio theme is icon-free
 import ThemeSelector from "./ThemeSelector"
 import AgencyConfigForm from "./AgencyConfig"
 import PDFPreview from "./PDFPreview"
@@ -83,7 +83,7 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
     const newServices = selectedServices.includes(service)
       ? selectedServices.filter(s => s !== service)
       : [...selectedServices, service]
-    
+
     setSelectedServices(newServices)
     setValue("services", newServices)
   }
@@ -93,10 +93,8 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
   return (
     <div className="w-full">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold bg-gradient-to-r from-electric-blue via-neon-orange to-electric-violet bg-clip-text text-transparent mb-2">
-          Proposal Details
-        </h2>
-        <p className="text-slate-300">Fill out the information below to generate your professional 8-section proposal</p>
+        <h2 style={{ fontSize: '20px', fontWeight: 700, color: '#EDE9DC', marginBottom: '4px' }}>Proposal Details</h2>
+        <p style={{ color: '#9E9880', fontSize: '14px' }}>Fill in the details below to generate a professional 8-section proposal.</p>
 
       </div>
 
@@ -110,17 +108,17 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
         }
         console.log('Form Submit - Full Data:', submissionData)
         onSubmit(submissionData)
-      })} className="space-y-6 bg-slate-900/90 backdrop-blur-sm border border-slate-700 rounded-xl p-8 shadow-2xl">
+      })} className="space-y-6" style={{ background: '#18181F', border: '1px solid #2A2A38', borderRadius: '8px', padding: '32px' }}>
         {/* Basic Information */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label.Root className="text-sm font-medium text-white">
+            <Label.Root style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#9E9880', display: 'block', marginBottom: '6px' }}>
               Client Name *
             </Label.Root>
             <Input
               {...register("clientName")}
               placeholder="Vijeet Shah"
-              className="mt-1 bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 focus:border-electric-blue focus:ring-electric-blue"
+              style={{ background: '#111118', border: '1px solid #2A2A38', color: '#EDE9DC', borderRadius: '6px', marginTop: '0' }} className="placeholder:text-[#5E5A50] focus:outline-none focus:border-[#D4A853] focus:ring-1 focus:ring-[#D4A853]/40"
             />
             {errors.clientName && (
               <p className="text-red-400 text-sm mt-1">{errors.clientName.message}</p>
@@ -128,13 +126,13 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
           </div>
 
           <div>
-            <Label.Root className="text-sm font-medium text-white">
+            <Label.Root style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#9E9880', display: 'block', marginBottom: '6px' }}>
               Business Name *
             </Label.Root>
             <Input
               {...register("businessName")}
               placeholder="Loopxo"
-              className="mt-1 bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 focus:border-electric-blue focus:ring-electric-blue"
+              style={{ background: '#111118', border: '1px solid #2A2A38', color: '#EDE9DC', borderRadius: '6px', marginTop: '0' }} className="placeholder:text-[#5E5A50] focus:outline-none focus:border-[#D4A853] focus:ring-1 focus:ring-[#D4A853]/40"
             />
             {errors.businessName && (
               <p className="text-red-400 text-sm mt-1">{errors.businessName.message}</p>
@@ -144,14 +142,14 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label.Root className="text-sm font-medium text-white">
-              Email Address <span className="text-slate-400 text-xs">(Optional)</span>
+            <Label.Root style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#9E9880', display: 'block', marginBottom: '6px' }}>
+              Email <span style={{ color: '#5E5A50', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional)</span>
             </Label.Root>
             <Input
               {...register("clientEmail")}
               type="email"
               placeholder="vijeet@vijeetshah.com"
-              className="mt-1 bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 focus:border-electric-blue focus:ring-electric-blue"
+              style={{ background: '#111118', border: '1px solid #2A2A38', color: '#EDE9DC', borderRadius: '6px', marginTop: '0' }} className="placeholder:text-[#5E5A50] focus:outline-none focus:border-[#D4A853] focus:ring-1 focus:ring-[#D4A853]/40"
             />
             {errors.clientEmail && (
               <p className="text-red-400 text-sm mt-1">{errors.clientEmail.message}</p>
@@ -159,13 +157,13 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
           </div>
 
           <div>
-            <Label.Root className="text-sm font-medium text-white">
+            <Label.Root style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#9E9880', display: 'block', marginBottom: '6px' }}>
               Phone Number *
             </Label.Root>
             <Input
               {...register("clientPhone")}
               placeholder="+91 9892912999"
-              className="mt-1 bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 focus:border-electric-blue focus:ring-electric-blue"
+              style={{ background: '#111118', border: '1px solid #2A2A38', color: '#EDE9DC', borderRadius: '6px', marginTop: '0' }} className="placeholder:text-[#5E5A50] focus:outline-none focus:border-[#D4A853] focus:ring-1 focus:ring-[#D4A853]/40"
             />
             {errors.clientPhone && (
               <p className="text-red-400 text-sm mt-1">{errors.clientPhone.message}</p>
@@ -175,24 +173,24 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
 
         {/* Industry Selection */}
         <div>
-          <Label.Root className="text-sm font-medium text-white">
-            Industry *
+          <Label.Root style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#9E9880', display: 'block', marginBottom: '6px' }}>
+            Industry
           </Label.Root>
           <Select.Root onValueChange={handleIndustryChange}>
-            <Select.Trigger className="flex h-10 w-full items-center justify-between rounded-md border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-electric-blue disabled:cursor-not-allowed disabled:opacity-50 mt-1">
-              <Select.Value placeholder="Select your industry" />
-              <Select.Icon asChild>
-                <ChevronDown className="h-4 w-4 opacity-50" />
+            <Select.Trigger style={{ display: 'flex', height: '38px', width: '100%', alignItems: 'center', justifyContent: 'space-between', borderRadius: '6px', border: '1px solid #2A2A38', background: '#111118', padding: '0 12px', fontSize: '14px', color: '#EDE9DC', outline: 'none', cursor: 'pointer' }} className="focus:border-[#D4A853] focus:ring-1 focus:ring-[#D4A853]/40">
+              <Select.Value placeholder="Select industry" />
+              <Select.Icon>
+                <span style={{ color: '#9E9880', fontSize: '10px' }}>▼</span>
               </Select.Icon>
             </Select.Trigger>
             <Select.Portal>
-              <Select.Content className="relative z-50 max-h-96 min-w-[12rem] overflow-hidden rounded-md border border-slate-600 bg-slate-900 text-white shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
+              <Select.Content style={{ background: '#18181F', border: '1px solid #2A2A38', borderRadius: '6px', zIndex: 50, minWidth: '12rem', boxShadow: '0 8px 32px rgba(0,0,0,0.5)', overflow: 'hidden' }}>
                 <Select.Viewport className="p-2 h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]">
                   {Object.keys(servicesByIndustry).map((industry) => {
                     const industryLabels = {
                       salon: "Salon & Beauty",
                       construction: "Construction",
-                      doctors: "Doctors & Clinics", 
+                      doctors: "Doctors & Clinics",
                       gym: "Gym/Yoga",
                       lawyers: "Lawyers/CAs/Consultants",
                       realestate: "Real Estate",
@@ -205,23 +203,16 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
                       app: "App Development",
                       consulting: "Consulting"
                     }
-                    
+
                     return (
-                    <Select.Item
-                      key={industry}
-                      value={industry}
-                      className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-slate-700 focus:bg-slate-700 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
-                    >
-                      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-                        <Select.ItemIndicator>
-                          <Check className="h-4 w-4 text-electric-blue" />
-                        </Select.ItemIndicator>
-                      </span>
-                      <Select.ItemText className="font-medium">
-                        {industryLabels[industry as keyof typeof industryLabels] || industry}
-                      </Select.ItemText>
-                    </Select.Item>
-                  )})}
+                      <Select.Item
+                        key={industry}
+                        value={industry}
+                        style={{ padding: '8px 12px', fontSize: '14px', color: '#EDE9DC', cursor: 'pointer', borderRadius: '4px', outline: 'none' }} className="hover:bg-[#1E1E28] focus:bg-[#1E1E28] data-[highlighted]:bg-[#1E1E28] data-[state=checked]:text-[#D4A853] transition-colors">
+                        <Select.ItemText>{industryLabels[industry as keyof typeof industryLabels] || industry}</Select.ItemText>
+                      </Select.Item>
+                    )
+                  })}
                 </Select.Viewport>
               </Select.Content>
             </Select.Portal>
@@ -234,22 +225,22 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
         {/* Services Selection */}
         {selectedIndustry && (
           <div>
-            <Label.Root className="text-sm font-medium text-white">
+            <Label.Root style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#9E9880', display: 'block', marginBottom: '6px' }}>
               Services Needed *
             </Label.Root>
             <div className="grid grid-cols-2 gap-2 mt-2">
               {availableServices.map((service) => (
                 <label
                   key={service}
-                  className="flex items-center space-x-2 p-3 border border-slate-600 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700 transition-colors"
+                  style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', border: '1px solid #2A2A38', background: selectedServices.includes(service) ? 'rgba(212,168,83,0.06)' : '#111118', borderColor: selectedServices.includes(service) ? '#D4A853' : '#2A2A38', borderRadius: '6px', cursor: 'pointer', transition: 'all 0.15s ease' }}
                 >
                   <input
                     type="checkbox"
                     checked={selectedServices.includes(service)}
                     onChange={() => handleServiceToggle(service)}
-                    className="rounded border-slate-600 bg-slate-700 text-electric-blue focus:ring-electric-blue"
+                    style={{ accentColor: '#D4A853', width: '14px', height: '14px' }}
                   />
-                  <span className="text-sm text-white">{service}</span>
+                  <span style={{ fontSize: '13px', color: '#EDE9DC' }}>{service}</span>
                 </label>
               ))}
             </div>
@@ -261,63 +252,43 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
 
         {/* Timeline */}
         <div>
-            <Label.Root className="text-sm font-medium text-white">
-              Timeline *
-            </Label.Root>
-            <Select.Root onValueChange={(value) => setValue("timeline", value as "1-2weeks" | "3-4weeks" | "1-2months" | "3months+")}>
-              <Select.Trigger className="flex h-10 w-full items-center justify-between rounded-md border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-electric-blue disabled:cursor-not-allowed disabled:opacity-50 mt-1">
-                <Select.Value placeholder="Select timeline" />
-                <Select.Icon asChild>
-                  <ChevronDown className="h-4 w-4 opacity-50" />
-                </Select.Icon>
-              </Select.Trigger>
-              <Select.Portal>
-                <Select.Content className="relative z-50 max-h-96 min-w-[10rem] overflow-hidden rounded-md border border-slate-600 bg-slate-900 text-white shadow-lg">
-                  <Select.Viewport className="p-2">
-                    <Select.Item value="1-2weeks" className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-slate-700 focus:bg-slate-700 transition-colors">
-                      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-                        <Select.ItemIndicator>
-                          <Check className="h-4 w-4 text-electric-blue" />
-                        </Select.ItemIndicator>
-                      </span>
-                      <Select.ItemText className="font-medium">1-2 weeks</Select.ItemText>
-                    </Select.Item>
-                    <Select.Item value="3-4weeks" className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-slate-700 focus:bg-slate-700 transition-colors">
-                      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-                        <Select.ItemIndicator>
-                          <Check className="h-4 w-4 text-electric-blue" />
-                        </Select.ItemIndicator>
-                      </span>
-                      <Select.ItemText className="font-medium">3-4 weeks</Select.ItemText>
-                    </Select.Item>
-                    <Select.Item value="1-2months" className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-slate-700 focus:bg-slate-700 transition-colors">
-                      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-                        <Select.ItemIndicator>
-                          <Check className="h-4 w-4 text-electric-blue" />
-                        </Select.ItemIndicator>
-                      </span>
-                      <Select.ItemText className="font-medium">1-2 months</Select.ItemText>
-                    </Select.Item>
-                    <Select.Item value="3months+" className="relative flex w-full cursor-pointer select-none items-center rounded-md py-2.5 pl-8 pr-2 text-sm outline-none hover:bg-slate-700 focus:bg-slate-700 transition-colors">
-                      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-                        <Select.ItemIndicator>
-                          <Check className="h-4 w-4 text-electric-blue" />
-                        </Select.ItemIndicator>
-                      </span>
-                      <Select.ItemText className="font-medium">3+ months</Select.ItemText>
-                    </Select.Item>
-                  </Select.Viewport>
-                </Select.Content>
-              </Select.Portal>
-            </Select.Root>
-            {errors.timeline && (
-              <p className="text-red-400 text-sm mt-1">{errors.timeline.message}</p>
-            )}
+          <Label.Root style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#9E9880', display: 'block', marginBottom: '6px' }}>
+            Timeline
+          </Label.Root>
+          <Select.Root onValueChange={(value) => setValue("timeline", value as "1-2weeks" | "3-4weeks" | "1-2months" | "3months+")}>
+            <Select.Trigger style={{ display: 'flex', height: '38px', width: '100%', alignItems: 'center', justifyContent: 'space-between', borderRadius: '6px', border: '1px solid #2A2A38', background: '#111118', padding: '0 12px', fontSize: '14px', color: '#EDE9DC', outline: 'none', cursor: 'pointer' }} className="focus:border-[#D4A853] focus:ring-1 focus:ring-[#D4A853]/40">
+              <Select.Value placeholder="Select timeline" />
+              <Select.Icon>
+                <span style={{ color: '#9E9880', fontSize: '10px' }}>▼</span>
+              </Select.Icon>
+            </Select.Trigger>
+            <Select.Portal>
+              <Select.Content style={{ background: '#18181F', border: '1px solid #2A2A38', borderRadius: '6px', zIndex: 50, minWidth: '10rem', boxShadow: '0 8px 32px rgba(0,0,0,0.5)', overflow: 'hidden' }}>
+                <Select.Viewport className="p-2">
+                  <Select.Item value="1-2weeks" style={{ padding: '8px 12px', fontSize: '14px', color: '#EDE9DC', cursor: 'pointer', borderRadius: '4px' }} className="hover:bg-[#1E1E28] data-[highlighted]:bg-[#1E1E28] data-[state=checked]:text-[#D4A853] transition-colors">
+                    <Select.ItemText>1-2 weeks</Select.ItemText>
+                  </Select.Item>
+                  <Select.Item value="3-4weeks" style={{ padding: '8px 12px', fontSize: '14px', color: '#EDE9DC', cursor: 'pointer', borderRadius: '4px' }} className="hover:bg-[#1E1E28] data-[highlighted]:bg-[#1E1E28] data-[state=checked]:text-[#D4A853] transition-colors">
+                    <Select.ItemText>3-4 weeks</Select.ItemText>
+                  </Select.Item>
+                  <Select.Item value="1-2months" style={{ padding: '8px 12px', fontSize: '14px', color: '#EDE9DC', cursor: 'pointer', borderRadius: '4px' }} className="hover:bg-[#1E1E28] data-[highlighted]:bg-[#1E1E28] data-[state=checked]:text-[#D4A853] transition-colors">
+                    <Select.ItemText>1-2 months</Select.ItemText>
+                  </Select.Item>
+                  <Select.Item value="3months+" style={{ padding: '8px 12px', fontSize: '14px', color: '#EDE9DC', cursor: 'pointer', borderRadius: '4px' }} className="hover:bg-[#1E1E28] data-[highlighted]:bg-[#1E1E28] data-[state=checked]:text-[#D4A853] transition-colors">
+                    <Select.ItemText>3+ months</Select.ItemText>
+                  </Select.Item>
+                </Select.Viewport>
+              </Select.Content>
+            </Select.Portal>
+          </Select.Root>
+          {errors.timeline && (
+            <p className="text-red-400 text-sm mt-1">{errors.timeline.message}</p>
+          )}
         </div>
 
         {/* Optional Fields */}
         <div>
-          <Label.Root className="text-sm font-medium text-white">
+          <Label.Root style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#9E9880', display: 'block', marginBottom: '6px' }}>
             Current Website (Optional)
           </Label.Root>
           <Input
@@ -331,26 +302,27 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
         </div>
 
         <div>
-          <Label.Root className="text-sm font-medium text-white">
+          <Label.Root style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#9E9880', display: 'block', marginBottom: '6px' }}>
             Special Requirements (Optional)
           </Label.Root>
           <textarea
             {...register("specialRequirements")}
             placeholder="Any specific requirements or preferences..."
-            className="flex min-h-[80px] w-full rounded-md border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:border-electric-blue disabled:cursor-not-allowed disabled:opacity-50 mt-1"
+            style={{ width: '100%', minHeight: '80px', background: '#111118', border: '1px solid #2A2A38', borderRadius: '6px', padding: '8px 12px', fontSize: '14px', color: '#EDE9DC', resize: 'vertical', outline: 'none' }}
+            className="placeholder:text-[#5E5A50] focus:border-[#D4A853] focus:ring-1 focus:ring-[#D4A853]/40"
           />
         </div>
 
         {/* Theme Selection */}
-        <div className="border-t border-slate-700 pt-6">
-          <ThemeSelector 
+        <div style={{ borderTop: '1px solid #2A2A38', paddingTop: '24px' }}>
+          <ThemeSelector
             selectedTheme={selectedTheme}
             onThemeChange={setSelectedTheme}
           />
         </div>
 
         {/* Agency Configuration */}
-        <div className="border-t border-slate-700 pt-6">
+        <div style={{ borderTop: '1px solid #2A2A38', paddingTop: '24px' }}>
           <AgencyConfigForm
             config={agencyConfig}
             onConfigChange={setAgencyConfig}
@@ -359,7 +331,7 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
 
         {/* Pricing Packages Editor */}
         {selectedIndustry && customPricing && (
-          <div className="border-t border-slate-700 pt-6">
+          <div style={{ borderTop: '1px solid #2A2A38', paddingTop: '24px' }}>
             <PricingEditor
               packages={customPricing}
               onPackagesChange={setCustomPricing}
@@ -370,8 +342,8 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
 
         {/* Section Toggle */}
         {selectedIndustry && (
-          <div className="border-t border-slate-700 pt-6">
-            <Label.Root className="text-sm font-medium text-white mb-4 block">
+          <div style={{ borderTop: '1px solid #2A2A38', paddingTop: '24px' }}>
+            <Label.Root style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#9E9880', display: 'block', marginBottom: '12px' }}>
               Proposal Sections (All sections are included by default)
             </Label.Root>
             <div className="grid grid-cols-2 gap-3">
@@ -387,34 +359,28 @@ export default function PitchForm({ onSubmit, onFormChange }: PitchFormProps) {
               ].map((section) => (
                 <label
                   key={section.id}
-                  className="flex items-center space-x-3 p-3 border rounded-lg bg-slate-800 border-slate-600 cursor-not-allowed"
+                  style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', border: '1px solid #2A2A38', background: '#111118', borderRadius: '6px', cursor: 'not-allowed', opacity: 0.8 }}
                 >
-                  <input
-                    type="checkbox"
-                    checked={section.enabled}
-                    disabled
-                    className="rounded border-slate-600 bg-slate-700 text-electric-blue focus:ring-electric-blue"
-                  />
-                  <span className="text-sm font-medium text-white">{section.label}</span>
-                  <span className="text-xs text-green-400 ml-auto">✓ Included</span>
+                  <input type="checkbox" checked={section.enabled} disabled style={{ accentColor: '#D4A853', width: '14px', height: '14px' }} />
+                  <span style={{ fontSize: '13px', color: '#EDE9DC', flex: 1 }}>{section.label}</span>
+                  <span style={{ fontSize: '11px', color: '#4D9E6A', fontWeight: 600, letterSpacing: '0.04em' }}>Included</span>
                 </label>
               ))}
             </div>
-            <p className="text-sm text-slate-400 mt-3">
-              ℹ️ All 8 sections are included in every proposal to ensure comprehensive coverage.
-              Custom section selection will be available in future updates.
-            </p>
+            <p style={{ fontSize: '12px', color: '#9E9880', marginTop: '10px' }}>All 8 sections are included in every proposal. Custom section selection coming soon.</p>
           </div>
         )}
 
         <div className="flex justify-center">
-          <Button
+          <button
             type="button"
             onClick={() => setShowPreview(true)}
-            className="w-full max-w-md bg-gradient-to-r from-electric-blue to-electric-violet hover:from-electric-blue/80 hover:to-electric-violet/80 text-white font-bold py-3 px-6 rounded-lg shadow-lg shadow-electric-blue/25 hover:shadow-electric-blue/40 transition-all duration-300 transform hover:scale-[1.02]"
+            style={{ width: '100%', maxWidth: '420px', background: '#D4A853', color: '#111118', fontWeight: 700, fontSize: '14px', letterSpacing: '0.04em', padding: '13px 24px', borderRadius: '6px', border: 'none', cursor: 'pointer', transition: 'background 0.15s ease' }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = '#C49843')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = '#D4A853')}
           >
             Preview & Generate Proposal
-          </Button>
+          </button>
         </div>
       </form>
 
