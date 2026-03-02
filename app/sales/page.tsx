@@ -10,10 +10,10 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { 
-  BookOpen, 
-  Target, 
-  Send, 
+import {
+  BookOpen,
+  Target,
+  Send,
   CheckCircle2,
   Lightbulb,
   FileText,
@@ -94,7 +94,7 @@ export default function SelfServiceSDRGenerator() {
 function SelfServiceSDRGeneratorContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  
+
   const [activeTab, setActiveTab] = useState<string>('pipeline')
   const [businessInfo, setBusinessInfo] = useState({
     companyName: '',
@@ -109,7 +109,7 @@ function SelfServiceSDRGeneratorContent() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const planRef = useRef<HTMLDivElement>(null)
-  
+
   // New sales management state
   const [leads] = useState<Lead[]>(sampleLeads)
 
@@ -142,7 +142,7 @@ function SelfServiceSDRGeneratorContent() {
 
   const generatePlan = () => {
     setIsGenerating(true)
-    
+
     // Simulate processing time
     setTimeout(() => {
       const now = new Date()
@@ -264,7 +264,7 @@ Looking forward to hearing from you!`
 
   const downloadPlanAsPDF = async () => {
     setIsDownloading(true);
-    
+
     try {
       // Create a simplified HTML version for PDF
       const planContent = `
@@ -379,7 +379,7 @@ Looking forward to hearing from you!`
 
       // Create a Blob with the HTML content
       const blob = new Blob([planContent], { type: 'text/html' });
-      
+
       // Create a download link
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -387,11 +387,11 @@ Looking forward to hearing from you!`
       a.download = `SDR-Plan-${businessInfo.companyName.replace(/\s+/g, '-')}.html`;
       document.body.appendChild(a);
       a.click();
-      
+
       // Clean up
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      
+
       alert("Your SDR Plan has been downloaded as an HTML file! You can open it in any browser or convert it to PDF using your browser's print function.");
     } catch (error) {
       alert('Error downloading plan. Please try again.');
@@ -410,24 +410,24 @@ Looking forward to hearing from you!`
 
   return (
     <DashboardLayout>
-      <div className="container mx-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-white mb-4">
+          <h1 className="font-sans text-4xl sm:text-5xl font-bold text-[#EDE9DC] uppercase tracking-tight mb-4">
             Advanced Sales Management Suite
           </h1>
-          <p className="text-xl text-slate-400 max-w-3xl mx-auto mb-6">
+          <p className="text-xl text-[#9E9880] font-mono text-xs max-w-3xl mx-auto mb-6">
             Complete sales toolkit: CRM, pipeline management, templates, analytics, and automated SDR plan generation.
           </p>
           <div className="flex flex-wrap justify-center gap-2">
             {[
-              "🏗️ Pipeline Management", 
-              "📊 Sales Analytics", 
-              "📝 Proven Templates", 
-              "🎯 Lead Scoring", 
-              "📈 Conversion Tracking",
-              "🤖 SDR Plan Generator"
+              "Pipeline Management",
+              "Sales Analytics",
+              "Proven Templates",
+              "Lead Scoring",
+              "Conversion Tracking",
+              "SDR Plan Generator"
             ].map((feature) => (
-              <Badge key={feature} variant="secondary" className="text-sm">
+              <Badge className="bg-[#111118] border border-[#2A2A38] text-[#EDE9DC] font-mono rounded-sm hover:bg-[#111118] text-sm" key={feature} variant="secondary" >
                 {feature}
               </Badge>
             ))}
@@ -435,28 +435,28 @@ Looking forward to hearing from you!`
         </div>
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-          <TabsList className="grid w-full grid-cols-6 text-xs">
-            <TabsTrigger value="pipeline" className="flex items-center gap-1">
+          <TabsList className="flex flex-wrap border-b border-[#2A2A38] bg-transparent w-full p-0 h-auto gap-2">
+            <TabsTrigger value="pipeline" className="font-mono text-xs uppercase text-[#9E9880] data-[state=active]:text-[#D4A853] data-[state=active]:border-b-2 data-[state=active]:border-[#D4A853] bg-transparent rounded-none px-4 sm:px-6 py-3 sm:py-4 data-[state=active]:bg-transparent shadow-none">
               <TrendingUp className="w-3 h-3" />
               Pipeline
             </TabsTrigger>
-            <TabsTrigger value="templates" className="flex items-center gap-1">
+            <TabsTrigger value="templates" className="font-mono text-xs uppercase text-[#9E9880] data-[state=active]:text-[#D4A853] data-[state=active]:border-b-2 data-[state=active]:border-[#D4A853] bg-transparent rounded-none px-4 sm:px-6 py-3 sm:py-4 data-[state=active]:bg-transparent shadow-none">
               <FileText className="w-3 h-3" />
               Templates
             </TabsTrigger>
-            <TabsTrigger value="analytics" className="flex items-center gap-1">
+            <TabsTrigger value="analytics" className="font-mono text-xs uppercase text-[#9E9880] data-[state=active]:text-[#D4A853] data-[state=active]:border-b-2 data-[state=active]:border-[#D4A853] bg-transparent rounded-none px-4 sm:px-6 py-3 sm:py-4 data-[state=active]:bg-transparent shadow-none">
               <BarChart3 className="w-3 h-3" />
               Analytics
             </TabsTrigger>
-            <TabsTrigger value="playbooks" className="flex items-center gap-1">
+            <TabsTrigger value="playbooks" className="font-mono text-xs uppercase text-[#9E9880] data-[state=active]:text-[#D4A853] data-[state=active]:border-b-2 data-[state=active]:border-[#D4A853] bg-transparent rounded-none px-4 sm:px-6 py-3 sm:py-4 data-[state=active]:bg-transparent shadow-none">
               <BookOpen className="w-3 h-3" />
               Playbooks
             </TabsTrigger>
-            <TabsTrigger value="business-info" className="flex items-center gap-1">
+            <TabsTrigger value="business-info" className="font-mono text-xs uppercase text-[#9E9880] data-[state=active]:text-[#D4A853] data-[state=active]:border-b-2 data-[state=active]:border-[#D4A853] bg-transparent rounded-none px-4 sm:px-6 py-3 sm:py-4 data-[state=active]:bg-transparent shadow-none">
               <Target className="w-3 h-3" />
               SDR Setup
             </TabsTrigger>
-            <TabsTrigger value="plan" className="flex items-center gap-1" disabled={!generatedPlan}>
+            <TabsTrigger value="plan" className="font-mono text-xs uppercase text-[#9E9880] data-[state=active]:text-[#D4A853] data-[state=active]:border-b-2 data-[state=active]:border-[#D4A853] bg-transparent rounded-none px-4 sm:px-6 py-3 sm:py-4 data-[state=active]:bg-transparent shadow-none" disabled={!generatedPlan}>
               <Zap className="w-3 h-3" />
               SDR Plan
             </TabsTrigger>
@@ -465,83 +465,83 @@ Looking forward to hearing from you!`
           {/* Pipeline Management Tab */}
           <TabsContent value="pipeline" className="space-y-6">
             <div className="grid gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-blue-600" />
+              <Card className="bg-[#18181F] border border-[#2A2A38] rounded-sm bg-[#18181F] border border-[#2A2A38] rounded-sm" >
+                <CardHeader className="border-b border-[#2A2A38] pb-4 bg-[#111118]">
+                  <CardTitle className="font-sans text-lg sm:text-xl text-[#EDE9DC] uppercase tracking-wider flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-[#D4A853]" />
                     Sales Pipeline Overview
                   </CardTitle>
-                  <CardDescription>
+                  <CardDescription className="font-mono text-xs text-[#9E9880] mt-1">
                     Manage your leads and track deals through the sales process
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid md:grid-cols-4 gap-4 mb-6">
-                    <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg">
-                      <div className="text-2xl font-bold text-blue-600">{leads.length}</div>
-                      <div className="text-sm text-slate-400">Total Leads</div>
+                    <div className="text-center p-4 bg-[#111118] border border-[#2A2A38] rounded-lg">
+                      <div className="text-2xl font-bold text-[#D4A853]">{leads.length}</div>
+                      <div className="text-sm text-[#9E9880] font-mono text-xs">Total Leads</div>
                     </div>
-                    <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg">
-                      <div className="text-2xl font-bold text-green-600">
+                    <div className="text-center p-4 bg-[#111118] border border-[#2A2A38] rounded-lg">
+                      <div className="text-2xl font-bold text-[#4D9E6A]">
                         {leads.filter(l => ['demo', 'proposal', 'negotiation'].includes(l.stage)).length}
                       </div>
-                      <div className="text-sm text-slate-400">Active Deals</div>
+                      <div className="text-sm text-[#9E9880] font-mono text-xs">Active Deals</div>
                     </div>
-                    <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-violet-50 rounded-lg">
-                      <div className="text-2xl font-bold text-purple-600">
+                    <div className="text-center p-4 bg-[#111118] border border-[#2A2A38] rounded-lg">
+                      <div className="text-2xl font-bold text-[#EDE9DC]">
                         {formatCurrency(leads.reduce((sum, l) => sum + (l.stage !== 'closed-lost' ? l.value * (l.probability / 100) : 0), 0))}
                       </div>
-                      <div className="text-sm text-slate-400">Pipeline Value</div>
+                      <div className="text-sm text-[#9E9880] font-mono text-xs">Pipeline Value</div>
                     </div>
-                    <div className="text-center p-4 bg-gradient-to-br from-orange-50 to-red-50 rounded-lg">
-                      <div className="text-2xl font-bold text-orange-600">
+                    <div className="text-center p-4 bg-[#111118] border border-[#2A2A38] rounded-lg">
+                      <div className="text-2xl font-bold text-[#D4A853]">
                         {Math.round(leads.filter(l => l.stage === 'closed-won').length / Math.max(leads.length, 1) * 100)}%
                       </div>
-                      <div className="text-sm text-slate-400">Win Rate</div>
+                      <div className="text-sm text-[#9E9880] font-mono text-xs">Win Rate</div>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <h3 className="text-lg font-semibold">Your Leads</h3>
-                      <Button size="sm">
+                      <h3 className="font-sans text-lg font-bold text-[#EDE9DC]">Your Leads</h3>
+                      <Button size="sm" className="bg-[#D4A853] text-[#111118] font-mono text-xs font-bold uppercase tracking-widest hover:bg-[#C49843] transition-colors rounded-sm border-none shadow-none ring-0">
                         <Plus className="w-4 h-4 mr-2" />
                         Add Lead
                       </Button>
                     </div>
-                    
+
                     <div className="space-y-3">
                       {leads.map((lead) => {
                         const stageConfig = leadStages.find(s => s.value === lead.stage);
                         return (
-                          <div key={lead.id} className="border rounded-lg p-4 hover:bg-slate-900">
+                          <div key={lead.id} className="border border-[#2A2A38] rounded-sm p-4 hover:bg-[#111118] border border-[#2A2A38]">
                             <div className="flex justify-between items-start mb-2">
                               <div>
                                 <h4 className="font-semibold">{lead.name}</h4>
-                                <p className="text-sm text-slate-400">{lead.company}</p>
+                                <p className="text-sm text-[#9E9880] font-mono text-xs">{lead.company}</p>
                               </div>
                               <div className="text-right">
                                 <div className="text-lg font-bold">{formatCurrency(lead.value)}</div>
-                                <Badge className={stageConfig?.color}>{stageConfig?.label}</Badge>
+                                <Badge className="bg-[#111118] border border-[#2A2A38] text-[#EDE9DC] font-mono rounded-sm hover:bg-[#111118]" className={stageConfig?.color}>{stageConfig?.label}</Badge>
                               </div>
                             </div>
                             <div className="grid md:grid-cols-3 gap-4 text-sm">
                               <div>
-                                <span className="text-slate-400">Source:</span> {lead.source}
+                                <span className="text-[#9E9880] font-mono text-xs">Source:</span> {lead.source}
                               </div>
                               <div>
-                                <span className="text-slate-400">Score:</span> {lead.score}/100
+                                <span className="text-[#9E9880] font-mono text-xs">Score:</span> {lead.score}/100
                               </div>
                               <div>
-                                <span className="text-slate-400">Probability:</span> {lead.probability}%
+                                <span className="text-[#9E9880] font-mono text-xs">Probability:</span> {lead.probability}%
                               </div>
                             </div>
                             <div className="mt-2">
-                              <span className="text-slate-400">Next Action:</span> {lead.nextAction}
+                              <span className="text-[#9E9880] font-mono text-xs">Next Action:</span> {lead.nextAction}
                             </div>
                             <div className="flex flex-wrap gap-1 mt-2">
                               {lead.tags.map(tag => (
-                                <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
+                                <Badge className="bg-[#111118] border border-[#2A2A38] text-[#EDE9DC] font-mono rounded-sm hover:bg-[#111118] text-xs" key={tag} variant="outline" >{tag}</Badge>
                               ))}
                             </div>
                           </div>
@@ -556,50 +556,50 @@ Looking forward to hearing from you!`
 
           {/* Templates Tab */}
           <TabsContent value="templates" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-green-600" />
+            <Card className="bg-[#18181F] border border-[#2A2A38] rounded-sm bg-[#18181F] border border-[#2A2A38] rounded-sm" >
+              <CardHeader className="border-b border-[#2A2A38] pb-4 bg-[#111118]">
+                <CardTitle className="font-sans text-lg sm:text-xl text-[#EDE9DC] uppercase tracking-wider flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-[#4D9E6A]" />
                   High-Converting Sales Templates
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="font-mono text-xs text-[#9E9880] mt-1">
                   Proven templates for emails, calls, and LinkedIn outreach
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4">
                   {salesTemplates.map((template) => (
-                    <div key={template.id} className="border rounded-lg p-4">
+                    <div key={template.id} className="border border-[#2A2A38] rounded-sm p-4">
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <h3 className="font-semibold text-lg">{template.name}</h3>
-                          <p className="text-sm text-slate-400">{template.useCase}</p>
+                          <p className="text-sm text-[#9E9880] font-mono text-xs">{template.useCase}</p>
                         </div>
                         <div className="flex items-center gap-2">
                           {template.conversionRate && (
-                            <Badge variant="secondary">{template.conversionRate} conversion</Badge>
+                            <Badge className="bg-[#111118] border border-[#2A2A38] text-[#EDE9DC] font-mono rounded-sm hover:bg-[#111118]" variant="secondary">{template.conversionRate} conversion</Badge>
                           )}
-                          <Button size="sm">
+                          <Button size="sm" className="bg-[#D4A853] text-[#111118] font-mono text-xs font-bold uppercase tracking-widest hover:bg-[#C49843] transition-colors rounded-sm border-none shadow-none ring-0">
                             <Copy className="w-4 h-4 mr-2" />
                             Use Template
                           </Button>
                         </div>
                       </div>
-                      
+
                       {template.subject && (
                         <div className="mb-2">
                           <span className="font-medium text-sm">Subject: </span>
                           <span className="text-sm">{template.subject}</span>
                         </div>
                       )}
-                      
-                      <div className="bg-slate-900 p-3 rounded-lg text-sm whitespace-pre-line mb-3">
+
+                      <div className="bg-[#111118] border border-[#2A2A38] p-3 rounded-lg text-sm whitespace-pre-line mb-3">
                         {template.content}
                       </div>
-                      
+
                       <div className="flex flex-wrap gap-1">
                         {template.tags.map(tag => (
-                          <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
+                          <Badge className="bg-[#111118] border border-[#2A2A38] text-[#EDE9DC] font-mono rounded-sm hover:bg-[#111118] text-xs" key={tag} variant="outline" >{tag}</Badge>
                         ))}
                       </div>
                     </div>
@@ -611,13 +611,13 @@ Looking forward to hearing from you!`
 
           {/* Analytics Tab */}
           <TabsContent value="analytics" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-purple-600" />
+            <Card className="bg-[#18181F] border border-[#2A2A38] rounded-sm bg-[#18181F] border border-[#2A2A38] rounded-sm" >
+              <CardHeader className="border-b border-[#2A2A38] pb-4 bg-[#111118]">
+                <CardTitle className="font-sans text-lg sm:text-xl text-[#EDE9DC] uppercase tracking-wider flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-[#EDE9DC]" />
                   Sales Analytics & Performance
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="font-mono text-xs text-[#9E9880] mt-1">
                   Track your sales performance and identify improvement opportunities
                 </CardDescription>
               </CardHeader>
@@ -632,9 +632,9 @@ Looking forward to hearing from you!`
                         <div key={source.value} className="flex justify-between items-center">
                           <span className="text-sm">{source.label}</span>
                           <div className="flex items-center gap-2">
-                            <div className="w-16 bg-gray-200 rounded-full h-2">
-                              <div 
-                                className="bg-blue-600 h-2 rounded-full" 
+                            <div className="w-16 bg-[#2A2A38] rounded-full h-2">
+                              <div
+                                className="bg-[#D4A853] h-2 rounded-full"
                                 style={{ width: `${percentage}%` }}
                               />
                             </div>
@@ -644,7 +644,7 @@ Looking forward to hearing from you!`
                       );
                     })}
                   </div>
-                  
+
                   <div className="space-y-4">
                     <h3 className="font-semibold">Stage Distribution</h3>
                     {leadStages.slice(0, 6).map((stage) => {
@@ -654,9 +654,9 @@ Looking forward to hearing from you!`
                         <div key={stage.value} className="flex justify-between items-center">
                           <span className="text-sm">{stage.label}</span>
                           <div className="flex items-center gap-2">
-                            <div className="w-16 bg-gray-200 rounded-full h-2">
-                              <div 
-                                className="bg-green-600 h-2 rounded-full" 
+                            <div className="w-16 bg-[#2A2A38] rounded-full h-2">
+                              <div
+                                className="bg-[#4D9E6A] h-2 rounded-full"
                                 style={{ width: `${percentage}%` }}
                               />
                             </div>
@@ -666,44 +666,44 @@ Looking forward to hearing from you!`
                       );
                     })}
                   </div>
-                  
+
                   <div className="space-y-4">
                     <h3 className="font-semibold">Key Metrics</h3>
                     <div className="space-y-3">
                       <div className="flex justify-between">
-                        <span className="text-sm text-slate-400">Avg Deal Size</span>
+                        <span className="text-sm text-[#9E9880] font-mono text-xs">Avg Deal Size</span>
                         <span className="font-medium">{formatCurrency(leads.reduce((sum, l) => sum + l.value, 0) / leads.length)}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-sm text-slate-400">Avg Lead Score</span>
+                        <span className="text-sm text-[#9E9880] font-mono text-xs">Avg Lead Score</span>
                         <span className="font-medium">{Math.round(leads.reduce((sum, l) => sum + l.score, 0) / leads.length)}/100</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-sm text-slate-400">High Value Deals</span>
+                        <span className="text-sm text-[#9E9880] font-mono text-xs">High Value Deals</span>
                         <span className="font-medium">{leads.filter(l => l.value > 50000).length}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-sm text-slate-400">Hot Leads (Score &gt;80)</span>
+                        <span className="text-sm text-[#9E9880] font-mono text-xs">Hot Leads (Score &gt;80)</span>
                         <span className="font-medium">{leads.filter(l => l.score > 80).length}</span>
                       </div>
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="border-t pt-6">
                   <h3 className="font-semibold mb-4">Recommended Actions</h3>
                   <div className="grid md:grid-cols-2 gap-4">
-                    <div className="p-4 bg-blue-50 rounded-lg">
-                      <h4 className="font-medium text-blue-800 mb-2">🎯 Focus on High-Value Leads</h4>
-                      <p className="text-sm text-blue-700">
-                        You have {leads.filter(l => l.value > 30000 && l.score > 70).length} high-value, high-score leads. 
+                    <div className="p-4 bg-[#111118] border border-[#2A2A38] rounded-lg">
+                      <h4 className="font-medium text-[#EDE9DC] mb-2">Focus on High-Value Leads</h4>
+                      <p className="text-sm text-[#9E9880]">
+                        You have {leads.filter(l => l.value > 30000 && l.score > 70).length} high-value, high-score leads.
                         Prioritize these for immediate follow-up.
                       </p>
                     </div>
-                    <div className="p-4 bg-yellow-50 rounded-lg">
-                      <h4 className="font-medium text-yellow-800 mb-2">📈 Improve Conversion Rate</h4>
-                      <p className="text-sm text-yellow-700">
-                        Your LinkedIn outreach has the highest lead score average. 
+                    <div className="p-4 bg-[#111118] border border-[#2A2A38] rounded-lg">
+                      <h4 className="font-medium text-[#EDE9DC] mb-2">Improve Conversion Rate</h4>
+                      <p className="text-sm text-[#9E9880]">
+                        Your LinkedIn outreach has the highest lead score average.
                         Consider increasing effort on this channel.
                       </p>
                     </div>
@@ -715,44 +715,44 @@ Looking forward to hearing from you!`
 
           {/* Playbooks Tab */}
           <TabsContent value="playbooks" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BookOpen className="w-5 h-5 text-orange-600" />
+            <Card className="bg-[#18181F] border border-[#2A2A38] rounded-sm bg-[#18181F] border border-[#2A2A38] rounded-sm" >
+              <CardHeader className="border-b border-[#2A2A38] pb-4 bg-[#111118]">
+                <CardTitle className="font-sans text-lg sm:text-xl text-[#EDE9DC] uppercase tracking-wider flex items-center gap-2">
+                  <BookOpen className="w-5 h-5 text-[#D4A853]" />
                   Sales Playbooks & Processes
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="font-mono text-xs text-[#9E9880] mt-1">
                   Step-by-step guides for consistent sales success
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
                   {salesPlaybooks.map((playbook) => (
-                    <div key={playbook.id} className="border rounded-lg p-6">
+                    <div key={playbook.id} className="border border-[#2A2A38] rounded-sm p-6">
                       <div className="flex justify-between items-start mb-4">
                         <div>
-                          <h3 className="text-xl font-semibold">{playbook.name}</h3>
-                          <p className="text-slate-400">{playbook.description}</p>
-                          <Badge variant="outline" className="mt-2">{playbook.targetPersona}</Badge>
+                          <h3 className="font-sans text-xl font-bold text-[#EDE9DC]">{playbook.name}</h3>
+                          <p className="text-[#9E9880] font-mono text-xs">{playbook.description}</p>
+                          <Badge className="bg-[#111118] border border-[#2A2A38] text-[#EDE9DC] font-mono rounded-sm hover:bg-[#111118] mt-2" variant="outline" >{playbook.targetPersona}</Badge>
                         </div>
-                        <Button>
+                        <Button className="bg-[#D4A853] text-[#111118] font-mono text-xs font-bold uppercase tracking-widest hover:bg-[#C49843] transition-colors rounded-sm border-none shadow-none ring-0">
                           View Full Playbook
                         </Button>
                       </div>
-                      
+
                       <div className="grid gap-4">
                         {playbook.stages.map((stage, index) => (
                           <div key={index} className="flex gap-4">
-                            <div className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium">
+                            <div className="flex-shrink-0 w-8 h-8 bg-blue-100 text-[#D4A853] rounded-full flex items-center justify-center text-sm font-medium">
                               {index + 1}
                             </div>
                             <div className="flex-1">
                               <div className="flex justify-between items-center mb-2">
                                 <h4 className="font-medium">{stage.name}</h4>
-                                <Badge variant="secondary">{stage.avgDuration}</Badge>
+                                <Badge className="bg-[#111118] border border-[#2A2A38] text-[#EDE9DC] font-mono rounded-sm hover:bg-[#111118]" variant="secondary">{stage.avgDuration}</Badge>
                               </div>
-                              <p className="text-sm text-slate-400 mb-2">{stage.description}</p>
-                              <div className="text-xs text-slate-400">
+                              <p className="text-sm text-[#9E9880] font-mono text-xs mb-2">{stage.description}</p>
+                              <div className="text-xs text-[#9E9880] font-mono text-xs">
                                 {stage.activities.length} activities • {stage.successCriteria.length} success criteria
                               </div>
                             </div>
@@ -768,13 +768,13 @@ Looking forward to hearing from you!`
 
           {/* Business Info Tab */}
           <TabsContent value="business-info" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+            <Card className="bg-[#18181F] border border-[#2A2A38] rounded-sm bg-[#18181F] border border-[#2A2A38] rounded-sm" >
+              <CardHeader className="border-b border-[#2A2A38] pb-4 bg-[#111118]">
+                <CardTitle className="font-sans text-lg sm:text-xl text-[#EDE9DC] uppercase tracking-wider flex items-center gap-2">
                   <Target className="w-5 h-5" />
                   Tell Us About Your Business
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="font-mono text-xs text-[#9E9880] mt-1">
                   Provide details about your business to generate a customized SDR plan
                 </CardDescription>
               </CardHeader>
@@ -782,8 +782,8 @@ Looking forward to hearing from you!`
                 <div className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <Label htmlFor="companyName">Company Name *</Label>
-                      <Input
+                      <Label className="font-mono text-xs text-[#D4A853] uppercase tracking-widest mb-2 block" htmlFor="companyName">Company Name *</Label>
+                      <Input className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm"
                         id="companyName"
                         value={businessInfo.companyName}
                         onChange={(e) => handleInputChange('companyName', e.target.value)}
@@ -792,8 +792,8 @@ Looking forward to hearing from you!`
                       />
                     </div>
                     <div>
-                      <Label htmlFor="industry">Industry *</Label>
-                      <Input
+                      <Label className="font-mono text-xs text-[#D4A853] uppercase tracking-widest mb-2 block" htmlFor="industry">Industry *</Label>
+                      <Input className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm"
                         id="industry"
                         value={businessInfo.industry}
                         onChange={(e) => handleInputChange('industry', e.target.value)}
@@ -804,8 +804,8 @@ Looking forward to hearing from you!`
                   </div>
 
                   <div>
-                    <Label htmlFor="productService">Product or Service *</Label>
-                    <Textarea
+                    <Label className="font-mono text-xs text-[#D4A853] uppercase tracking-widest mb-2 block" htmlFor="productService">Product or Service *</Label>
+                    <Textarea className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm min-h-[100px]"
                       id="productService"
                       value={businessInfo.productService}
                       onChange={(e) => handleInputChange('productService', e.target.value)}
@@ -815,8 +815,8 @@ Looking forward to hearing from you!`
                   </div>
 
                   <div>
-                    <Label htmlFor="targetCustomers">Target Customers *</Label>
-                    <Textarea
+                    <Label className="font-mono text-xs text-[#D4A853] uppercase tracking-widest mb-2 block" htmlFor="targetCustomers">Target Customers *</Label>
+                    <Textarea className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm min-h-[100px]"
                       id="targetCustomers"
                       value={businessInfo.targetCustomers}
                       onChange={(e) => handleInputChange('targetCustomers', e.target.value)}
@@ -827,8 +827,8 @@ Looking forward to hearing from you!`
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <Label htmlFor="currentSales">Current Monthly Sales ($) *</Label>
-                      <Input
+                      <Label className="font-mono text-xs text-[#D4A853] uppercase tracking-widest mb-2 block" htmlFor="currentSales">Current Monthly Sales ($) *</Label>
+                      <Input className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm"
                         id="currentSales"
                         value={businessInfo.currentSales}
                         onChange={(e) => handleInputChange('currentSales', e.target.value)}
@@ -837,8 +837,8 @@ Looking forward to hearing from you!`
                       />
                     </div>
                     <div>
-                      <Label htmlFor="budget">Monthly SDR Budget ($) *</Label>
-                      <Input
+                      <Label className="font-mono text-xs text-[#D4A853] uppercase tracking-widest mb-2 block" htmlFor="budget">Monthly SDR Budget ($) *</Label>
+                      <Input className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm"
                         id="budget"
                         value={businessInfo.budget}
                         onChange={(e) => handleInputChange('budget', e.target.value)}
@@ -849,8 +849,8 @@ Looking forward to hearing from you!`
                   </div>
 
                   <div>
-                    <Label htmlFor="salesChallenges">Top Sales Challenge *</Label>
-                    <Textarea
+                    <Label className="font-mono text-xs text-[#D4A853] uppercase tracking-widest mb-2 block" htmlFor="salesChallenges">Top Sales Challenge *</Label>
+                    <Textarea className="bg-transparent border-[#2A2A38] text-[#EDE9DC] placeholder:text-[#9E9880] focus-visible:ring-[#D4A853] rounded-sm min-h-[100px]"
                       id="salesChallenges"
                       value={businessInfo.salesChallenges}
                       onChange={(e) => handleInputChange('salesChallenges', e.target.value)}
@@ -859,18 +859,19 @@ Looking forward to hearing from you!`
                     />
                   </div>
 
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <h3 className="font-semibold text-blue-800 mb-2">How This Helps</h3>
-                    <p className="text-sm text-blue-700">
+                  <div className="bg-[#111118] border border-[#2A2A38] p-4 rounded-lg">
+                    <h3 className="font-semibold text-[#EDE9DC] mb-2">How This Helps</h3>
+                    <p className="text-sm text-[#9E9880]">
                       Based on your inputs, we&apos;ll generate a customized SDR plan that includes:
                       prospecting strategies, messaging templates, tool recommendations, and a 30-day implementation timeline.
                     </p>
                   </div>
 
                   <div className="flex justify-end">
-                    <Button 
+                    <Button
                       onClick={() => handleTabChange('generate')}
                       disabled={!businessInfo.companyName || !businessInfo.industry || !businessInfo.productService}
+                      className="bg-[#D4A853] text-[#111118] font-mono text-xs font-bold uppercase tracking-widest hover:bg-[#C49843] transition-colors rounded-sm border-none shadow-none ring-0"
                     >
                       Generate My SDR Plan
                     </Button>
@@ -882,13 +883,13 @@ Looking forward to hearing from you!`
 
           {/* Generate Tab */}
           <TabsContent value="generate" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+            <Card className="bg-[#18181F] border border-[#2A2A38] rounded-sm bg-[#18181F] border border-[#2A2A38] rounded-sm" >
+              <CardHeader className="border-b border-[#2A2A38] pb-4 bg-[#111118]">
+                <CardTitle className="font-sans text-lg sm:text-xl text-[#EDE9DC] uppercase tracking-wider flex items-center gap-2">
                   <Zap className="w-5 h-5" />
                   Generate Your Custom SDR Plan
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="font-mono text-xs text-[#9E9880] mt-1">
                   Creating a tailored sales development strategy for {businessInfo.companyName}
                 </CardDescription>
               </CardHeader>
@@ -896,30 +897,31 @@ Looking forward to hearing from you!`
                 <div className="text-center py-12">
                   {isGenerating ? (
                     <>
-                      <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-                      <h3 className="text-xl font-semibold mb-2">Generating Your Custom Plan</h3>
-                      <p className="text-slate-400">
+                      <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#D4A853] mb-4"></div>
+                      <h3 className="font-sans text-xl font-bold text-[#EDE9DC] mb-2">Generating Your Custom Plan</h3>
+                      <p className="text-[#9E9880] font-mono text-xs">
                         Analyzing your business information and creating a tailored SDR strategy...
                       </p>
                     </>
                   ) : (
                     <>
                       <Lightbulb className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
-                      <h3 className="text-xl font-semibold mb-2">Ready to Generate Your Plan</h3>
-                      <p className="text-slate-400 mb-6 max-w-2xl mx-auto">
-                        Based on your inputs, we&apos;ll create a comprehensive Self-Service SDR Plan customized for 
+                      <h3 className="font-sans text-xl font-bold text-[#EDE9DC] mb-2">Ready to Generate Your Plan</h3>
+                      <p className="text-[#9E9880] font-mono text-xs mb-6 max-w-2xl mx-auto">
+                        Based on your inputs, we&apos;ll create a comprehensive Self-Service SDR Plan customized for
                         {businessInfo.companyName} in the {businessInfo.industry} industry.
                       </p>
                       <div className="flex justify-center gap-4">
-                        <Button 
+                        <Button
                           onClick={() => handleTabChange('business-info')}
                           variant="outline"
+                          className="bg-[#18181F] text-[#EDE9DC] font-mono text-xs font-bold uppercase tracking-widest hover:bg-[#2A2A38] transition-colors rounded-sm border border-[#2A2A38] shadow-none ring-0"
                         >
                           Edit Information
                         </Button>
-                        <Button 
+                        <Button
                           onClick={generatePlan}
-                          className="bg-blue-600 hover:bg-blue-700"
+                          className="bg-[#D4A853] text-[#111118] font-mono text-xs font-bold uppercase tracking-widest hover:bg-[#C49843] transition-colors rounded-sm border-none shadow-none ring-0"
                         >
                           Generate Custom Plan
                         </Button>
@@ -932,41 +934,41 @@ Looking forward to hearing from you!`
 
             {!isGenerating && (
               <div className="grid md:grid-cols-3 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-blue-600">
+                <Card className="bg-[#18181F] border border-[#2A2A38] rounded-sm bg-[#18181F] border border-[#2A2A38] rounded-sm" >
+                  <CardHeader className="border-b border-[#2A2A38] pb-4 bg-[#111118]">
+                    <CardTitle className="font-sans text-lg sm:text-xl text-[#EDE9DC] uppercase tracking-wider flex items-center gap-2 text-[#D4A853]">
                       <Target className="w-5 h-5" />
                       Prospecting Strategy
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-[#9E9880] font-mono text-xs">
                       Customized approach to find your ideal customers in the {businessInfo.industry} space.
                     </p>
                   </CardContent>
                 </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-green-600">
+                <Card className="bg-[#18181F] border border-[#2A2A38] rounded-sm bg-[#18181F] border border-[#2A2A38] rounded-sm" >
+                  <CardHeader className="border-b border-[#2A2A38] pb-4 bg-[#111118]">
+                    <CardTitle className="font-sans text-lg sm:text-xl text-[#EDE9DC] uppercase tracking-wider flex items-center gap-2 text-[#4D9E6A]">
                       <Send className="w-5 h-5" />
                       Messaging Templates
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-[#9E9880] font-mono text-xs">
                       Personalized outreach messages that resonate with your target audience.
                     </p>
                   </CardContent>
                 </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-purple-600">
+                <Card className="bg-[#18181F] border border-[#2A2A38] rounded-sm bg-[#18181F] border border-[#2A2A38] rounded-sm" >
+                  <CardHeader className="border-b border-[#2A2A38] pb-4 bg-[#111118]">
+                    <CardTitle className="font-sans text-lg sm:text-xl text-[#EDE9DC] uppercase tracking-wider flex items-center gap-2 text-[#EDE9DC]">
                       <TrendingUp className="w-5 h-5" />
                       30-Day Implementation
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-[#9E9880] font-mono text-xs">
                       Step-by-step timeline to execute your SDR strategy effectively.
                     </p>
                   </CardContent>
@@ -977,47 +979,47 @@ Looking forward to hearing from you!`
 
           {/* Plan Tab */}
           <TabsContent value="plan" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+            <Card className="bg-[#18181F] border border-[#2A2A38] rounded-sm bg-[#18181F] border border-[#2A2A38] rounded-sm" >
+              <CardHeader className="border-b border-[#2A2A38] pb-4 bg-[#111118]">
+                <CardTitle className="font-sans text-lg sm:text-xl text-[#EDE9DC] uppercase tracking-wider flex items-center gap-2">
                   <FileText className="w-5 h-5" />
                   Your Customized SDR Plan
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="font-mono text-xs text-[#9E9880] mt-1">
                   Generated for {businessInfo.companyName} on {generatedPlan?.createdAt}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex justify-end gap-2 mb-6">
-                  <Button onClick={copyToClipboard} variant="outline">
+                  <Button onClick={copyToClipboard} variant="outline" className="bg-[#D4A853] text-[#111118] font-mono text-xs font-bold uppercase tracking-widest hover:bg-[#C49843] transition-colors rounded-sm border-none shadow-none ring-0">
                     <Copy className="w-4 h-4 mr-2" />
                     Copy Plan
                   </Button>
-                  <Button onClick={downloadPlanAsPDF} disabled={isDownloading}>
+                  <Button onClick={downloadPlanAsPDF} disabled={isDownloading} className="bg-[#D4A853] text-[#111118] font-mono text-xs font-bold uppercase tracking-widest hover:bg-[#C49843] transition-colors rounded-sm border-none shadow-none ring-0">
                     <Download className="w-4 h-4 mr-2" />
                     {isDownloading ? 'Generating...' : 'Download as HTML'}
                   </Button>
                 </div>
-                
+
                 <div ref={planRef} className="space-y-8">
                   {/* Executive Summary */}
                   <div>
-                    <h2 className="text-2xl font-bold mb-4 text-blue-800">Executive Summary</h2>
-                    <p className="text-slate-300 bg-blue-50 p-4 rounded-lg">
+                    <h2 className="text-2xl font-bold mb-4 text-[#EDE9DC]">Executive Summary</h2>
+                    <p className="text-[#9E9880] font-mono text-xs bg-[#111118] border border-[#2A2A38] p-4 rounded-lg">
                       {generatedPlan?.plan?.executiveSummary}
                     </p>
                   </div>
 
                   {/* Prospecting Strategy */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
+                  <Card className="bg-[#18181F] border border-[#2A2A38] rounded-sm bg-[#18181F] border border-[#2A2A38] rounded-sm" >
+                    <CardHeader className="border-b border-[#2A2A38] pb-4 bg-[#111118]">
+                      <CardTitle className="font-sans text-lg sm:text-xl text-[#EDE9DC] uppercase tracking-wider flex items-center gap-2">
                         <Target className="w-5 h-5" />
                         {generatedPlan?.plan?.prospecting?.title}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-slate-300 mb-4">
+                      <p className="text-[#9E9880] font-mono text-xs mb-4">
                         {generatedPlan?.plan?.prospecting?.description}
                       </p>
                       <div className="space-y-3">
@@ -1025,7 +1027,7 @@ Looking forward to hearing from you!`
                         <ul className="space-y-2">
                           {generatedPlan?.plan?.prospecting?.steps?.map((step: string, index: number) => (
                             <li key={index} className="flex items-start gap-2">
-                              <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5" />
+                              <CheckCircle2 className="w-5 h-5 text-[#4D9E6A] mt-0.5" />
                               <span>{step}</span>
                             </li>
                           ))}
@@ -1035,29 +1037,29 @@ Looking forward to hearing from you!`
                   </Card>
 
                   {/* Messaging Framework */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
+                  <Card className="bg-[#18181F] border border-[#2A2A38] rounded-sm bg-[#18181F] border border-[#2A2A38] rounded-sm" >
+                    <CardHeader className="border-b border-[#2A2A38] pb-4 bg-[#111118]">
+                      <CardTitle className="font-sans text-lg sm:text-xl text-[#EDE9DC] uppercase tracking-wider flex items-center gap-2">
                         <MessageSquare className="w-5 h-5" />
                         {generatedPlan?.plan?.messaging?.title}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-slate-300 mb-4">
+                      <p className="text-[#9E9880] font-mono text-xs mb-4">
                         {generatedPlan?.plan?.messaging?.description}
                       </p>
-                      
+
                       <div className="space-y-6">
                         {generatedPlan?.plan?.messaging?.templates?.map((template: Record<string, string>, index: number) => (
-                          <div key={index} className="border rounded-lg p-4">
+                          <div key={index} className="border border-[#2A2A38] rounded-sm p-4">
                             <h4 className="font-semibold mb-2">{template.type}</h4>
                             {template.subject && (
                               <div className="mb-2">
                                 <span className="font-medium">Subject: </span>
-                                <span className="text-slate-300">{template.subject}</span>
+                                <span className="text-[#9E9880] font-mono text-xs">{template.subject}</span>
                               </div>
                             )}
-                            <div className="bg-slate-900 p-3 rounded text-sm whitespace-pre-line">
+                            <div className="bg-[#111118] border border-[#2A2A38] p-3 rounded text-sm whitespace-pre-line">
                               {template.body}
                             </div>
                           </div>
@@ -1067,26 +1069,26 @@ Looking forward to hearing from you!`
                   </Card>
 
                   {/* Tool Recommendations */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
+                  <Card className="bg-[#18181F] border border-[#2A2A38] rounded-sm bg-[#18181F] border border-[#2A2A38] rounded-sm" >
+                    <CardHeader className="border-b border-[#2A2A38] pb-4 bg-[#111118]">
+                      <CardTitle className="font-sans text-lg sm:text-xl text-[#EDE9DC] uppercase tracking-wider flex items-center gap-2">
                         <Zap className="w-5 h-5" />
                         {generatedPlan?.plan?.tools?.title}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-slate-300 mb-4">
+                      <p className="text-[#9E9880] font-mono text-xs mb-4">
                         {generatedPlan?.plan?.tools?.description}
                       </p>
-                      
+
                       <div className="grid md:grid-cols-2 gap-4">
                         {generatedPlan?.plan?.tools?.recommendations?.map((tool: Record<string, string>, index: number) => (
-                          <div key={index} className="border rounded-lg p-4">
+                          <div key={index} className="border border-[#2A2A38] rounded-sm p-4">
                             <div className="flex justify-between items-start mb-2">
                               <h4 className="font-semibold">{tool.name}</h4>
-                              <Badge variant="secondary">{tool.cost}</Badge>
+                              <Badge className="bg-[#111118] border border-[#2A2A38] text-[#EDE9DC] font-mono rounded-sm hover:bg-[#111118]" variant="secondary">{tool.cost}</Badge>
                             </div>
-                            <p className="text-sm text-slate-400">{tool.purpose}</p>
+                            <p className="text-sm text-[#9E9880] font-mono text-xs">{tool.purpose}</p>
                           </div>
                         ))}
                       </div>
@@ -1094,9 +1096,9 @@ Looking forward to hearing from you!`
                   </Card>
 
                   {/* Implementation Timeline */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
+                  <Card className="bg-[#18181F] border border-[#2A2A38] rounded-sm bg-[#18181F] border border-[#2A2A38] rounded-sm" >
+                    <CardHeader className="border-b border-[#2A2A38] pb-4 bg-[#111118]">
+                      <CardTitle className="font-sans text-lg sm:text-xl text-[#EDE9DC] uppercase tracking-wider flex items-center gap-2">
                         <Calendar className="w-5 h-5" />
                         {generatedPlan?.plan?.timeline?.title}
                       </CardTitle>
@@ -1104,15 +1106,15 @@ Looking forward to hearing from you!`
                     <CardContent>
                       <div className="space-y-6">
                         {generatedPlan?.plan?.timeline?.weeks?.map((week: any, index: number) => (
-                          <div key={index} className="border-l-4 border-blue-500 pl-4 py-1">
+                          <div key={index} className="border-l-2 border-[#D4A853] pl-4 py-1">
                             <div className="flex items-center gap-2 mb-2">
-                              <Badge variant="default">Week {week.week.replace('Week ', '')}</Badge>
+                              <Badge className="bg-[#111118] border border-[#2A2A38] text-[#EDE9DC] font-mono rounded-sm hover:bg-[#111118]" variant="default">Week {week.week.replace('Week ', '')}</Badge>
                               <span className="font-semibold">{week.focus}</span>
                             </div>
                             <ul className="space-y-1">
                               {week.tasks?.map((task: string, taskIndex: number) => (
                                 <li key={taskIndex} className="flex items-start gap-2 text-sm">
-                                  <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5" />
+                                  <CheckCircle2 className="w-4 h-4 text-[#4D9E6A] mt-0.5" />
                                   <span>{task}</span>
                                 </li>
                               ))}
@@ -1124,9 +1126,9 @@ Looking forward to hearing from you!`
                   </Card>
 
                   {/* Key Metrics */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
+                  <Card className="bg-[#18181F] border border-[#2A2A38] rounded-sm bg-[#18181F] border border-[#2A2A38] rounded-sm" >
+                    <CardHeader className="border-b border-[#2A2A38] pb-4 bg-[#111118]">
+                      <CardTitle className="font-sans text-lg sm:text-xl text-[#EDE9DC] uppercase tracking-wider flex items-center gap-2">
                         <TrendingUp className="w-5 h-5" />
                         {generatedPlan?.plan?.metrics?.title}
                       </CardTitle>
@@ -1134,9 +1136,9 @@ Looking forward to hearing from you!`
                     <CardContent>
                       <div className="grid md:grid-cols-4 gap-4">
                         {generatedPlan?.plan?.metrics?.kpis?.map((kpi: Record<string, string>, index: number) => (
-                          <div key={index} className="text-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg">
-                            <div className="text-lg font-bold text-blue-600">{kpi.target}</div>
-                            <div className="text-sm text-slate-400">{kpi.name}</div>
+                          <div key={index} className="text-center p-4 bg-[#111118] border border-[#2A2A38] rounded-lg">
+                            <div className="text-lg font-bold text-[#D4A853]">{kpi.target}</div>
+                            <div className="text-sm text-[#9E9880] font-mono text-xs">{kpi.name}</div>
                           </div>
                         ))}
                       </div>
@@ -1144,29 +1146,29 @@ Looking forward to hearing from you!`
                   </Card>
 
                   {/* Final Section */}
-                  <Card className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
+                  <Card className="bg-[#18181F] border border-[#2A2A38] rounded-sm bg-[#18181F] border border-[#D4A853] text-white" >
+                    <CardHeader className="border-b border-[#2A2A38] pb-4 bg-[#111118]">
+                      <CardTitle className="font-sans text-lg sm:text-xl text-[#EDE9DC] uppercase tracking-wider flex items-center gap-2">
                         <Award className="w-5 h-5" />
                         Next Steps
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <p className="mb-4">
-                        Congratulations! You now have a complete Self-Service SDR Plan tailored for {businessInfo.companyName}. 
+                        Congratulations! You now have a complete Self-Service SDR Plan tailored for {businessInfo.companyName}.
                         Follow the 30-day timeline to implement your strategy and start generating qualified leads.
                       </p>
                       <div className="flex flex-wrap gap-2">
-                        <Badge variant="secondary" className="bg-slate-800 text-blue-600">
+                        <Badge className="bg-[#111118] border border-[#2A2A38] text-[#EDE9DC] font-mono rounded-sm hover:bg-[#111118] bg-slate-800 text-[#D4A853]" variant="secondary" >
                           Start Week 1
                         </Badge>
-                        <Badge variant="secondary" className="bg-slate-800 text-blue-600">
+                        <Badge className="bg-[#111118] border border-[#2A2A38] text-[#EDE9DC] font-mono rounded-sm hover:bg-[#111118] bg-slate-800 text-[#D4A853]" variant="secondary" >
                           Set up tools
                         </Badge>
-                        <Badge variant="secondary" className="bg-slate-800 text-blue-600">
+                        <Badge className="bg-[#111118] border border-[#2A2A38] text-[#EDE9DC] font-mono rounded-sm hover:bg-[#111118] bg-slate-800 text-[#D4A853]" variant="secondary" >
                           Build prospect list
                         </Badge>
-                        <Badge variant="secondary" className="bg-slate-800 text-blue-600">
+                        <Badge className="bg-[#111118] border border-[#2A2A38] text-[#EDE9DC] font-mono rounded-sm hover:bg-[#111118] bg-slate-800 text-[#D4A853]" variant="secondary" >
                           Launch outreach
                         </Badge>
                       </div>
