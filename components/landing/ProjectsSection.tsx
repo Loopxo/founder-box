@@ -10,7 +10,7 @@ const toolkitItems = [
         description: "Iron-clad agreements",
         status: "Live",
         category: "Legal",
-        image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=800&h=1000&fit=crop&auto=format&q=80",
+        image: "/image/contracts.png",
         link: "/contract"
     },
     {
@@ -19,7 +19,7 @@ const toolkitItems = [
         description: "Professional billing",
         status: "Live",
         category: "Finance",
-        image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&h=1000&fit=crop&auto=format&q=80",
+        image: "/image/invoices.png",
         link: "/invoice"
     },
     {
@@ -28,7 +28,7 @@ const toolkitItems = [
         description: "Winning pitches",
         status: "Live",
         category: "Sales",
-        image: "https://images.unsplash.com/photo-1434626881859-194d67b2b86f?w=800&h=1000&fit=crop&auto=format&q=80",
+        image: "/image/proposals.png",
         link: "/dashboard/proposal"
     },
     {
@@ -37,7 +37,7 @@ const toolkitItems = [
         description: "Targeted outreach",
         status: "Live",
         category: "Growth",
-        image: "https://images.unsplash.com/photo-1577563908411-5079b6a662ed?w=800&h=1000&fit=crop&auto=format&q=80",
+        image: "/image/cold-email.png",
         link: "/cold-emails"
     },
     {
@@ -46,7 +46,7 @@ const toolkitItems = [
         description: "ATS-optimized profiles",
         status: "Live",
         category: "Career",
-        image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800&h=1000&fit=crop&auto=format&q=80",
+        image: "/image/resume.png",
         link: "/resume"
     },
     {
@@ -55,7 +55,7 @@ const toolkitItems = [
         description: "Market intelligence",
         status: "Beta",
         category: "Strategy",
-        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=1000&fit=crop&auto=format&q=80",
+        image: "/image/competetive-analysis.png",
         link: "/dashboard" // Placeholder for future page
     }
 ];

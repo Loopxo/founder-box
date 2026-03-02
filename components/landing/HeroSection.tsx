@@ -27,7 +27,7 @@ export default function HeroSection() {
     }, []);
 
     return (
-        <section className="relative h-screen min-h-[700px] w-full bg-[#111118] overflow-hidden flex flex-col pt-20">
+        <section className="relative h-[100svh] min-h-[600px] sm:min-h-[700px] w-full bg-[#111118] overflow-hidden flex flex-col pt-12 sm:pt-16 sm:pb-8 pb-4">
 
             {/* Background Grid Overlay */}
             <div className="absolute inset-0 z-0 pointer-events-none">
@@ -75,9 +75,9 @@ export default function HeroSection() {
                 </div>
 
                 {/* Bottom Actions */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-end border-t border-white/10 pt-8 mt-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8 items-end border-t border-white/10 pt-6 sm:pt-8 mt-4 sm:mt-8">
                     <div>
-                        <p className="font-mono text-sm text-[#9E9880] leading-relaxed max-w-lg mb-8">
+                        <p className="font-mono text-sm text-[#9E9880] leading-relaxed max-w-lg mb-6 sm:mb-8">
                             The ultimate operating system for agency owners and independent founders. Craft proposals, close contracts, and send invoices with absolute precision.
                         </p>
                         <Link
