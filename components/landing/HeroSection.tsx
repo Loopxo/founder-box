@@ -1,34 +1,19 @@
 'use client';
 
-import Image from 'next/image';
+import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const features = [
-    {
-        id: '01',
-        name: 'contracts & legal',
-        type: 'operations',
-        image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1920&h=1080&fit=crop&auto=format&q=80"
-    },
-    {
-        id: '02',
-        name: 'invoicing & billing',
-        type: 'finance',
-        image: "https://images.unsplash.com/photo-1620912189866-474843bb5ebf?w=1920&h=1080&fit=crop&auto=format&q=80"
-    },
-    {
-        id: '03',
-        name: 'proposals & pitch',
-        type: 'sales',
-        image: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1920&h=1080&fit=crop&auto=format&q=80"
-    },
-    {
-        id: '04',
-        name: 'cold emails & outreach',
-        type: 'growth',
-        image: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=1920&h=1080&fit=crop&auto=format&q=80"
-    }
+    { id: '01', name: 'contracts & legal' },
+    { id: '02', name: 'invoicing & billing' },
+    { id: '03', name: 'proposals & pitch' },
+    { id: '04', name: 'cold emails & outreach' },
+    { id: '05', name: 'resume builder' },
+    { id: '06', name: 'seo content' },
+    { id: '07', name: 'sales copy' },
+    { id: '08', name: 'social media' },
+    { id: '09', name: 'competitive analysis' }
 ];
 
 export default function HeroSection() {
@@ -37,40 +22,15 @@ export default function HeroSection() {
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((prev) => (prev + 1) % features.length);
-        }, 5000);
+        }, 3000);
         return () => clearInterval(interval);
     }, []);
 
     return (
         <section className="relative h-screen min-h-[700px] w-full bg-[#111118] overflow-hidden flex flex-col pt-20">
 
-            {/* Background Image Layer */}
-            <div className="absolute inset-0 z-0">
-                <AnimatePresence mode="popLayout">
-                    <motion.div
-                        key={currentIndex}
-                        className="absolute inset-0"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.25 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 1 }}
-                    >
-                        <Image
-                            src={features[currentIndex].image}
-                            alt={features[currentIndex].name}
-                            fill
-                            priority
-                            className="object-cover grayscale"
-                        />
-                        {/* Dark Studio overlay for text contrast */}
-                        <div className="absolute inset-0 bg-[#111118]/70" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#111118] via-transparent to-transparent" />
-                    </motion.div>
-                </AnimatePresence>
-            </div>
-
-            {/* Grid Overlay */}
-            <div className="absolute inset-0 z-10 pointer-events-none">
+            {/* Background Grid Overlay */}
+            <div className="absolute inset-0 z-0 pointer-events-none">
                 <div className="h-full w-full max-w-7xl mx-auto border-r border-l border-white/5 grid grid-cols-4">
                     <div className="border-r border-white/5 h-full" />
                     <div className="border-r border-white/5 h-full" />
@@ -91,7 +51,7 @@ export default function HeroSection() {
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 exit={{ y: -20, opacity: 0 }}
-                                className="font-mono text-sm text-[#EDE9DC] uppercase mt-1"
+                                className="font-mono text-xs sm:text-sm text-[#EDE9DC] uppercase mt-1"
                             >
                                 {features[currentIndex].id} / {features[currentIndex].name}
                             </motion.span>
@@ -106,20 +66,26 @@ export default function HeroSection() {
 
                 {/* Main Title */}
                 <div className="flex-1 flex items-center">
-                    <h1 className="font-sans text-5xl sm:text-7xl lg:text-9xl font-bold leading-[0.85] tracking-tighter text-[#EDE9DC] mix-blend-plus-lighter">
+                    <h1 className="font-sans text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold leading-[0.85] tracking-tighter text-[#EDE9DC]">
                         <span className="block">TURNING</span>
                         <span className="block text-transparent stroke-text hover:text-[#D4A853] transition-colors duration-500 cursor-default">CHAOS</span>
-                        <span className="block pl-12 sm:pl-32">INTO</span>
+                        <span className="block pl-8 sm:pl-16 md:pl-24 lg:pl-32">INTO</span>
                         <span className="block text-right">EMPIRES.</span>
                     </h1>
                 </div>
 
                 {/* Bottom Actions */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-end border-t border-white/10 pt-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-end border-t border-white/10 pt-8 mt-8">
                     <div>
-                        <p className="font-mono text-sm text-[#9E9880] leading-relaxed whitespace-nowrap max-w-lg whitespace-normal">
+                        <p className="font-mono text-sm text-[#9E9880] leading-relaxed max-w-lg mb-8">
                             The ultimate operating system for agency owners and independent founders. Craft proposals, close contracts, and send invoices with absolute precision.
                         </p>
+                        <Link
+                            href="/dashboard"
+                            className="inline-flex items-center justify-center px-8 py-4 bg-[#D4A853] text-[#111118] font-mono text-xs font-bold uppercase tracking-widest hover:bg-[#C49843] transition-colors duration-300 rounded-sm"
+                        >
+                            Start Free Forever
+                        </Link>
                     </div>
                 </div>
 
