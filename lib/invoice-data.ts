@@ -48,16 +48,16 @@ export interface Invoice {
   date: string;
   dueDate: string;
   status: 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled';
-  
+
   // Company details
   company: InvoiceCompany;
-  
+
   // Client details
   client: InvoiceClient;
-  
+
   // Invoice items
   items: InvoiceItem[];
-  
+
   // Financial calculations
   subtotal: number;
   taxes: InvoiceTax[];
@@ -68,10 +68,10 @@ export interface Invoice {
     amount: number;
   };
   total: number;
-  
+
   // Payment terms
   paymentTerms: InvoicePaymentTerms;
-  
+
   // Additional info
   notes?: string;
   currency: string;
@@ -86,6 +86,12 @@ export interface InvoicePDFData {
 
 // Tax rates by country/region
 export const taxRates = {
+  IN: [
+    { name: 'GST (18%)', rate: 18, description: 'Standard GST rate' },
+    { name: 'GST (12%)', rate: 12, description: 'Reduced GST rate' },
+    { name: 'GST (5%)', rate: 5, description: 'Low GST rate' },
+    { name: 'No Tax', rate: 0, description: 'Tax exempt' }
+  ],
   US: [
     { name: 'Sales Tax', rate: 8.25, description: 'Standard sales tax' },
     { name: 'No Tax', rate: 0, description: 'Tax exempt' }
@@ -256,12 +262,12 @@ export const calculateTaxAmount = (subtotal: number, taxRate: number): number =>
  * @returns Object containing final total and calculated discount amount
  */
 export const calculateTotal = (
-  subtotal: number, 
-  totalTax: number, 
+  subtotal: number,
+  totalTax: number,
   discount?: { type: 'percentage' | 'fixed'; value: number }
 ): { total: number; discountAmount: number } => {
   let discountAmount = 0;
-  
+
   if (discount) {
     if (discount.type === 'percentage') {
       discountAmount = Math.round((subtotal * (discount.value / 100)) * 100) / 100;
@@ -269,7 +275,7 @@ export const calculateTotal = (
       discountAmount = discount.value;
     }
   }
-  
+
   const total = Math.round((subtotal + totalTax - discountAmount) * 100) / 100;
   return { total, discountAmount };
 };
@@ -277,7 +283,7 @@ export const calculateTotal = (
 export const formatCurrency = (amount: number, currencyCode: string): string => {
   const currency = currencies.find(c => c.code === currencyCode);
   if (!currency) return amount.toString();
-  
+
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currencyCode,
@@ -302,7 +308,7 @@ export const createSampleInvoice = (): Partial<Invoice> => {
   const invoiceNumber = generateInvoiceNumber();
   const today = new Date().toISOString().split('T')[0];
   const dueDate = addDaysToDate(today, 30);
-  
+
   return {
     invoiceNumber,
     date: today,

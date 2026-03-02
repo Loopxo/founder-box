@@ -46,7 +46,7 @@ function InvoiceContent() {
   const router = useRouter()
 
   const [invoice, setInvoice] = useState<Partial<Invoice>>(() => createSampleInvoice())
-  const [selectedRegion, setSelectedRegion] = useState<string>('US')
+  const [selectedRegion, setSelectedRegion] = useState<string>('IN')
   const [selectedTheme, setSelectedTheme] = useState<string>('professional')
   const [companyLogo, setCompanyLogo] = useState<string | null>(null)
   const [copiedInvoice, setCopiedInvoice] = useState(false)
@@ -101,9 +101,14 @@ function InvoiceContent() {
   const removeItem = (id: string) => setInvoice(prev => ({ ...prev, items: prev.items?.filter(item => item.id !== id) }))
 
   const addTax = () => {
-    const regionTaxes = taxRates[selectedRegion as keyof typeof taxRates] || taxRates.US
-    const defaultTax = regionTaxes[0]
-    const newTax: InvoiceTax = { name: defaultTax.name, rate: defaultTax.rate, amount: 0 }
+    let newTax: InvoiceTax;
+    if (selectedRegion === 'CUSTOM') {
+      newTax = { name: 'Custom Tax', rate: 0, amount: 0 };
+    } else {
+      const regionTaxes = taxRates[selectedRegion as keyof typeof taxRates] || taxRates.IN;
+      const defaultTax = regionTaxes[0];
+      newTax = { name: defaultTax.name, rate: defaultTax.rate, amount: 0 };
+    }
     setInvoice(prev => ({ ...prev, taxes: [...(prev.taxes || []), newTax] }))
   }
 
@@ -297,7 +302,7 @@ ${invoice.notes || ''}
 
       {/* Create Tab */}
       {activeTab === 'create' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', lg: { gridTemplateColumns: '2fr 1fr' }, gap: '24px' }}>
+        <div className="flex flex-col lg:grid lg:grid-cols-[2fr_1fr] gap-6">
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {/* Invoice Details */}
@@ -425,24 +430,36 @@ ${invoice.notes || ''}
               <div style={{ marginBottom: '16px' }}>
                 <label style={labelStyle}>Tax Region</label>
                 <select style={{ ...inputStyle, appearance: 'none' }} value={selectedRegion} onChange={e => setSelectedRegion(e.target.value)}>
+                  <option value="IN">India</option>
                   <option value="US">United States</option>
                   <option value="CA">Canada</option>
                   <option value="UK">United Kingdom</option>
                   <option value="EU">European Union</option>
                   <option value="AU">Australia</option>
+                  <option value="CUSTOM">Custom (Anywhere)</option>
                 </select>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {invoice.taxes?.map((tax, idx) => (
                   <div key={idx} style={{ background: S.surface2, border: `1px solid ${S.border}`, borderRadius: '6px', padding: '12px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                      <select style={{ ...inputStyle, width: 'auto', background: S.surface, appearance: 'none' }} value={tax.name} onChange={e => {
-                        const sTax = taxRates[selectedRegion as keyof typeof taxRates]?.find(t => t.name === e.target.value)
-                        if (sTax) { updateTax(idx, 'name', e.target.value); updateTax(idx, 'rate', sTax.rate) }
-                      }}>
-                        {taxRates[selectedRegion as keyof typeof taxRates]?.map(opt => <option key={opt.name} value={opt.name}>{opt.name} ({opt.rate}%)</option>)}
-                      </select>
-                      <button style={{ ...ghostBtn, padding: '4px 8px', fontSize: '11px' }} onClick={() => removeTax(idx)}>Remove</button>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', alignItems: 'flex-start', marginBottom: '8px' }}>
+                      {selectedRegion === 'CUSTOM' ? (
+                        <div style={{ display: 'flex', gap: '8px', flex: 1 }}>
+                          <input style={{ ...inputStyle, background: S.surface }} value={tax.name} onChange={e => updateTax(idx, 'name', e.target.value)} placeholder="Tax Name" />
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: S.surface, border: `1px solid ${S.border}`, borderRadius: '6px', paddingRight: '8px', width: '100px' }}>
+                            <input style={{ ...inputStyle, border: 'none', background: 'transparent' }} type="number" step="0.01" value={tax.rate} onChange={e => updateTax(idx, 'rate', parseFloat(e.target.value) || 0)} placeholder="Rate" />
+                            <span style={{ color: S.muted, fontSize: '12px', fontWeight: 600 }}>%</span>
+                          </div>
+                        </div>
+                      ) : (
+                        <select style={{ ...inputStyle, width: 'auto', background: S.surface, appearance: 'none' }} value={tax.name} onChange={e => {
+                          const sTax = taxRates[selectedRegion as keyof typeof taxRates]?.find(t => t.name === e.target.value)
+                          if (sTax) { updateTax(idx, 'name', e.target.value); updateTax(idx, 'rate', sTax.rate) }
+                        }}>
+                          {taxRates[selectedRegion as keyof typeof taxRates]?.map(opt => <option key={opt.name} value={opt.name}>{opt.name} ({opt.rate}%)</option>)}
+                        </select>
+                      )}
+                      <button style={{ ...ghostBtn, padding: '4px 8px', fontSize: '11px', flexShrink: 0 }} onClick={() => removeTax(idx)}>Remove</button>
                     </div>
                     <p style={{ color: S.muted, fontSize: '12px' }}>Amount: {formatCurrency(tax.amount, invoice.currency || 'USD')}</p>
                   </div>
@@ -467,23 +484,7 @@ ${invoice.notes || ''}
               </div>
             </SCard>
 
-            {/* Theme Select */}
-            <SCard style={{ padding: '24px' }}>
-              <p style={{ color: S.text, fontWeight: 600, marginBottom: '16px' }}>Print Theme</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {invoiceThemes.map(theme => (
-                  <div key={theme.id} onClick={() => handleThemeChange(theme.id)} style={{ padding: '12px', borderRadius: '6px', border: `1px solid ${selectedTheme === theme.id ? S.gold : S.border}`, background: selectedTheme === theme.id ? S.surface2 : S.surface, cursor: 'pointer' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: theme.primaryColor, flexShrink: 0 }} />
-                      <div>
-                        <p style={{ color: S.text, fontSize: '13px', fontWeight: selectedTheme === theme.id ? 700 : 500 }}>{theme.name}</p>
-                        <p style={{ color: S.muted, fontSize: '11px' }}>{theme.description}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </SCard>
+            {/* Print theme moved to preview tab */}
           </div>
         </div>
       )}
@@ -492,7 +493,12 @@ ${invoice.notes || ''}
       {activeTab === 'preview' && (
         <SCard style={{ padding: '0', overflow: 'hidden' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px', borderBottom: `1px solid ${S.border}` }}>
-            <p style={{ color: S.text, fontWeight: 600 }}>Invoice Preview</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <p style={{ color: S.text, fontWeight: 600 }}>Invoice Preview</p>
+              <select style={{ ...inputStyle, width: '160px', padding: '6px 12px', background: S.surface2, appearance: 'none' }} value={selectedTheme} onChange={e => handleThemeChange(e.target.value)}>
+                {invoiceThemes.map(t => <option key={t.id} value={t.id}>{t.name} Theme</option>)}
+              </select>
+            </div>
             <div style={{ display: 'flex', gap: '12px' }}>
               <button style={ghostBtn} onClick={copyToClipboard}>{copiedInvoice ? 'Copied!' : 'Copy Text'}</button>
               <button style={solidBtn} onClick={downloadPDF}>Download PDF</button>
