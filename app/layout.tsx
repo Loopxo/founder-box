@@ -9,8 +9,77 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "FounderBox",
-  description: "FounderBox — The operating system for founders",
+  metadataBase: new URL("https://founderbox.loopxo.org"),
+  title: {
+    default: "FounderBox — Free Open Source Toolkit for Founders | Proposals, Invoices & Contracts",
+    template: "%s | FounderBox by Loopxo",
+  },
+  description:
+    "FounderBox is a free, open source suite of business tools for founders and agencies. Generate proposals, contracts, invoices, cold emails, resumes, and sales copy — all in one place. Built by Loopxo.",
+  keywords: [
+    "founder tools",
+    "free proposal generator",
+    "invoice generator",
+    "contract templates",
+    "cold email templates",
+    "startup toolkit",
+    "open source business tools",
+    "freelancer tools",
+    "agency toolkit",
+    "FounderBox",
+    "Loopxo",
+    "Vijeet Shah",
+    "free invoicing software",
+    "proposal builder",
+    "resume builder",
+    "sales copy generator",
+    "competitive analysis tool",
+  ],
+  authors: [
+    { name: "Vijeet Shah", url: "https://loopxo.org" },
+    { name: "Loopxo", url: "https://loopxo.org" },
+  ],
+  creator: "Loopxo",
+  publisher: "Loopxo",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://founderbox.loopxo.org",
+    siteName: "FounderBox",
+    title: "FounderBox — Free Open Source Toolkit for Founders",
+    description:
+      "Stop juggling 10 different tools. FounderBox gives you proposals, contracts, invoices, cold emails, and more — free forever. An open source project by Loopxo.",
+    images: [
+      {
+        url: "/logo.png",
+        width: 512,
+        height: 512,
+        alt: "FounderBox Logo — The complete founder toolkit",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FounderBox — Free Open Source Toolkit for Founders",
+    description:
+      "Proposals, contracts, invoices, cold emails, and more — free forever. Built by Loopxo.",
+    images: ["/logo.png"],
+    creator: "@loopxo",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: "https://founderbox.loopxo.org",
+  },
 };
 
 export default function RootLayout({

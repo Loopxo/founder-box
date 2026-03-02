@@ -7,7 +7,7 @@ const toolkitItems = [
     {
         id: '01',
         title: "Contracts",
-        description: "Iron-clad agreements",
+        description: "Send binding agreements in under 60 seconds",
         status: "Live",
         category: "Legal",
         image: "/image/contracts.png",
@@ -16,7 +16,7 @@ const toolkitItems = [
     {
         id: '02',
         title: "Invoices",
-        description: "Professional billing",
+        description: "Auto-calculated invoices clients actually pay",
         status: "Live",
         category: "Finance",
         image: "/image/invoices.png",
@@ -25,7 +25,7 @@ const toolkitItems = [
     {
         id: '03',
         title: "Proposals",
-        description: "Winning pitches",
+        description: "Pitch decks that close deals on the first send",
         status: "Live",
         category: "Sales",
         image: "/image/proposals.png",
@@ -34,7 +34,7 @@ const toolkitItems = [
     {
         id: '04',
         title: "Cold Emails",
-        description: "Targeted outreach",
+        description: "Outreach templates with proven reply rates",
         status: "Live",
         category: "Growth",
         image: "/image/cold-email.png",
@@ -43,7 +43,7 @@ const toolkitItems = [
     {
         id: '05',
         title: "Resume Builder",
-        description: "ATS-optimized profiles",
+        description: "ATS-optimized resumes that land interviews",
         status: "Live",
         category: "Career",
         image: "/image/resume.png",
@@ -52,11 +52,11 @@ const toolkitItems = [
     {
         id: '06',
         title: "Competitive Analysis",
-        description: "Market intelligence",
+        description: "Know exactly where you stand in the market",
         status: "Beta",
         category: "Strategy",
         image: "/image/competetive-analysis.png",
-        link: "/dashboard" // Placeholder for future page
+        link: "/competitive-analysis"
     }
 ];
 
@@ -71,12 +71,12 @@ function ToolkitCard({ item, index }: { item: typeof toolkitItems[0]; index: num
             transition={{ duration: 0.5, delay: index * 0.1 }}
             viewport={{ once: true }}
         >
-            <Link href={item.link} className="block h-full w-full relative">
+            <Link href={item.link} className="block h-full w-full relative" aria-label={`Open ${item.title} tool — ${item.description}`}>
                 {/* Image Layer */}
                 <div className="absolute inset-0 z-0">
                     <ParallaxImage
                         src={item.image}
-                        alt={item.title}
+                        alt={`${item.title} — ${item.description}`}
                         fill
                         className="group-hover:scale-105 opacity-50 group-hover:opacity-80 transition-all duration-700"
                         containerClassName="w-full h-full"
@@ -116,7 +116,7 @@ function ToolkitCard({ item, index }: { item: typeof toolkitItems[0]; index: num
 
 export default function ProjectsSection() {
     return (
-        <section className="py-24 bg-[#111118] border-t border-[#2A2A38]">
+        <section className="py-24 bg-[#111118] border-t border-[#2A2A38]" aria-label="FounderBox tools and features">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 {/* Header */}
@@ -126,8 +126,8 @@ export default function ProjectsSection() {
                             02 / The Arsenal
                         </span>
                         <h2 className="font-sans text-4xl sm:text-5xl font-bold text-[#EDE9DC]">
-                            EVERYTHING YOU <br />
-                            NEED TO SCALE.
+                            NINE TOOLS. <br />
+                            ZERO COST.
                         </h2>
                     </div>
 

@@ -19,6 +19,12 @@ const WhyChooseUsSection = dynamic(() => import('./landing/WhyChooseUsSection'),
   ssr: true
 });
 
+
+const FAQSection = dynamic(() => import('./landing/FAQSection'), {
+  loading: () => <div className="h-96 bg-[#111118]" />,
+  ssr: true
+});
+
 const ContactSection = dynamic(() => import('./landing/ContactSection'), {
   loading: () => <div className="h-96 bg-[#111118]" />,
   ssr: true
@@ -44,6 +50,11 @@ export default function LandingPage() {
 
         <Suspense fallback={<div className="h-96 bg-[#111118]" />}>
           <WhyChooseUsSection />
+        </Suspense>
+
+
+        <Suspense fallback={<div className="h-96 bg-[#111118]" />}>
+          <FAQSection />
         </Suspense>
 
         <Suspense fallback={<div className="h-96 bg-[#111118]" />}>

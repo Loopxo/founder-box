@@ -6,38 +6,38 @@ const processSteps = [
     {
         number: '01',
         label: "Speed",
-        description: "Execute in seconds what used to take hours. Instantly generate contracts, invoices, and proposals."
+        description: "Generate a complete proposal or contract in under 60 seconds. No templates to hunt down, no formatting to fix."
     },
     {
         number: '02',
         label: "Precision",
-        description: "Eliminate human error with dynamic variables, auto-calculations, and bulletproof templates."
+        description: "Auto-calculated invoices, dynamic contract variables, and bulletproof templates. Every number checks out, every clause holds up."
     },
     {
         number: '03',
-        label: "Professionalism",
-        description: "Every touchpoint with you looks like it came from a Fortune 500 company. Build instant trust."
+        label: "Credibility",
+        description: "Clients judge you by your documents. FounderBox output looks like it came from a company ten times your size."
     },
     {
         number: '04',
         label: "Leverage",
-        description: "Scale yourself. A unified system that gives independent founders the output of a 5-person team."
+        description: "One founder. Nine professional tools. FounderBox gives solo operators the output of a fully-staffed back office."
     }
 ];
 
 export default function WhyChooseUsSection() {
     return (
-        <section className="py-24 bg-[#111118] border-t border-[#2A2A38]">
+        <section className="py-24 bg-[#111118] border-t border-[#2A2A38]" aria-label="Why founders choose FounderBox">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-[#2A2A38] pb-6">
                     <div className="max-w-xl">
                         <span className="font-mono text-xs text-[#D4A853] uppercase tracking-widest mb-4 block">
-                            03 / The Value
+                            03 / The Edge
                         </span>
                         <h2 className="font-sans text-4xl sm:text-5xl font-bold text-[#EDE9DC]">
-                            SPEED AND <br />
-                            LEVERAGE.
+                            WHY FOUNDERS <br />
+                            CHOOSE THIS.
                         </h2>
                     </div>
                     <p className="font-mono text-xs text-[#9E9880] uppercase tracking-widest mt-6 md:mt-0 max-w-xs text-right hidden md:block">
