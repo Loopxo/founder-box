@@ -65,7 +65,7 @@ import { ParallaxImage } from '@/components/ui/ParallaxImage';
 function ToolkitCard({ item, index }: { item: typeof toolkitItems[0]; index: number }) {
     return (
         <motion.div
-            className="group relative w-full aspect-[4/5] bg-[#18181F] border border-[#2A2A38] overflow-hidden"
+            className="group relative w-full aspect-video sm:aspect-[4/5] bg-[#18181F] border border-[#2A2A38] overflow-hidden"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
