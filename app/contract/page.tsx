@@ -4,20 +4,30 @@ import { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/DashboardLayout'
 import { contractCategories, contractTemplates, standardClauses, ContractTemplate, ContractField } from '@/lib/contract-data'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { Copy, Download, Upload, RotateCcw, FileText, Building, Scale, Home, DollarSign, HardHat, Search, X } from 'lucide-react'
+
+// Studio palette
+const S = {
+  bg: '#111118',
+  surface: '#18181F',
+  surface2: '#1E1E28',
+  border: '#2A2A38',
+  text: '#EDE9DC',
+  muted: '#9E9880',
+  gold: '#D4A853',
+  goldDim: '#C49843',
+  success: '#4D9E6A',
+} as const
+
+const SCard = ({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) => (
+  <div style={{ background: S.surface, border: `1px solid ${S.border}`, borderRadius: '8px', ...style }}>
+    {children}
+  </div>
+)
 
 function ContractContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  
+
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [selectedTemplate, setSelectedTemplate] = useState<ContractTemplate | null>(null)
   const [contractInputs, setContractInputs] = useState<Record<string, string>>({})
@@ -25,39 +35,25 @@ function ContractContent() {
   const [searchQuery, setSearchQuery] = useState('')
   const [companyLogo, setCompanyLogo] = useState<string | null>(null)
   const [copiedContract, setCopiedContract] = useState(false)
+  const [openSections, setOpenSections] = useState<Set<string>>(new Set())
   const fileInputRef = useRef<HTMLInputElement>(null)
-
-  const categoryIcons: Record<string, React.ComponentType<{ className?: string }>> = {
-    employment: Building,
-    business: FileText,
-    legal: Scale,
-    property: Home,
-    financial: DollarSign,
-    construction: HardHat
-  }
 
   const filteredTemplates = contractTemplates.filter(template => {
     const matchesCategory = selectedCategory ? template.category === selectedCategory : true
-    const matchesSearch = searchQuery ? 
-      template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    const matchesSearch = searchQuery
+      ? template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       template.description.toLowerCase().includes(searchQuery.toLowerCase())
       : true
     return matchesCategory && matchesSearch
   })
 
-  // URL state management
   useEffect(() => {
     const category = searchParams.get('category')
     const templateId = searchParams.get('template')
-    
-    if (category) {
-      setSelectedCategory(category)
-    }
+    if (category) setSelectedCategory(category)
     if (templateId) {
       const template = contractTemplates.find(t => t.id === templateId)
-      if (template) {
-        handleTemplateSelect(template)
-      }
+      if (template) handleTemplateSelect(template)
     }
   }, [searchParams])
 
@@ -65,7 +61,6 @@ function ContractContent() {
     const params = new URLSearchParams()
     if (category) params.set('category', category)
     if (templateId) params.set('template', templateId)
-    
     const newUrl = params.toString() ? `/contract?${params.toString()}` : '/contract'
     router.replace(newUrl, { scroll: false })
   }
@@ -77,13 +72,13 @@ function ContractContent() {
 
   const handleTemplateSelect = (template: ContractTemplate) => {
     setSelectedTemplate(template)
-    // Initialize inputs
     const initialInputs: Record<string, string> = {}
-    template.customizationFields.forEach(field => {
-      initialInputs[field.id] = ''
-    })
+    template.customizationFields.forEach(field => { initialInputs[field.id] = '' })
     setContractInputs(initialInputs)
     setSelectedClauses([])
+    // Open first section by default
+    const sections = [...new Set(template.customizationFields.map(f => f.section))]
+    if (sections.length) setOpenSections(new Set([sections[0]]))
   }
 
   const handleTemplateSelectWithUrl = (template: ContractTemplate) => {
@@ -91,23 +86,13 @@ function ContractContent() {
     updateUrl(selectedCategory, template.id)
   }
 
-  const goBackToCategories = () => {
-    setSelectedCategory(null)
-    setSelectedTemplate(null)
-    updateUrl()
-  }
-
-  const goBackToTemplates = () => {
-    setSelectedTemplate(null)
-    updateUrl(selectedCategory)
-  }
+  const goBackToCategories = () => { setSelectedCategory(null); setSelectedTemplate(null); updateUrl() }
+  const goBackToTemplates = () => { setSelectedTemplate(null); updateUrl(selectedCategory) }
 
   const resetContract = () => {
     if (selectedTemplate) {
       const initialInputs: Record<string, string> = {}
-      selectedTemplate.customizationFields.forEach(field => {
-        initialInputs[field.id] = ''
-      })
+      selectedTemplate.customizationFields.forEach(field => { initialInputs[field.id] = '' })
       setContractInputs(initialInputs)
       setSelectedClauses([])
     }
@@ -117,35 +102,25 @@ function ContractContent() {
     const file = event.target.files?.[0]
     if (file) {
       const reader = new FileReader()
-      reader.onload = (e) => {
-        setCompanyLogo(e.target?.result as string)
-      }
+      reader.onload = e => setCompanyLogo(e.target?.result as string)
       reader.readAsDataURL(file)
     }
   }
 
   const removeLogo = () => {
     setCompanyLogo(null)
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
+    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   const formatCurrency = (value: string) => {
     const number = parseFloat(value)
     if (isNaN(number)) return value
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(number)
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(number)
   }
 
   const generateContract = () => {
     if (!selectedTemplate) return ''
-
     let contract = selectedTemplate.content
-
-    // Replace all placeholders with user inputs
     Object.entries(contractInputs).forEach(([fieldId, value]) => {
       const field = selectedTemplate.customizationFields.find(f => f.id === fieldId)
       if (field && value) {
@@ -153,461 +128,360 @@ function ContractContent() {
         contract = contract.replaceAll(`[${fieldId}]`, formattedValue)
       }
     })
-
-    // Add selected clauses
     if (selectedClauses.length > 0) {
       const additionalClauses = selectedClauses.map(clauseId => {
         const clause = selectedTemplate.clauses.find(c => c.id === clauseId) ||
-                      Object.values(standardClauses).flat().find(c => c.id === clauseId)
+          Object.values(standardClauses).flat().find(c => c.id === clauseId)
         return clause ? `\n\nADDITIONAL CLAUSE: ${clause.title}\n${clause.content}` : ''
       }).join('')
-      
       contract += additionalClauses
     }
-
     return contract
   }
 
   const copyToClipboard = () => {
-    const contract = generateContract()
-    navigator.clipboard.writeText(contract)
+    navigator.clipboard.writeText(generateContract())
     setCopiedContract(true)
     setTimeout(() => setCopiedContract(false), 2000)
   }
 
   const downloadPDF = async () => {
     try {
-      const contract = generateContract()
-      
       const response = await fetch('/api/generate-pdf', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: contract,
-          title: selectedTemplate?.title || 'Contract',
-          logo: companyLogo
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: generateContract(), title: selectedTemplate?.title || 'Contract', logo: companyLogo }),
       })
-
       if (response.ok) {
         const blob = await response.blob()
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement('a')
-        a.style.display = 'none'
         a.href = url
         a.download = `${selectedTemplate?.title?.replace(/\s+/g, '_') || 'contract'}.pdf`
         document.body.appendChild(a)
         a.click()
         window.URL.revokeObjectURL(url)
         document.body.removeChild(a)
-      } else {
-        alert('Error generating PDF. Please try again.')
       }
-    } catch (error) {
-      alert('Error generating PDF. Please try again.')
-    }
+    } catch { /* silent */ }
   }
 
   const groupFieldsBySection = (fields: ContractField[]) => {
     const grouped: Record<string, ContractField[]> = {}
     fields.forEach(field => {
-      if (!grouped[field.section]) {
-        grouped[field.section] = []
-      }
+      if (!grouped[field.section]) grouped[field.section] = []
       grouped[field.section].push(field)
     })
     return grouped
   }
 
+  const toggleSection = (section: string) => {
+    setOpenSections(prev => {
+      const next = new Set(prev)
+      next.has(section) ? next.delete(section) : next.add(section)
+      return next
+    })
+  }
+
+  // Shared style atoms
+  const inputStyle: React.CSSProperties = {
+    width: '100%', background: S.bg, border: `1px solid ${S.border}`, borderRadius: '6px',
+    padding: '8px 12px', fontSize: '13px', color: S.text, outline: 'none',
+  }
+  const labelStyle: React.CSSProperties = {
+    fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase',
+    color: S.muted, display: 'block', marginBottom: '6px',
+  }
+  const ghostBtn: React.CSSProperties = {
+    padding: '7px 14px', background: 'transparent', border: `1px solid ${S.border}`,
+    borderRadius: '6px', color: S.muted, fontSize: '13px', fontWeight: 600, cursor: 'pointer',
+  }
+
   return (
-    <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-white mb-4">
-            Professional Contract Generator
-          </h1>
-          <p className="text-xl text-slate-400 max-w-3xl mx-auto">
-            Generate legally sound contracts with customizable templates, branding options, 
-            and professional formatting for all your business needs.
-          </p>
-        </div>
+    <div style={{ maxWidth: '1200px' }}>
+      {/* Page header */}
+      <div style={{ marginBottom: '32px' }}>
+        <p style={labelStyle}>Contracts</p>
+        <h1 style={{ fontSize: '24px', fontWeight: 700, color: S.text, marginBottom: '6px' }}>
+          Contract Generator
+        </h1>
+        <p style={{ color: S.muted, fontSize: '14px' }}>
+          Generate legally sound contracts with customizable templates and professional formatting.
+        </p>
+      </div>
 
-        <Tabs defaultValue="contracts" className="w-full">
-          <TabsList className="grid w-full grid-cols-1">
-            <TabsTrigger value="contracts" className="flex items-center gap-2">
-              <FileText className="w-4 h-4" />
-              Contract Templates
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="contracts" className="space-y-6">
-            {!selectedCategory && !selectedTemplate && (
-              <>
-                {/* Search All Contracts */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Search className="w-5 h-5" />
-                      Search All Contracts
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <Input
-                      placeholder="Search contracts by name or description..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="mb-4"
-                    />
-                    {searchQuery && (
-                      <div className="space-y-3">
-                        <p className="text-sm text-slate-400">
-                          Found {filteredTemplates.length} contracts
-                        </p>
-                        <div className="grid gap-3">
-                          {filteredTemplates.slice(0, 6).map((template) => (
-                            <div 
-                              key={template.id}
-                              className="p-3 border rounded-lg cursor-pointer hover:bg-slate-900"
-                              onClick={() => handleTemplateSelectWithUrl(template)}
-                            >
-                              <div className="flex justify-between items-start mb-2">
-                                <h4 className="font-medium flex items-center gap-2">
-                                  <span className="text-lg">{template.icon}</span>
-                                  {template.title}
-                                </h4>
-                                <Badge variant="outline">
-                                  {contractCategories.find(c => c.id === template.category)?.name}
-                                </Badge>
-                              </div>
-                              <p className="text-sm text-slate-400">
-                                {template.description}
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-
-                {/* Contract Categories */}
-                <div className="mb-8">
-                  <h2 className="text-2xl font-semibold mb-6 text-center">
-                    Choose Contract Category
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {contractCategories.map((category) => {
-                      const IconComponent = categoryIcons[category.id]
-                      return (
-                        <Card 
-                          key={category.id}
-                          className="cursor-pointer hover:shadow-lg transition-shadow group border-2 hover:border-blue-300"
-                          onClick={() => handleCategorySelect(category.id)}
-                        >
-                          <CardHeader className="text-center">
-                            <div className="text-4xl mb-2">{category.icon}</div>
-                            <CardTitle className="text-lg group-hover:text-blue-600 flex items-center justify-center gap-2">
-                              <IconComponent className="w-5 h-5" />
-                              {category.name}
-                            </CardTitle>
-                            <CardDescription>{category.description}</CardDescription>
-                          </CardHeader>
-                          <CardContent className="text-center">
-                            <Badge variant="secondary">
-                              {contractTemplates.filter(t => t.category === category.id).length} templates
-                            </Badge>
-                          </CardContent>
-                        </Card>
-                      )
-                    })}
-                  </div>
-                </div>
-              </>
-            )}
-
-            {selectedCategory && !selectedTemplate && (
-              <>
-                {/* Category Templates List */}
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h2 className="text-2xl font-semibold">
-                      {contractCategories.find(c => c.id === selectedCategory)?.name} Templates
-                    </h2>
-                    <p className="text-slate-400">
-                      {filteredTemplates.length} professional contract templates
-                    </p>
-                  </div>
-                  <Button 
-                    variant="outline" 
-                    onClick={goBackToCategories}
-                  >
-                    ← Back to Categories
-                  </Button>
-                </div>
-
-                <div className="grid gap-4">
-                  {filteredTemplates.map((template) => (
-                    <Card 
+      {/* Step 1: Category selection */}
+      {!selectedCategory && !selectedTemplate && (
+        <>
+          {/* Search */}
+          <SCard style={{ padding: '20px', marginBottom: '28px' }}>
+            <p style={labelStyle}>Search All Contracts</p>
+            <input
+              style={inputStyle}
+              placeholder="Search contracts by name or description..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
+            {searchQuery && (
+              <div style={{ marginTop: '16px' }}>
+                <p style={{ color: S.muted, fontSize: '13px', marginBottom: '10px' }}>
+                  {filteredTemplates.length} contracts found
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {filteredTemplates.slice(0, 6).map(template => (
+                    <div
                       key={template.id}
-                      className="cursor-pointer hover:shadow-md transition-shadow"
                       onClick={() => handleTemplateSelectWithUrl(template)}
+                      style={{ padding: '14px', background: S.surface2, border: `1px solid ${S.border}`, borderRadius: '6px', cursor: 'pointer' }}
                     >
-                      <CardHeader>
-                        <div className="flex justify-between items-start">
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl">{template.icon}</span>
-                            <div>
-                              <CardTitle className="text-lg">{template.title}</CardTitle>
-                              <CardDescription>{template.description}</CardDescription>
-                            </div>
-                          </div>
-                          <div className="flex gap-2">
-                            <Badge variant="outline">
-                              {template.customizationFields.length} fields
-                            </Badge>
-                            <Badge variant="secondary">
-                              {template.clauses.length} clauses
-                            </Badge>
-                          </div>
-                        </div>
-                      </CardHeader>
-                    </Card>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                        <span style={{ color: S.text, fontWeight: 600, fontSize: '14px' }}>{template.title}</span>
+                        <span style={{ fontSize: '11px', color: S.muted, padding: '2px 8px', background: S.surface, border: `1px solid ${S.border}`, borderRadius: '3px' }}>
+                          {contractCategories.find(c => c.id === template.category)?.name}
+                        </span>
+                      </div>
+                      <p style={{ color: S.muted, fontSize: '13px' }}>{template.description}</p>
+                    </div>
                   ))}
                 </div>
-              </>
+              </div>
             )}
+          </SCard>
 
-            {selectedTemplate && (
-              <>
-                {/* Contract Builder */}
-                <div className="flex items-center justify-between mb-6">
+          {/* Category grid */}
+          <p style={labelStyle}>Choose Contract Category</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1px', background: S.border, border: `1px solid ${S.border}`, borderRadius: '8px', overflow: 'hidden', marginTop: '12px' }}>
+            {contractCategories.map(category => (
+              <div
+                key={category.id}
+                onClick={() => handleCategorySelect(category.id)}
+                style={{ background: S.surface, padding: '24px', cursor: 'pointer', transition: 'background 0.15s' }}
+                onMouseEnter={e => (e.currentTarget.style.background = S.surface2)}
+                onMouseLeave={e => (e.currentTarget.style.background = S.surface)}
+              >
+                <p style={{ fontSize: '15px', fontWeight: 600, color: S.text, marginBottom: '4px' }}>{category.name}</p>
+                <p style={{ fontSize: '13px', color: S.muted, marginBottom: '12px' }}>{category.description}</p>
+                <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: S.gold }}>
+                  {contractTemplates.filter(t => t.category === category.id).length} templates
+                </span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* Step 2: Template list */}
+      {selectedCategory && !selectedTemplate && (
+        <>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+            <div>
+              <h2 style={{ fontSize: '18px', fontWeight: 700, color: S.text }}>
+                {contractCategories.find(c => c.id === selectedCategory)?.name} Templates
+              </h2>
+              <p style={{ color: S.muted, fontSize: '13px' }}>{filteredTemplates.length} professional contract templates</p>
+            </div>
+            <button style={ghostBtn} onClick={goBackToCategories}
+              onMouseEnter={e => (e.currentTarget.style.color = S.text)}
+              onMouseLeave={e => (e.currentTarget.style.color = S.muted)}
+            >Back to Categories</button>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {filteredTemplates.map(template => (
+              <div
+                key={template.id}
+                onClick={() => handleTemplateSelectWithUrl(template)}
+                style={{ background: S.surface, border: `1px solid ${S.border}`, borderRadius: '8px', padding: '20px', cursor: 'pointer', transition: 'border-color 0.15s, background 0.15s' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = S.gold; (e.currentTarget as HTMLElement).style.background = S.surface2 }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = S.border; (e.currentTarget as HTMLElement).style.background = S.surface }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
-                    <h2 className="text-2xl font-semibold flex items-center gap-2">
-                      <span className="text-2xl">{selectedTemplate.icon}</span>
-                      {selectedTemplate.title}
-                    </h2>
-                    <p className="text-slate-400">{selectedTemplate.description}</p>
+                    <p style={{ fontSize: '15px', fontWeight: 600, color: S.text, marginBottom: '4px' }}>{template.title}</p>
+                    <p style={{ fontSize: '13px', color: S.muted }}>{template.description}</p>
                   </div>
-                  <div className="flex gap-2">
-                    <Button 
-                      variant="outline" 
-                      onClick={goBackToTemplates}
-                    >
-                      ← Back to Templates
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      onClick={goBackToCategories}
-                    >
-                      All Categories
-                    </Button>
+                  <div style={{ display: 'flex', gap: '6px', flexShrink: 0, marginLeft: '16px' }}>
+                    <span style={{ fontSize: '11px', color: S.muted, padding: '2px 8px', background: S.surface2, border: `1px solid ${S.border}`, borderRadius: '3px' }}>
+                      {template.customizationFields.length} fields
+                    </span>
+                    <span style={{ fontSize: '11px', color: S.muted, padding: '2px 8px', background: S.surface2, border: `1px solid ${S.border}`, borderRadius: '3px' }}>
+                      {template.clauses.length} clauses
+                    </span>
                   </div>
                 </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
-                <div className="grid lg:grid-cols-3 gap-6">
-                  {/* Left Column: Contract Fields */}
-                  <div className="lg:col-span-1 space-y-6">
-                    {/* Logo Upload */}
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="text-lg">Company Branding</CardTitle>
-                        <CardDescription>
-                          Upload your company logo for professional contracts
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        {!companyLogo ? (
-                          <div 
-                            className="border-2 border-dashed border-slate-600 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400"
-                            onClick={() => fileInputRef.current?.click()}
-                          >
-                            <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                            <p className="text-sm text-slate-400">Click to upload logo</p>
-                            <p className="text-xs text-slate-400">PNG, JPG up to 2MB</p>
-                          </div>
-                        ) : (
-                          <div className="space-y-3">
-                            <div className="border rounded-lg p-4 bg-slate-900">
-                              <img 
-                                src={companyLogo} 
-                                alt="Company Logo" 
-                                className="max-h-20 mx-auto"
+      {/* Step 3: Contract builder */}
+      {selectedTemplate && (
+        <>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+            <div>
+              <h2 style={{ fontSize: '18px', fontWeight: 700, color: S.text }}>{selectedTemplate.title}</h2>
+              <p style={{ color: S.muted, fontSize: '13px' }}>{selectedTemplate.description}</p>
+            </div>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button style={ghostBtn} onClick={goBackToTemplates}
+                onMouseEnter={e => (e.currentTarget.style.color = S.text)}
+                onMouseLeave={e => (e.currentTarget.style.color = S.muted)}
+              >Back</button>
+              <button style={ghostBtn} onClick={goBackToCategories}
+                onMouseEnter={e => (e.currentTarget.style.color = S.text)}
+                onMouseLeave={e => (e.currentTarget.style.color = S.muted)}
+              >All Categories</button>
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px', alignItems: 'start' }}>
+            {/* Left: fields */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {/* Logo upload */}
+              <SCard style={{ padding: '20px' }}>
+                <p style={{ color: S.text, fontWeight: 600, marginBottom: '4px' }}>Company Branding</p>
+                <p style={{ color: S.muted, fontSize: '13px', marginBottom: '14px' }}>Upload your company logo for professional contracts.</p>
+                {!companyLogo ? (
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    style={{ border: `2px dashed ${S.border}`, borderRadius: '6px', padding: '24px', textAlign: 'center', cursor: 'pointer', transition: 'border-color 0.15s' }}
+                    onMouseEnter={e => (e.currentTarget.style.borderColor = S.gold)}
+                    onMouseLeave={e => (e.currentTarget.style.borderColor = S.border)}
+                  >
+                    <p style={{ color: S.muted, fontSize: '13px', marginBottom: '4px' }}>Click to upload logo</p>
+                    <p style={{ color: S.muted, fontSize: '11px' }}>PNG, JPG up to 2MB</p>
+                  </div>
+                ) : (
+                  <div>
+                    <div style={{ background: S.bg, border: `1px solid ${S.border}`, borderRadius: '6px', padding: '16px', textAlign: 'center', marginBottom: '10px' }}>
+                      <img src={companyLogo} alt="Company Logo" style={{ maxHeight: '64px', margin: '0 auto' }} />
+                    </div>
+                    <button
+                      onClick={removeLogo}
+                      style={{ width: '100%', padding: '8px', background: 'transparent', border: `1px solid ${S.border}`, borderRadius: '6px', color: S.muted, fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
+                    >Remove Logo</button>
+                  </div>
+                )}
+                <input ref={fileInputRef} type="file" accept="image/*" onChange={handleLogoUpload} style={{ display: 'none' }} />
+              </SCard>
+
+              {/* Contract details accordion */}
+              <SCard style={{ padding: '0', overflow: 'hidden' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: `1px solid ${S.border}` }}>
+                  <p style={{ color: S.text, fontWeight: 600 }}>Contract Details</p>
+                  <button style={{ ...ghostBtn, fontSize: '12px', padding: '5px 10px' }} onClick={resetContract}
+                    onMouseEnter={e => (e.currentTarget.style.color = S.text)}
+                    onMouseLeave={e => (e.currentTarget.style.color = S.muted)}
+                  >Reset</button>
+                </div>
+                {Object.entries(groupFieldsBySection(selectedTemplate.customizationFields)).map(([section, fields], idx, arr) => (
+                  <div key={section} style={{ borderBottom: idx < arr.length - 1 ? `1px solid ${S.border}` : 'none' }}>
+                    <button
+                      onClick={() => toggleSection(section)}
+                      style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 20px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
+                    >
+                      <span style={{ fontSize: '13px', fontWeight: 600, color: S.text }}>{section}</span>
+                      <span style={{ color: S.muted, fontSize: '12px' }}>{openSections.has(section) ? '▲' : '▼'} {fields.length} fields</span>
+                    </button>
+                    {openSections.has(section) && (
+                      <div style={{ padding: '0 20px 16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        {fields.map(field => (
+                          <div key={field.id}>
+                            <label style={labelStyle}>
+                              {field.label}{field.required && <span style={{ color: '#C0514A', marginLeft: '3px' }}>*</span>}
+                            </label>
+                            {field.type === 'textarea' ? (
+                              <textarea
+                                style={{ ...inputStyle, resize: 'vertical', minHeight: '70px' }}
+                                value={contractInputs[field.id] || ''}
+                                onChange={e => setContractInputs({ ...contractInputs, [field.id]: e.target.value })}
+                                placeholder={field.placeholder}
                               />
-                            </div>
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              onClick={removeLogo}
-                              className="w-full"
-                            >
-                              <X className="w-4 h-4 mr-2" />
-                              Remove Logo
-                            </Button>
+                            ) : (
+                              <input
+                                style={inputStyle}
+                                type={field.type === 'currency' ? 'number' : field.type}
+                                value={contractInputs[field.id] || ''}
+                                onChange={e => setContractInputs({ ...contractInputs, [field.id]: e.target.value })}
+                                placeholder={field.placeholder}
+                              />
+                            )}
                           </div>
-                        )}
-                        <input
-                          ref={fileInputRef}
-                          type="file"
-                          accept="image/*"
-                          onChange={handleLogoUpload}
-                          className="hidden"
-                        />
-                      </CardContent>
-                    </Card>
-
-                    {/* Contract Fields */}
-                    <Card>
-                      <CardHeader>
-                        <div className="flex justify-between items-center">
-                          <CardTitle className="text-lg">Contract Details</CardTitle>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={resetContract}
-                          >
-                            <RotateCcw className="w-4 h-4 mr-2" />
-                            Reset
-                          </Button>
-                        </div>
-                        <CardDescription>
-                          Fill in the details for your contract
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <Accordion type="multiple" className="w-full">
-                          {Object.entries(groupFieldsBySection(selectedTemplate.customizationFields)).map(([section, fields]) => (
-                            <AccordionItem key={section} value={section}>
-                              <AccordionTrigger className="text-sm font-medium">
-                                {section} ({fields.length} fields)
-                              </AccordionTrigger>
-                              <AccordionContent>
-                                <div className="space-y-4 pt-2">
-                                  {fields.map((field) => (
-                                    <div key={field.id}>
-                                      <Label htmlFor={field.id} className="text-sm font-medium">
-                                        {field.label}
-                                        {field.required && <span className="text-red-500 ml-1">*</span>}
-                                      </Label>
-                                      {field.type === 'textarea' ? (
-                                        <Textarea
-                                          id={field.id}
-                                          value={contractInputs[field.id] || ''}
-                                          onChange={(e) => setContractInputs({
-                                            ...contractInputs,
-                                            [field.id]: e.target.value
-                                          })}
-                                          placeholder={field.placeholder}
-                                          className="mt-1"
-                                        />
-                                      ) : (
-                                        <Input
-                                          id={field.id}
-                                          type={field.type === 'currency' ? 'number' : field.type}
-                                          value={contractInputs[field.id] || ''}
-                                          onChange={(e) => setContractInputs({
-                                            ...contractInputs,
-                                            [field.id]: e.target.value
-                                          })}
-                                          placeholder={field.placeholder}
-                                          className="mt-1"
-                                        />
-                                      )}
-                                    </div>
-                                  ))}
-                                </div>
-                              </AccordionContent>
-                            </AccordionItem>
-                          ))}
-                        </Accordion>
-                      </CardContent>
-                    </Card>
-
-                    {/* Optional Clauses */}
-                    {selectedTemplate.clauses.length > 0 && (
-                      <Card>
-                        <CardHeader>
-                          <CardTitle className="text-lg">Optional Clauses</CardTitle>
-                          <CardDescription>
-                            Select additional clauses to include
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-3">
-                            {selectedTemplate.clauses.map((clause) => (
-                              <label key={clause.id} className="flex items-start space-x-2 cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  checked={selectedClauses.includes(clause.id)}
-                                  onChange={(e) => {
-                                    if (e.target.checked) {
-                                      setSelectedClauses([...selectedClauses, clause.id])
-                                    } else {
-                                      setSelectedClauses(selectedClauses.filter(id => id !== clause.id))
-                                    }
-                                  }}
-                                  className="mt-1"
-                                />
-                                <div>
-                                  <div className="font-medium text-sm">{clause.title}</div>
-                                  <div className="text-xs text-slate-400">{clause.content}</div>
-                                </div>
-                              </label>
-                            ))}
-                          </div>
-                        </CardContent>
-                      </Card>
+                        ))}
+                      </div>
                     )}
                   </div>
+                ))}
+              </SCard>
 
-                  {/* Right Column: Contract Preview */}
-                  <div className="lg:col-span-2">
-                    <Card>
-                      <CardHeader>
-                        <div className="flex justify-between items-center">
-                          <CardTitle className="text-lg">Contract Preview</CardTitle>
-                          <div className="flex gap-2">
-                            <Button 
-                              variant="outline"
-                              onClick={copyToClipboard}
-                              disabled={!generateContract().trim()}
-                            >
-                              <Copy className="w-4 h-4 mr-2" />
-                              {copiedContract ? 'Copied!' : 'Copy Text'}
-                            </Button>
-                            <Button 
-                              onClick={downloadPDF}
-                              disabled={!generateContract().trim()}
-                            >
-                              <Download className="w-4 h-4 mr-2" />
-                              Download PDF
-                            </Button>
-                          </div>
+              {/* Optional clauses */}
+              {selectedTemplate.clauses.length > 0 && (
+                <SCard style={{ padding: '20px' }}>
+                  <p style={{ color: S.text, fontWeight: 600, marginBottom: '4px' }}>Optional Clauses</p>
+                  <p style={{ color: S.muted, fontSize: '13px', marginBottom: '14px' }}>Select additional clauses to include.</p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {selectedTemplate.clauses.map(clause => (
+                      <label key={clause.id} style={{ display: 'flex', gap: '10px', cursor: 'pointer' }}>
+                        <input
+                          type="checkbox"
+                          checked={selectedClauses.includes(clause.id)}
+                          onChange={e => {
+                            if (e.target.checked) setSelectedClauses([...selectedClauses, clause.id])
+                            else setSelectedClauses(selectedClauses.filter(id => id !== clause.id))
+                          }}
+                          style={{ accentColor: S.gold, width: '14px', height: '14px', marginTop: '2px', flexShrink: 0 }}
+                        />
+                        <div>
+                          <p style={{ fontSize: '13px', fontWeight: 600, color: S.text, marginBottom: '2px' }}>{clause.title}</p>
+                          <p style={{ fontSize: '12px', color: S.muted, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{clause.content}</p>
                         </div>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="bg-slate-800 border rounded-lg p-6 min-h-[600px] font-mono text-sm overflow-auto">
-                          {companyLogo && (
-                            <div className="text-center mb-6">
-                              <img 
-                                src={companyLogo} 
-                                alt="Company Logo" 
-                                className="max-h-16 mx-auto mb-4"
-                              />
-                            </div>
-                          )}
-                          <pre className="whitespace-pre-wrap">
-                            {generateContract() || 'Fill in the contract details to see the preview...'}
-                          </pre>
-                        </div>
-                      </CardContent>
-                    </Card>
+                      </label>
+                    ))}
                   </div>
+                </SCard>
+              )}
+            </div>
+
+            {/* Right: preview */}
+            <SCard style={{ padding: '0', overflow: 'hidden' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: `1px solid ${S.border}` }}>
+                <p style={{ color: S.text, fontWeight: 600 }}>Contract Preview</p>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={copyToClipboard}
+                    disabled={!generateContract().trim()}
+                    style={{ ...ghostBtn, opacity: !generateContract().trim() ? 0.4 : 1 }}
+                    onMouseEnter={e => { if (generateContract().trim()) (e.currentTarget as HTMLElement).style.color = S.text }}
+                    onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = S.muted}
+                  >
+                    {copiedContract ? 'Copied!' : 'Copy Text'}
+                  </button>
+                  <button
+                    onClick={downloadPDF}
+                    disabled={!generateContract().trim()}
+                    style={{
+                      padding: '7px 14px', background: generateContract().trim() ? S.gold : S.surface2,
+                      color: generateContract().trim() ? '#111118' : S.muted,
+                      border: 'none', borderRadius: '6px', fontSize: '13px', fontWeight: 700, cursor: generateContract().trim() ? 'pointer' : 'not-allowed',
+                    }}
+                  >Download PDF</button>
                 </div>
-              </>
-            )}
-          </TabsContent>
-        </Tabs>
+              </div>
+              <div style={{ padding: '24px', minHeight: '600px', fontFamily: 'monospace', fontSize: '13px', color: S.text }}>
+                {companyLogo && (
+                  <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+                    <img src={companyLogo} alt="Company Logo" style={{ maxHeight: '64px', margin: '0 auto' }} />
+                  </div>
+                )}
+                <pre style={{ whiteSpace: 'pre-wrap', margin: 0, color: S.text }}>
+                  {generateContract() || <span style={{ color: S.muted }}>Fill in the contract details to see the preview...</span>}
+                </pre>
+              </div>
+            </SCard>
+          </div>
+        </>
+      )}
     </div>
   )
 }
@@ -615,7 +489,7 @@ function ContractContent() {
 export default function ContractGenerator() {
   return (
     <DashboardLayout>
-      <Suspense fallback={<div className="container mx-auto px-4 py-8">Loading...</div>}>
+      <Suspense fallback={<div style={{ color: '#9E9880', fontSize: '14px' }}>Loading...</div>}>
         <ContractContent />
       </Suspense>
     </DashboardLayout>
