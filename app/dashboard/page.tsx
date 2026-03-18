@@ -11,6 +11,12 @@ const TOOLS = [
     tag: 'Writing',
   },
   {
+    title: 'Launchpath Atlas',
+    description: 'A guided founder curriculum with curated resources.',
+    href: '/founder-guide',
+    tag: 'Guide',
+  },
+  {
     title: 'Cold Emails',
     description: 'High-converting outreach at scale.',
     href: '/cold-emails',
@@ -57,12 +63,11 @@ const TOOLS = [
     description: '100% ATS-friendly founder resumes.',
     href: '/resume',
     tag: 'Career',
-    isNew: true,
   },
 ]
 
 const STATS = [
-  { label: 'Tools Available', value: '9' },
+  { label: 'Tools Available', value: '10' },
   { label: 'Account Type', value: 'Free' },
   { label: 'Status', value: 'Active' },
   { label: 'Workspace', value: 'Personal' },

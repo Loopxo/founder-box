@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useRouter } from 'next/navigation'
 
 interface NavItem {
   name: string
@@ -14,6 +13,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { name: 'Dashboard', href: '/dashboard', abbr: 'DB' },
+  { name: 'Launchpath Atlas', href: '/founder-guide', abbr: 'LA' },
   { name: 'Proposal Generator', href: '/dashboard/proposal', abbr: 'PG' },
   { name: 'Cold Emails', href: '/cold-emails', abbr: 'CE' },
   { name: 'Competitive Analysis', href: '/competitive-analysis', abbr: 'CA' },
