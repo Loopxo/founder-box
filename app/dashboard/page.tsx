@@ -3,7 +3,15 @@
 import Link from 'next/link'
 import DashboardLayout from '@/components/DashboardLayout'
 
-const TOOLS = [
+interface Tool {
+  title: string
+  description: string
+  href: string
+  tag: string
+  isNew?: boolean
+}
+
+const TOOLS: Tool[] = [
   {
     title: 'Proposal Generator',
     description: 'Craft client-ready proposals in minutes.',
