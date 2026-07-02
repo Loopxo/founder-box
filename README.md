@@ -1,188 +1,180 @@
-# FounderBox 🚀
+# FounderBox
 
-**The Complete Founder Toolkit - Free, Open Source, and Community-Driven**
+FounderBox is a solo-operator accountability OS, founder tool suite, and hosted MCP server.
 
-FounderBox is a comprehensive suite of tools designed specifically for entrepreneurs and founders. From proposal generation to social media content, we provide everything you need to accelerate your business growth.
+The main product helps solo devs, indie hackers, freelancers, agency owners, and solo founders prove what actually happened today: revenue attempts, shipped outputs, outreach experiments, work sessions, product progress, proof links, and weekly accountability reports.
 
-## ✨ Features
+Founder Tools remain available as a secondary suite, and the MCP server lets Claude Code, Cursor, Codex, Windsurf, and other MCP-compatible agents call FounderBox workflows directly.
 
-### 🎯 Core Tools
-- **Proposal Generator** - Create stunning, professional proposals with customizable themes
-- **Cold Email Templates** - High-converting email templates for outreach
-- **Contract Templates** - Legal contract templates for clients and partnerships
-- **Invoice Generator** - Professional invoice templates with automatic calculations
-- **SEO Content** - SEO-optimized content templates for blogs and websites
-- **Sales Copy** - High-converting sales copy for your products/services
-- **Social Media Content** - Engaging social media content for all platforms
-- **Competitive Analysis** - Analyze your competition and market positioning
+## Product Direction
 
-### 🎨 Design Features
-- **Multiple Themes** - Dark Luxe, Minimal Elegance, Geometric Futurism, Corporate Modern, Magazine Style
-- **Custom Branding** - Add your logo, company details, and custom colors
-- **Interactive Preview** - Full preview with real-time customization
-- **PDF Export** - High-quality PDF generation with professional layouts
+- Main dashboard: Accountability OS
+- Secondary section: Founder Tools
+- Hosted MCP endpoint: `https://mcp.founderbox.loopxo.org/mcp`
+- Auth: Google, GitHub, and Resend email OTP
+- Billing: Lemon Squeezy
+- Mobile: Expo React Native for iOS and Android, with mobile IAP planned through RevenueCat
+- Database: Postgres + Prisma
+- Files/artifacts: Cloudflare R2 or S3-compatible storage in production, local filesystem in dev/self-host mode
+- API keys with the `fb_live_xxxxx` format
+- Free hosted usage limits to protect infrastructure, with $8/month Founding Pro
+- Unlimited self-hosting mode where limits can be disabled
+- Shared core package for web and MCP generation logic
+- Installable skills that teach AI agents how to use FounderBox tools well
 
-### 🔐 Authentication
-- **Supabase Integration** - Secure user authentication and management
-- **Protected Routes** - Dashboard access requires authentication
-- **User Profiles** - Personalized experience for each user
+## Workspace
 
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 18+ 
-- pnpm (recommended) or npm
-- Supabase account (free tier available)
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/your-username/founder-box.git
-cd founder-box
+```txt
+founder-box/
+  apps/
+    web/       Next.js dashboard, accountability OS, auth, billing, docs, admin
+    mcp/       Express Streamable HTTP MCP server
+    mobile/    Expo iOS/Android app for mobile accountability capture
+  packages/
+    api-client/ Shared typed client for mobile and future SDK surfaces
+    core/      Shared FounderBox business logic
+    skills/    AI skill folders and install docs
+  prisma/      Postgres schema, migrations, and seed script
 ```
 
-### 2. Install Dependencies
+## Accountability OS
+
+Core metrics:
+
+- Revenue Attempts: outreach, follow-ups, replies, calls booked, proposals sent, deals closed
+- Shipped Outputs: deployed features, proof links, deliverables, proposals, content, bug fixes, product progress
+
+Starter flows:
+
+- Solo Dev
+- Indie Hacker
+- Agency Owner
+- Freelancer
+- Client Outreach Sprint
+- Product Shipping Sprint
+- Personal Discipline Reset
+
+## V1 MCP Tools
+
+Accountability tools:
+
+- `accountability_get_today`
+- `accountability_start_day`
+- `accountability_log_outreach`
+- `accountability_log_work_session`
+- `accountability_log_product_progress`
+- `accountability_log_proof`
+- `accountability_end_day_review`
+- `accountability_get_weekly_report`
+- `accountability_list_flows`
+- `accountability_create_entry`
+- `accountability_query_metrics`
+- `accountability_create_share_report`
+
+Founder tool milestone:
+
+- Resume Forge: `resume_generate`, `resume_optimize_for_job`, `resume_score_ats`, `resume_render_pdf`
+- Proposal Generator: `proposal_generate`, `proposal_estimate_pricing`, `proposal_bulk_generate`, `proposal_render_pdf`
+- Startup Lens: `startup_lens_create_framework`, `startup_lens_analyze_notes`, `startup_lens_generate_report`, `startup_lens_render_pdf`
+
+The MCP catalog also exposes Launchpath Atlas, Cold Emails, Competitive Analysis, Contracts, Invoices, SEO, Sales Copy, Social Media, dashboard utilities, and skills.
+
+## Quick Start
+
 ```bash
 pnpm install
-```
-
-### 3. Set Up Supabase
-
-#### Create a Supabase Project
-1. Go to [supabase.com](https://supabase.com) and create a free account
-2. Create a new project
-3. Go to Settings > API to get your credentials
-
-#### Configure Environment Variables
-Create a `.env.local` file in the root directory:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-
-### 4. Run the Development Server
-```bash
+pnpm db:seed
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the application.
+Run the MCP server:
 
-## 🛠️ Tech Stack
-
-- **Framework**: Next.js 15 with App Router
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **UI Components**: Radix UI + Custom Components
-- **Authentication**: Supabase Auth
-- **Database**: Supabase (PostgreSQL)
-- **PDF Generation**: Puppeteer
-- **Form Handling**: React Hook Form + Zod
-- **Icons**: Lucide React
-
-## 📁 Project Structure
-
-```
-founder-box/
-├── app/                    # Next.js App Router pages
-│   ├── api/               # API routes
-│   ├── dashboard/         # Protected dashboard pages
-│   ├── login/            # Authentication pages
-│   └── signup/
-├── components/            # React components
-│   ├── ui/               # Reusable UI components
-│   └── ...               # Feature-specific components
-├── lib/                  # Utility functions and configurations
-│   ├── templates.ts      # Industry templates
-│   ├── themes.ts         # Theme configurations
-│   ├── pdf-templates.ts  # PDF generation logic
-│   └── supabase.ts       # Supabase client
-├── public/               # Static assets
-└── templates/            # Industry-specific templates
+```bash
+FOUNDERBOX_DEV_API_KEY=fb_live_dev pnpm dev:mcp
 ```
 
-## 🎨 Customization
+Connect a local MCP client:
 
-### Adding New Themes
-1. Edit `lib/themes.ts`
-2. Add your theme configuration
-3. Update the theme selector component
+```bash
+claude mcp add founderbox --transport http http://localhost:8787/mcp --header "Authorization: Bearer fb_live_dev"
+```
 
-### Adding New Industries
-1. Edit `lib/templates.ts`
-2. Add industry-specific content
-3. Update the form schemas
+Run the mobile app:
 
-### Customizing PDF Templates
-1. Edit `lib/pdf-templates.ts`
-2. Modify HTML structure and styling
-3. Update CSS variables for theme integration
+```bash
+pnpm dev:mobile
+```
 
-## 🔧 Configuration
+For mobile on a physical device, set `EXPO_PUBLIC_FOUNDERBOX_API_URL` to a reachable web API URL instead of `localhost`.
 
-### Environment Variables
+## Environment
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase project URL | Yes |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase anonymous key | Yes |
+```env
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/founderbox
+SESSION_SECRET=change-me
+API_KEY_HASH_SECRET=change-me
+AUDIT_HASH_SECRET=change-me
+CRON_SECRET=change-me
+RESEND_API_KEY=
+RESEND_FROM_EMAIL=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+LEMONSQUEEZY_API_KEY=
+LEMONSQUEEZY_STORE_ID=
+LEMONSQUEEZY_WEBHOOK_SECRET=
+LEMONSQUEEZY_FOUNDING_PRO_VARIANT_ID=
+S3_ENDPOINT=
+S3_BUCKET=
+S3_ACCESS_KEY_ID=
+S3_SECRET_ACCESS_KEY=
+FOUNDERBOX_WEB_URL=http://localhost:3000
+FOUNDERBOX_MCP_URL=http://localhost:8787/mcp
+EXPO_PUBLIC_FOUNDERBOX_API_URL=http://localhost:3000
+EXPO_PUBLIC_REVENUECAT_IOS_KEY=
+EXPO_PUBLIC_REVENUECAT_ANDROID_KEY=
+FOUNDERBOX_DISABLE_LIMITS=false
+FOUNDERBOX_ARTIFACT_DIR=.founderbox/artifacts
+```
 
-### Supabase Setup
+## Hosted Limits
 
-1. **Enable Email Auth** in Authentication > Providers
-2. **Configure Email Templates** in Authentication > Email Templates
-3. **Set up Row Level Security** for your tables (if using database)
+- 1 workspace
+- 1 active custom flow
+- 30-day history
+- limited share reports and exports
+- limited accountability MCP usage
+- 500 general text tool calls per day per user
+- 20 PDF renders per day per user
+- 7-day generated artifact expiry
+- Self-host mode can disable limits with `FOUNDERBOX_DISABLE_LIMITS=true`
 
-## 🚀 Deployment
+## Development Commands
 
-### Vercel (Recommended)
-1. Connect your GitHub repository to Vercel
-2. Add environment variables in Vercel dashboard
-3. Deploy automatically on push
+```bash
+pnpm check:all
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+pnpm db:migrate
+pnpm db:studio
+pnpm dev:mobile
+pnpm check:mobile
+```
 
-### Other Platforms
-The app can be deployed to any platform that supports Next.js:
-- Netlify
-- Railway
-- DigitalOcean App Platform
-- AWS Amplify
+## Tech Stack
 
-## 🤝 Contributing
+- Next.js 15 and React 19 for the web dashboard
+- Expo React Native for the iOS and Android app
+- Express and the official MCP TypeScript SDK for the hosted MCP server
+- Prisma and Postgres for users, sessions, API keys, runs, artifacts, billing, flows, entries, audit events, and limits
+- Resend for passwordless email OTP
+- Lemon Squeezy for hosted checkout and customer portal
+- Cloudflare R2/S3-compatible storage for hosted artifacts and uploads
+- Local filesystem artifacts for self-hosting/dev
 
-We welcome contributions! Here's how you can help:
+## License
 
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
-
-### Development Guidelines
-- Follow TypeScript best practices
-- Use conventional commits
-- Add tests for new features
-- Update documentation
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Built with ❤️ by founders, for founders
-- Inspired by the challenges of growing a business
-- Powered by the open-source community
-
-
-## 🗺️ Roadmap
-
-- [ ] Team collaboration features
-- [ ] Advanced analytics dashboard
-- [ ] API for third-party integrations
-- [ ] Mobile app (React Native)
-- [ ] AI-powered content suggestions
-- [ ] Multi-language support
-- [ ] Advanced customization options
-
----
-
-**Made with ❤️ by the FounderBox community**
+MIT

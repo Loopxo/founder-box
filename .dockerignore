@@ -1,0 +1,12 @@
+node_modules
+apps/*/node_modules
+packages/*/node_modules
+.next
+apps/web/.next
+dist
+packages/core/dist
+apps/mcp/dist
+.founderbox
+.env
+.env.local
+.git
