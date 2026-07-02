@@ -13,6 +13,764 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  otpChallenges    OtpChallenge[]
+  sessions         Session[]
+  apiKeys          ApiKey[]
+  toolRuns         ToolRun[]
+  artifacts        Artifact[]
+  rateLimitBuckets RateLimitBucket[]
+  oauthAccounts    OAuthAccount[]
+  ownedWorkspaces  Workspace[]            @relation("WorkspaceOwner")
+  memberships      WorkspaceMember[]
+  subscriptions    Subscription[]
+  lemonEvents      LemonSqueezyEvent[]
+  createdEntries   Entry[]                @relation("EntryCreator")
+  proofAssets      ProofAsset[]
+  dailyReviews     DailyReview[]
+  weeklyReviews    WeeklyReview[]
+  shareLinks       ShareLink[]
+  notifications    NotificationPreference?
+  auditEvents      AuditEvent[]
+  suspiciousFlags  SuspiciousUsageFlag[]
+  exportJobs       ExportJob[]
+
+  @@map("users")
+}
+
+model Workspace {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String?  @unique
+  persona     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  ownerUserId String
+  owner       User     @relation("WorkspaceOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
+
+  members           WorkspaceMember[]
+  flows             Flow[]
+  dashboards        Dashboard[]
+  targets           Target[]
+  metricDefinitions MetricDefinition[]
+  entries           Entry[]
+  proofAssets       ProofAsset[]
+  dailyReviews      DailyReview[]
+  weeklyReviews     WeeklyReview[]
+  shareLinks        ShareLink[]
+  subscriptions     Subscription[]
+  auditEvents       AuditEvent[]
+  suspiciousFlags   SuspiciousUsageFlag[]
+  exportJobs        ExportJob[]
+
+  @@index([ownerUserId])
+  @@map("workspaces")
+}
+
+model WorkspaceMember {
+  id          String   @id @default(cuid())
+  role        String   @default("owner")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@index([userId])
+  @@map("workspace_members")
+}
+
+model OAuthAccount {
+  id                String    @id @default(cuid())
+  provider          String
+  providerAccountId String
+  email             String?
+  name              String?
+  avatarUrl         String?
+  accessToken       String?
+  refreshToken      String?
+  expiresAt         DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@index([email])
+  @@map("oauth_accounts")
+}
+
+model Plan {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  priceCents  Int      @default(0)
+  interval    String   @default("month")
+  limits      Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  subscriptions Subscription[]
+
+  @@map("plans")
+}
+
+model Subscription {
+  id                  String    @id @default(cuid())
+  provider            String    @default("lemonsqueezy")
+  lemonCustomerId     String?
+  lemonSubscriptionId String?   @unique
+  lemonOrderId        String?
+  lemonProductId      String?
+  lemonVariantId      String?
+  status              String    @default("free")
+  currentPeriodEnd    DateTime?
+  renewsAt            DateTime?
+  endsAt              DateTime?
+  trialEndsAt         DateTime?
+  customerPortalUrl   String?
+  raw                 Json?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  planId String?
+  plan   Plan?   @relation(fields: [planId], references: [id], onDelete: SetNull)
+
+  @@index([userId, status])
+  @@index([workspaceId])
+  @@index([lemonCustomerId])
+  @@index([lemonVariantId])
+  @@map("subscriptions")
+}
+
+model LemonSqueezyEvent {
+  id              String    @id @default(cuid())
+  eventId         String?   @unique
+  eventName       String
+  lemonObjectId   String?
+  payload         Json
+  processedAt     DateTime?
+  processingError String?
+  createdAt       DateTime  @default(now())
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([eventName, createdAt])
+  @@index([lemonObjectId])
+  @@map("lemonsqueezy_events")
+}
+
+model Flow {
+  id             String    @id @default(cuid())
+  templateKey    String?
+  name           String
+  description    String?
+  persona        String?
+  isActive       Boolean   @default(true)
+  currentVersion Int       @default(1)
+  archivedAt     DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  versions          FlowVersion[]
+  objects           FlowObject[]
+  views             FlowView[]
+  dashboards        Dashboard[]
+  targets           Target[]
+  metricDefinitions MetricDefinition[]
+  entries           Entry[]
+
+  @@index([workspaceId, isActive])
+  @@index([templateKey])
+  @@map("flows")
+}
+
+model FlowVersion {
+  id        String   @id @default(cuid())
+  version   Int
+  config    Json
+  createdAt DateTime @default(now())
+
+  flowId String
+  flow   Flow   @relation(fields: [flowId], references: [id], onDelete: Cascade)
+
+  @@unique([flowId, version])
+  @@map("flow_versions")
+}
+
+model FlowObject {
+  id          String    @id @default(cuid())
+  key         String
+  name        String
+  description String?
+  icon        String?
+  sortOrder   Int       @default(0)
+  archivedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  flowId String
+  flow   Flow   @relation(fields: [flowId], references: [id], onDelete: Cascade)
+
+  fields                FlowField[] @relation("ObjectFields")
+  relationFieldsTarget  FlowField[] @relation("RelationTargetObject")
+  entries               Entry[]
+  views                 FlowView[]
+
+  @@unique([flowId, key])
+  @@index([flowId, sortOrder])
+  @@map("flow_objects")
+}
+
+model FlowField {
+  id           String    @id @default(cuid())
+  key          String
+  name         String
+  type         String
+  required     Boolean   @default(false)
+  defaultValue Json?
+  settings     Json?
+  sortOrder    Int       @default(0)
+  archivedAt   DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  objectId String
+  object   FlowObject @relation("ObjectFields", fields: [objectId], references: [id], onDelete: Cascade)
+
+  targetObjectId String?
+  targetObject   FlowObject? @relation("RelationTargetObject", fields: [targetObjectId], references: [id], onDelete: SetNull)
+
+  options FlowFieldOption[]
+  values  EntryValue[]
+
+  @@unique([objectId, key])
+  @@index([objectId, sortOrder])
+  @@index([targetObjectId])
+  @@map("flow_fields")
+}
+
+model FlowFieldOption {
+  id        String   @id @default(cuid())
+  label     String
+  value     String
+  color     String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  fieldId String
+  field   FlowField @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+
+  @@unique([fieldId, value])
+  @@index([fieldId, sortOrder])
+  @@map("flow_field_options")
+}
+
+model FlowView {
+  id        String   @id @default(cuid())
+  name      String
+  type      String
+  config    Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  flowId String
+  flow   Flow   @relation(fields: [flowId], references: [id], onDelete: Cascade)
+
+  objectId String?
+  object   FlowObject? @relation(fields: [objectId], references: [id], onDelete: Cascade)
+
+  @@index([flowId])
+  @@index([objectId])
+  @@map("flow_views")
+}
+
+model Dashboard {
+  id        String   @id @default(cuid())
+  name      String
+  config    Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  flowId String?
+  flow   Flow?   @relation(fields: [flowId], references: [id], onDelete: Cascade)
+
+  widgets DashboardWidget[]
+
+  @@index([workspaceId])
+  @@index([flowId])
+  @@map("dashboards")
+}
+
+model DashboardWidget {
+  id        String   @id @default(cuid())
+  type      String
+  title     String
+  config    Json
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  dashboardId String
+  dashboard   Dashboard @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
+
+  @@index([dashboardId, sortOrder])
+  @@map("dashboard_widgets")
+}
+
+model Target {
+  id          String   @id @default(cuid())
+  metricKey   String
+  name        String
+  period      String   @default("week")
+  targetValue Float
+  currentValue Float   @default(0)
+  unit        String?
+  startsAt    DateTime
+  endsAt      DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  flowId String?
+  flow   Flow?   @relation(fields: [flowId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, metricKey])
+  @@index([flowId])
+  @@map("targets")
+}
+
+model MetricDefinition {
+  id          String   @id @default(cuid())
+  key         String
+  name        String
+  type        String
+  description String?
+  config      Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  flowId String?
+  flow   Flow?   @relation(fields: [flowId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, key])
+  @@index([flowId])
+  @@map("metric_definitions")
+}
+
+model Entry {
+  id          String   @id @default(cuid())
+  happenedAt  DateTime @default(now())
+  title       String?
+  summary     String?
+  systemType  String?
+  data        Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  archivedAt  DateTime?
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  flowId String?
+  flow   Flow?   @relation(fields: [flowId], references: [id], onDelete: Cascade)
+
+  objectId String
+  object   FlowObject @relation(fields: [objectId], references: [id], onDelete: Cascade)
+
+  createdById String?
+  createdBy   User?   @relation("EntryCreator", fields: [createdById], references: [id], onDelete: SetNull)
+
+  values      EntryValue[]
+  proofAssets ProofAsset[]
+
+  @@index([workspaceId, happenedAt])
+  @@index([objectId, happenedAt])
+  @@index([createdById])
+  @@index([systemType])
+  @@map("entries")
+}
+
+model EntryValue {
+  id        String   @id @default(cuid())
+  value     Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  entryId String
+  entry   Entry  @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  fieldId String
+  field   FlowField @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+
+  @@unique([entryId, fieldId])
+  @@index([fieldId])
+  @@map("entry_values")
+}
+
+model ProofAsset {
+  id          String   @id @default(cuid())
+  type        String
+  label       String?
+  url         String?
+  text        String?
+  fileName    String?
+  mimeType    String?
+  sizeBytes   Int?
+  storageKey  String?
+  metadata    Json?
+  capturedAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  entryId String?
+  entry   Entry?  @relation(fields: [entryId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId, capturedAt])
+  @@index([entryId])
+  @@index([userId])
+  @@index([type])
+  @@map("proof_assets")
+}
+
+model DailyReview {
+  id                   String   @id @default(cuid())
+  date                 DateTime
+  wakeUpTime           String?
+  mood                 String?
+  energy               Int?
+  mainGoal             String?
+  revenueTaskDone      Boolean  @default(false)
+  productTaskDone      Boolean  @default(false)
+  distributionTaskDone Boolean  @default(false)
+  deepWorkMinutes      Int      @default(0)
+  biggestOutput        String?
+  methodWorked         String?
+  vanished             String?
+  endOfDayReview       String?
+  data                 Json?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId, date])
+  @@index([workspaceId, date])
+  @@map("daily_reviews")
+}
+
+model WeeklyReview {
+  id          String   @id @default(cuid())
+  weekStart   DateTime
+  summary     String?
+  markdown    String?
+  metrics     Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  shareLinks ShareLink[]
+
+  @@unique([workspaceId, userId, weekStart])
+  @@index([workspaceId, weekStart])
+  @@map("weekly_reviews")
+}
+
+model ShareLink {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  title     String
+  scope     Json
+  redacted  Boolean   @default(true)
+  viewCount Int       @default(0)
+  lastViewedAt DateTime?
+  expiresAt DateTime?
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  createdById String
+  createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+  weeklyReviewId String?
+  weeklyReview   WeeklyReview? @relation(fields: [weeklyReviewId], references: [id], onDelete: SetNull)
+
+  views ShareLinkView[]
+
+  @@index([workspaceId, createdAt])
+  @@index([createdById])
+  @@map("share_links")
+}
+
+model ShareLinkView {
+  id        String   @id @default(cuid())
+  ipHash    String?
+  userAgent String?
+  referrer  String?
+  createdAt DateTime @default(now())
+
+  shareLinkId String
+  shareLink   ShareLink @relation(fields: [shareLinkId], references: [id], onDelete: Cascade)
+
+  @@index([shareLinkId, createdAt])
+  @@map("share_link_views")
+}
+
+model NotificationPreference {
+  id                 String   @id @default(cuid())
+  dailyReminder      Boolean  @default(false)
+  weeklyReview       Boolean  @default(true)
+  reminderTime       String?
+  timezone           String?
+  channelPreferences Json?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notification_preferences")
+}
+
+model AuditEvent {
+  id         String   @id @default(cuid())
+  action     String
+  entityType String?
+  entityId   String?
+  metadata   Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId, createdAt])
+  @@index([userId, createdAt])
+  @@index([action])
+  @@map("audit_events")
+}
+
+model SuspiciousUsageFlag {
+  id         String    @id @default(cuid())
+  type       String
+  severity   String    @default("medium")
+  status     String    @default("open")
+  reason     String
+  metadata   Json?
+  resolvedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId, createdAt])
+  @@index([userId, createdAt])
+  @@index([type, status])
+  @@map("suspicious_usage_flags")
+}
+
+model ExportJob {
+  id          String    @id @default(cuid())
+  type        String
+  format      String
+  status      String    @default("completed")
+  storageKey  String?
+  downloadUrl String?
+  error       String?
+  metadata    Json?
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+  expiresAt   DateTime?
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, createdAt])
+  @@index([userId, createdAt])
+  @@index([status])
+  @@index([expiresAt])
+  @@map("export_jobs")
+}
+
+model OtpChallenge {
+  id           String    @id @default(cuid())
+  email        String
+  codeHash     String
+  attempts     Int       @default(0)
+  maxAttempts  Int       @default(5)
+  expiresAt    DateTime
+  consumedAt   DateTime?
+  createdAt    DateTime  @default(now())
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([email, createdAt])
+  @@index([expiresAt])
+  @@map("otp_challenges")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  tokenHash    String   @unique
+  userAgent    String?
+  ipAddress    String?
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  lastSeenAt   DateTime @default(now())
+  revokedAt    DateTime?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+model ApiKey {
+  id          String    @id @default(cuid())
+  name        String
+  prefix      String
+  keyHash     String    @unique
+  lastUsedAt  DateTime?
+  revokedAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  toolRuns ToolRun[]
+
+  @@index([userId])
+  @@index([prefix])
+  @@map("api_keys")
+}
+
+model ToolRun {
+  id            String    @id @default(cuid())
+  toolName      String
+  status        String
+  durationMs    Int
+  errorCode     String?
+  inputBytes    Int?
+  outputBytes   Int?
+  createdAt     DateTime  @default(now())
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  apiKeyId String?
+  apiKey   ApiKey? @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+
+  artifacts Artifact[]
+
+  @@index([toolName, createdAt])
+  @@index([userId, createdAt])
+  @@index([apiKeyId, createdAt])
+  @@map("tool_runs")
+}
+
+model Artifact {
+  id          String   @id @default(cuid())
+  name        String
+  type        String
+  mimeType    String
+  storageKey  String
+  sizeBytes   Int?
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  toolRunId String?
+  toolRun   ToolRun? @relation(fields: [toolRunId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([expiresAt])
+  @@map("artifacts")
+}
+
+model RateLimitBucket {
+  id          String   @id @default(cuid())
+  scope       String
+  bucketKey   String
+  count       Int      @default(0)
+  resetAt     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([scope, bucketKey])
+  @@index([userId, scope])
+  @@index([resetAt])
+  @@map("rate_limit_buckets")
+}
+
 model Client {
   id               String     @id @default(cuid())
   createdAt        DateTime   @default(now())
@@ -81,4 +839,3 @@ model Template {
   
   @@map("templates")
 }
-
